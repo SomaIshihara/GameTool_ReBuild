@@ -15,7 +15,7 @@
 //壁構造体
 typedef struct
 {
-	D3DXVECTOR3 pos;				//中心位置
+	D3DXVECTOR3 pos;					//中心位置
 	D3DXVECTOR3 rot;					//向き
 	float fWidth;						//幅
 	float fHeight;						//高さ

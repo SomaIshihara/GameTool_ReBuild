@@ -9,6 +9,7 @@
 #include "shadow.h"
 #include "wall.h"
 #include "player.h"
+#include "object.h"
 
 //マクロ
 #define MAX_BULLET				(128)	//弾の最大数
@@ -23,6 +24,7 @@
 typedef struct
 {
 	D3DXVECTOR3 pos;	//位置
+	D3DXVECTOR3 posOld;	//前回の位置
 	D3DXVECTOR3 move;	//移動量
 	D3DXCOLOR col;		//弾の色
 	int nLife;			//寿命
@@ -31,6 +33,7 @@ typedef struct
 } Bullet;
 
 void CollisionWallBullet(int nCount);
+void CollisionObjBullet(int nCount);
 
 LPDIRECT3DTEXTURE9 g_pTextureBullet;	//テクスチャポインタ
 LPDIRECT3DVERTEXBUFFER9 g_pVtxbuffBullet;	//頂点バッファポインタ
@@ -56,6 +59,7 @@ void InitBullet(void)
 	for (nCntBullet = 0; nCntBullet < MAX_BULLET; nCntBullet++)
 	{
 		g_aBullet[nCntBullet].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		g_aBullet[nCntBullet].posOld = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 		g_aBullet[nCntBullet].move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 		g_aBullet[nCntBullet].nLife = 100;
 		g_aBullet[nCntBullet].nIdxShadow = -1;
@@ -142,11 +146,15 @@ void UpdateBullet(void)
 	{
 		if (g_aBullet[nCntBullet].bUse)
 		{//弾が使用されている
-			//当たり判定
-			CollisionWallBullet(nCntBullet);
+			//今いる位置を前回の位置にする
+			g_aBullet[nCntBullet].posOld = g_aBullet[nCntBullet].pos;
 
 			//位置更新
 			g_aBullet[nCntBullet].pos += g_aBullet[nCntBullet].move;
+
+			//当たり判定
+			CollisionWallBullet(nCntBullet);
+			CollisionObjBullet(nCntBullet);
 
 			//影位置設定
 			SetPositionShadow(g_aBullet[nCntBullet].nIdxShadow, g_aBullet[nCntBullet].pos);
@@ -293,6 +301,87 @@ void CollisionWallBullet(int nCount)
 			{
 				g_aBullet[nCount].bUse = false;
 				ReleaseIdxShadow(g_aBullet[nCount].nIdxShadow);
+			}
+		}
+	}
+}
+
+//========================
+//弾当たり判定処理
+//========================
+void CollisionObjBullet(int nCount)
+{
+	Object *obj = GetObj();
+	D3DXVECTOR3 pos0x, pos1x, pos0z, pos1z;
+	D3DXVECTOR3 vecLinex, vecToPosx, vecLinez, vecToPosz;
+	D3DXVECTOR3 vecMove;
+	float fAreaA, fAreaB;
+
+	for (int nCntObj = 0; nCntObj < MAX_OBJECT; nCntObj++, obj++)
+	{
+		if (obj->bUse == true)
+		{
+			//各2頂点求める
+			pos0x = obj->pos + D3DXVECTOR3(obj->vtxMin.x, 0.0f, 0.0f);
+			pos1x = obj->pos + D3DXVECTOR3(obj->vtxMax.x, 0.0f, 0.0f);
+			pos0z = obj->pos + D3DXVECTOR3(0.0f, 0.0f, obj->vtxMax.z);
+			pos1z = obj->pos + D3DXVECTOR3(0.0f, 0.0f, obj->vtxMin.z);
+
+			//ベクトル求める
+			//move
+			vecMove = g_aBullet[nCount].pos - g_aBullet[nCount].posOld;
+
+			//X
+			vecLinex = pos1x - pos0x;
+			vecToPosx = g_aBullet[nCount].pos - pos0x;
+
+			//Z
+			vecLinez = pos1z - pos0z;
+			vecToPosz = g_aBullet[nCount].pos - pos0z;
+
+			//当たり判定本番
+			for (int nCount = 0; nCount < 2; nCount++)//仮
+			{
+				//X
+				//面積求める
+				fAreaA = (vecToPosx.z * vecMove.x) - (vecToPosx.x * vecMove.z);
+				fAreaB = (vecLinex.z * vecMove.x) - (vecLinex.x * vecMove.z);
+
+				//左側AND範囲内
+				if ((vecLinex.z * vecToPosx.x) - (vecLinex.x * vecToPosx.z) <= 0 && fAreaA / fAreaB >= 0.0f && fAreaA / fAreaB <= 1.0f)
+				{
+					g_aBullet[nCount].bUse = false;
+					ReleaseIdxShadow(g_aBullet[nCount].nIdxShadow);
+				}
+
+				//Z
+				//面積求める
+				fAreaA = (vecToPosz.z * vecMove.x) - (vecToPosz.x * vecMove.z);
+				fAreaB = (vecLinez.z * vecMove.x) - (vecLinez.x * vecMove.z);
+
+				//左側AND範囲内
+				if ((vecLinez.z * vecToPosz.x) - (vecLinez.x * vecToPosz.z) <= 0 && fAreaA / fAreaB >= 0.0f && fAreaA / fAreaB <= 1.0f)
+				{
+					g_aBullet[nCount].bUse = false;
+					ReleaseIdxShadow(g_aBullet[nCount].nIdxShadow);
+				}
+
+				//ベクトル反転
+				//X
+				vecLinex.x *= -1.0f;
+				vecLinex.y *= -1.0f;
+				vecLinex.z *= -1.0f;
+				vecToPosx.x *= -1.0f;
+				vecToPosx.y *= -1.0f;
+				vecToPosx.z *= -1.0f;
+
+				//Z
+				vecLinez.x *= -1.0f;
+				vecLinez.y *= -1.0f;
+				vecLinez.z *= -1.0f;
+				vecToPosz.x *= -1.0f;
+				vecToPosz.y *= -1.0f;
+				vecToPosz.z *= -1.0f;
 			}
 		}
 	}
