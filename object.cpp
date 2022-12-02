@@ -120,7 +120,6 @@ void InitObject(void)
 			//”ñ•\Ž¦
 			g_aObject[nCntModel].bUse = false;
 		}
-		g_aObject[0].bUse = false;
 	}
 	g_aObject[0].pos = D3DXVECTOR3(100.0f, 7.0f, 100.0f);
 	g_aObject[1].pos = D3DXVECTOR3(-100.0f, 0.0f, 100.0f);

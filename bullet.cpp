@@ -10,6 +10,7 @@
 #include "wall.h"
 #include "player.h"
 #include "object.h"
+#include <assert.h>
 
 //マクロ
 #define MAX_BULLET				(128)	//弾の最大数
@@ -313,7 +314,7 @@ void CollisionObjBullet(int nCount)
 {
 	Object *obj = GetObj();
 	D3DXVECTOR3 pos0x, pos1x, pos0z, pos1z;
-	D3DXVECTOR3 vecLinex, vecToPosx, vecLinez, vecToPosz;
+	D3DXVECTOR3 vecLinex, vecToPosx, vecToPosxOps, vecLinez, vecToPosz, vecToPoszOps;
 	D3DXVECTOR3 vecMove;
 	float fAreaA, fAreaB;
 
@@ -322,10 +323,10 @@ void CollisionObjBullet(int nCount)
 		if (obj->bUse == true)
 		{
 			//各2頂点求める
-			pos0x = obj->pos + D3DXVECTOR3(obj->vtxMin.x, 0.0f, 0.0f);
-			pos1x = obj->pos + D3DXVECTOR3(obj->vtxMax.x, 0.0f, 0.0f);
-			pos0z = obj->pos + D3DXVECTOR3(0.0f, 0.0f, obj->vtxMax.z);
-			pos1z = obj->pos + D3DXVECTOR3(0.0f, 0.0f, obj->vtxMin.z);
+			pos0x = obj->pos + D3DXVECTOR3(obj->vtxMin.x, 0.0f, obj->vtxMin.z);
+			pos1x = obj->pos + D3DXVECTOR3(obj->vtxMax.x, 0.0f, obj->vtxMin.z);
+			pos0z = obj->pos + D3DXVECTOR3(obj->vtxMax.x, 0.0f, obj->vtxMin.z);
+			pos1z = obj->pos + D3DXVECTOR3(obj->vtxMax.x, 0.0f, obj->vtxMax.z);
 
 			//ベクトル求める
 			//move
@@ -334,54 +335,44 @@ void CollisionObjBullet(int nCount)
 			//X
 			vecLinex = pos1x - pos0x;
 			vecToPosx = g_aBullet[nCount].pos - pos0x;
+			vecToPosxOps = g_aBullet[nCount].pos - (obj->pos + D3DXVECTOR3(obj->vtxMax.x, 0.0f, obj->vtxMax.z));
 
 			//Z
 			vecLinez = pos1z - pos0z;
 			vecToPosz = g_aBullet[nCount].pos - pos0z;
+			vecToPoszOps = g_aBullet[nCount].pos - (obj->pos + D3DXVECTOR3(obj->vtxMin.x, 0.0f, obj->vtxMax.z));
 
 			//当たり判定本番
-			for (int nCount = 0; nCount < 2; nCount++)//仮
+			//X
+			//面積求める
+			fAreaA = (vecToPosx.z * vecMove.x) - (vecToPosx.x * vecMove.z);
+			fAreaB = (vecLinex.z * vecMove.x) - (vecLinex.x * vecMove.z);
+
+			//左側AND範囲内
+			if ((vecLinex.z * vecToPosx.x) - (vecLinex.x * vecToPosx.z) <= 0 && (-vecLinex.z * vecToPosxOps.x) - (-vecLinex.x * vecToPosxOps.z) <= 0)
 			{
-				//X
-				//面積求める
-				fAreaA = (vecToPosx.z * vecMove.x) - (vecToPosx.x * vecMove.z);
-				fAreaB = (vecLinex.z * vecMove.x) - (vecLinex.x * vecMove.z);
-
-				//左側AND範囲内
-				if ((vecLinex.z * vecToPosx.x) - (vecLinex.x * vecToPosx.z) <= 0 && fAreaA / fAreaB >= 0.0f && fAreaA / fAreaB <= 1.0f)
+ 				if (fAreaA / fAreaB >= 0.0f && fAreaA / fAreaB <= 1.0f)
 				{
 					g_aBullet[nCount].bUse = false;
 					ReleaseIdxShadow(g_aBullet[nCount].nIdxShadow);
+					break;
 				}
+			}
 
-				//Z
-				//面積求める
-				fAreaA = (vecToPosz.z * vecMove.x) - (vecToPosz.x * vecMove.z);
-				fAreaB = (vecLinez.z * vecMove.x) - (vecLinez.x * vecMove.z);
+			//Z
+			//面積求める
+			fAreaA = (vecToPosz.z * vecMove.x) - (vecToPosz.x * vecMove.z);
+			fAreaB = (vecLinez.z * vecMove.x) - (vecLinez.x * vecMove.z);
 
-				//左側AND範囲内
-				if ((vecLinez.z * vecToPosz.x) - (vecLinez.x * vecToPosz.z) <= 0 && fAreaA / fAreaB >= 0.0f && fAreaA / fAreaB <= 1.0f)
+			//左側AND範囲内
+			if ((vecLinez.z * vecToPosz.x) - (vecLinex.z * vecToPosz.z) <= 0 && (-vecLinez.z * vecToPoszOps.x) - (-vecLinez.x * vecToPoszOps.z) <= 0)
+			{
+				if (fAreaA / fAreaB >= 0.0f && fAreaA / fAreaB <= 1.0f)
 				{
 					g_aBullet[nCount].bUse = false;
 					ReleaseIdxShadow(g_aBullet[nCount].nIdxShadow);
+					break;
 				}
-
-				//ベクトル反転
-				//X
-				vecLinex.x *= -1.0f;
-				vecLinex.y *= -1.0f;
-				vecLinex.z *= -1.0f;
-				vecToPosx.x *= -1.0f;
-				vecToPosx.y *= -1.0f;
-				vecToPosx.z *= -1.0f;
-
-				//Z
-				vecLinez.x *= -1.0f;
-				vecLinez.y *= -1.0f;
-				vecLinez.z *= -1.0f;
-				vecToPosz.x *= -1.0f;
-				vecToPosz.y *= -1.0f;
-				vecToPosz.z *= -1.0f;
 			}
 		}
 	}
