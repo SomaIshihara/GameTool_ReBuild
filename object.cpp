@@ -12,7 +12,9 @@
 #include "bullet.h"
 
 //マクロ
-#define MODEL_MOVE_SPEED	(1.0f)	//モデル移動速度
+#define OBJ_MOVE_SPEED	(1.0f)	//モデル移動速度
+#define OBJ_RED_ALPHA		(0.3f)	//赤さんの不透明度
+#define OBJ_DAMAGE_TIME	(5)		//ダメージ状態にする時間(F)
 
 //グローバル変数
 Object g_aObject[MAX_OBJECT];
@@ -40,6 +42,9 @@ void InitObject(void)
 	{
 		g_aObject[nCntModel].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 		g_aObject[nCntModel].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		g_aObject[nCntModel].state = OBJSTATE_MAX;
+		g_aObject[nCntModel].nLife = 5;
+		g_aObject[nCntModel].nCounterState = 0;
 
 		//Xファイル読み込み		
 		if (SUCCEEDED(D3DXLoadMeshFromX(
@@ -155,8 +160,27 @@ void UpdateObject(void)
 {
 	for (int nCount = 0; nCount < MAX_OBJECT; nCount++)
 	{
-		//影位置設定
-		SetPositionShadow(g_aObject[nCount].nIdxShadow, g_aObject[nCount].pos);
+		if (g_aObject[nCount].bUse == true)
+		{
+			//状態に応じて処理
+			switch (g_aObject[nCount].state)
+			{
+			case OBJSTATE_NONE:
+				break;
+			case OBJSTATE_DAMAGE:
+				g_aObject[nCount].nCounterState--;
+				if (g_aObject[nCount].nCounterState <= 0)
+				{
+					g_aObject[nCount].state = OBJSTATE_NONE;
+				}
+				break;
+			case OBJSTATE_BROKEN:
+				break;
+			}
+
+			//影位置設定
+			SetPositionShadow(g_aObject[nCount].nIdxShadow, g_aObject[nCount].pos);
+		}
 	}
 }
 
@@ -197,7 +221,15 @@ void DrawObject(void)
 			for (int nCntMat = 0; nCntMat < (int)g_aObject[nCount].dwNumMat; nCntMat++)
 			{
 				//マテリアル設定
-				pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+				D3DMATERIAL9 changeMat = pMat[nCntMat].MatD3D;
+				//ダメージ状態なら赤追加
+				if (g_aObject[nCount].state == OBJSTATE_DAMAGE)
+				{
+					changeMat.Diffuse.r = 1.0f * OBJ_RED_ALPHA + pMat[nCntMat].MatD3D.Diffuse.r * (1.0f - OBJ_RED_ALPHA);
+					changeMat.Diffuse.g = 0.0f * OBJ_RED_ALPHA + pMat[nCntMat].MatD3D.Diffuse.g * (1.0f - OBJ_RED_ALPHA);
+					changeMat.Diffuse.b = 0.0f * OBJ_RED_ALPHA + pMat[nCntMat].MatD3D.Diffuse.b * (1.0f - OBJ_RED_ALPHA);
+				}
+				pDevice->SetMaterial(&changeMat);
 
 				//テクスチャ設定
 				pDevice->SetTexture(0, g_aObject[nCount].apTexture[nCntMat]);
@@ -218,4 +250,30 @@ void DrawObject(void)
 Object *GetObj(void)
 {
 	return &g_aObject[0];
+}
+
+//========================
+//当たった時の処理
+//========================
+void HitObj(int nNumObj)
+{
+	g_aObject[nNumObj].nLife--;
+	if (g_aObject[nNumObj].nLife <= 0)
+	{//ぶっこわーす処理
+		DestroyObj(nNumObj);
+		ReleaseIdxShadow(g_aObject[nNumObj].nIdxShadow);
+	}
+	else
+	{
+		g_aObject[nNumObj].state = OBJSTATE_DAMAGE;
+		g_aObject[nNumObj].nCounterState = OBJ_DAMAGE_TIME;
+	}
+}
+
+//========================
+//ぶっこわーす処理
+//========================
+void DestroyObj(int nNumObj)
+{
+	g_aObject[nNumObj].bUse = false;
 }

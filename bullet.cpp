@@ -357,8 +357,8 @@ void CollisionObjBullet(int nCount)
  				if (fAreaA / fAreaB >= 0.0f && fAreaA / fAreaB <= 1.0f)
 				{
 					g_aBullet[nCount].bUse = false;
+					HitObj(nCntObj);
 					ReleaseIdxShadow(g_aBullet[nCount].nIdxShadow);
-					break;
 				}
 			}
 
@@ -373,8 +373,8 @@ void CollisionObjBullet(int nCount)
 				if (fAreaA / fAreaB >= 0.0f && fAreaA / fAreaB <= 1.0f)
 				{
 					g_aBullet[nCount].bUse = false;
+					HitObj(nCntObj);
 					ReleaseIdxShadow(g_aBullet[nCount].nIdxShadow);
-					break;
 				}
 			}
 		}
