@@ -262,6 +262,9 @@ void SetBullet(D3DXVECTOR3 pos, float fSpeed,float fRot, D3DXCOLOR col)
 			//âeî‘çÜê›íË
 			g_aBullet[nCntBullet].nIdxShadow = SetShadow();
 
+			//âeà íuê›íË
+			SetPositionShadow(g_aBullet[nCntBullet].nIdxShadow, g_aBullet[nCntBullet].pos);
+
 			//égópÇµÇƒÇ¢ÇÈÇ±Ç∆Ç…Ç∑ÇÈ
 			g_aBullet[nCntBullet].bUse = true;
 

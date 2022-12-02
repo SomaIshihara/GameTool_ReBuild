@@ -20,7 +20,7 @@ Object g_aObject[MAX_OBJECT];
 //ファイルパス
 const char* c_apFilePathObject[] =
 {
-	"data\\MODEL\\obj_bench_01.x",
+	"data\\MODEL\\obj_branco_01.x",
 	"data\\MODEL\\takibi001.x"
 };
 
