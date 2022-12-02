@@ -338,7 +338,10 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	SetWall(D3DXVECTOR3(0.0f, 0.0f, -300.0f), D3DXVECTOR3(0.0f, 1.0f * D3DX_PI, 0.0f), 600.0f, 50.0f);	//後ろ
 	SetWall(D3DXVECTOR3(-300.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, -0.5f * D3DX_PI, 0.0f), 600.0f, 50.0f);	//左
 	SetWall(D3DXVECTOR3(300.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.5f * D3DX_PI, 0.0f), 600.0f, 50.0f);	//右
-	//SetWall(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.25f * D3DX_PI, 0.0f), 200.0f, 50.0f);
+	
+	//オブジェクト生成
+	SetObject(BLUEPRINTIDX_BRANCO, D3DXVECTOR3(100.0f, 7.0f, 100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 5);
+	SetObject(BLUEPRINTIDX_TAKIBI, D3DXVECTOR3(-100.0f, 0.0f, 100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 5);
 
 	return S_OK;
 }

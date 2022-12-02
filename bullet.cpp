@@ -315,21 +315,22 @@ void CollisionWallBullet(int nCount)
 //========================
 void CollisionObjBullet(int nCount)
 {
-	Object *obj = GetObj();
+	BluePrint *pbprint = GetBluePrint();
+	Object *pObject = GetObj();
 	D3DXVECTOR3 pos0x, pos1x, pos0z, pos1z;
 	D3DXVECTOR3 vecLinex, vecToPosx, vecToPosxOps, vecLinez, vecToPosz, vecToPoszOps;
 	D3DXVECTOR3 vecMove;
 	float fAreaA, fAreaB;
 
-	for (int nCntObj = 0; nCntObj < MAX_OBJECT; nCntObj++, obj++)
+	for (int nCntObj = 0; nCntObj < MAX_BLUEPRINT; nCntObj++, pObject++)
 	{
-		if (obj->bUse == true)
+		if (pObject->bUse == true)
 		{
 			//各2頂点求める
-			pos0x = obj->pos + D3DXVECTOR3(obj->vtxMin.x, 0.0f, obj->vtxMin.z);
-			pos1x = obj->pos + D3DXVECTOR3(obj->vtxMax.x, 0.0f, obj->vtxMin.z);
-			pos0z = obj->pos + D3DXVECTOR3(obj->vtxMax.x, 0.0f, obj->vtxMin.z);
-			pos1z = obj->pos + D3DXVECTOR3(obj->vtxMax.x, 0.0f, obj->vtxMax.z);
+			pos0x = pObject->pos + D3DXVECTOR3(pbprint->vtxMin.x, 0.0f, pbprint->vtxMin.z);
+			pos1x = pObject->pos + D3DXVECTOR3(pbprint->vtxMax.x, 0.0f, pbprint->vtxMin.z);
+			pos0z = pObject->pos + D3DXVECTOR3(pbprint->vtxMax.x, 0.0f, pbprint->vtxMin.z);
+			pos1z = pObject->pos + D3DXVECTOR3(pbprint->vtxMax.x, 0.0f, pbprint->vtxMax.z);
 
 			//ベクトル求める
 			//move
@@ -338,12 +339,12 @@ void CollisionObjBullet(int nCount)
 			//X
 			vecLinex = pos1x - pos0x;
 			vecToPosx = g_aBullet[nCount].pos - pos0x;
-			vecToPosxOps = g_aBullet[nCount].pos - (obj->pos + D3DXVECTOR3(obj->vtxMax.x, 0.0f, obj->vtxMax.z));
+			vecToPosxOps = g_aBullet[nCount].pos - (pObject->pos + D3DXVECTOR3(pbprint->vtxMax.x, 0.0f, pbprint->vtxMax.z));
 
 			//Z
 			vecLinez = pos1z - pos0z;
 			vecToPosz = g_aBullet[nCount].pos - pos0z;
-			vecToPoszOps = g_aBullet[nCount].pos - (obj->pos + D3DXVECTOR3(obj->vtxMin.x, 0.0f, obj->vtxMax.z));
+			vecToPoszOps = g_aBullet[nCount].pos - (pObject->pos + D3DXVECTOR3(pbprint->vtxMin.x, 0.0f, pbprint->vtxMax.z));
 
 			//当たり判定本番
 			//X
