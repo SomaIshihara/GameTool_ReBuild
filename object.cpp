@@ -13,7 +13,7 @@
 
 //マクロ
 #define OBJ_MOVE_SPEED	(1.0f)	//モデル移動速度
-#define OBJ_RED_ALPHA		(0.3f)	//赤さんの不透明度
+#define OBJ_RED_ALPHA		(0.5f)	//赤さんの不透明度
 #define OBJ_DAMAGE_TIME	(5)		//ダメージ状態にする時間(F)
 
 //グローバル変数
