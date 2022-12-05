@@ -101,7 +101,7 @@ void UpdateCamera(void)
 		FixPosR();
 	}
 #endif
-
+#if 0
 	//Ž‹“_
 	if (GetKeyboardPress(DIK_Z) == true)
 	{//-
@@ -115,7 +115,7 @@ void UpdateCamera(void)
 		FixRot();
 		FixPosV();
 	}
-
+#endif
 #if 0
 	//ˆÚ“®
 	if (GetKeyboardPress(DIK_A) == true)

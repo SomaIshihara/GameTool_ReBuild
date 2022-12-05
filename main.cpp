@@ -453,7 +453,11 @@ void Draw(void)
 	if (SUCCEEDED(g_pD3DDevice->BeginScene()))
 	{//成功した場合
 		 //FPSを文字にして送る
-		PrintDebugProc("FPS:%d\n", g_nCountFPS);
+		PrintDebugProc("FPS:%d\n\n", g_nCountFPS);
+
+		//操作方法を文字にして送る
+		PrintDebugProc("移動:WASD, 弾発射:SPACE, 視点移動:マウス移動\n");
+		PrintDebugProc("オブジェクト再生成:F5\n\n");
 
 		//カメラ設定
 		SetCamera();
