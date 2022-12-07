@@ -240,3 +240,4 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/data/MODEL/階層構造設定_sorano.txt
