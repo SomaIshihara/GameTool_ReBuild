@@ -23,6 +23,7 @@ void FixRot(void);
 //グローバル変数
 Camera g_camera;	//カメラ情報
 LPD3DXFONT g_pFontCamera = NULL;	//フォントへのポインタ
+bool g_bDebugCamera = false;			//カーソル表示非表示切り替え
 
 //========================
 //初期化処理
@@ -57,8 +58,12 @@ void UninitCamera(void)
 //========================
 void UpdateCamera(void)
 {
+	if (GetKeyboardTrigger(DIK_F2) == true)
+	{
+		g_bDebugCamera = g_bDebugCamera ? false : true;
+	}
 	//視点
-	if (GetMouseClickPress(MOUSE_CLICK_LEFT) == true)
+	if (g_bDebugCamera == true)
 	{
 		//視点設定
 		g_camera.rot.y -= GetMouseMove().x * CAMERA_MOU_ROT_SPEED;
@@ -168,7 +173,7 @@ void SetCamera(void)
 	D3DXMatrixIdentity(&g_camera.mtxProjection);
 
 	//作成
-	D3DXMatrixPerspectiveFovLH(&g_camera.mtxProjection, D3DXToRadian(45.0f), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 10.0f, 1500.0f);
+	D3DXMatrixPerspectiveFovLH(&g_camera.mtxProjection, D3DXToRadian(45.0f), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 10.0f, 1600.0f);
 
 	//設定
 	pDevice->SetTransform(D3DTS_PROJECTION, &g_camera.mtxProjection);

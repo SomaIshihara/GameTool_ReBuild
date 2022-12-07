@@ -38,12 +38,7 @@ void CollisionWallPlayer(int nNumber);
 void CollisionObjPlayer(void);
 
 //グローバル変数
-//LPD3DXMESH g_pMeshPlayer = NULL;			//メッシュへのポインタ
-//LPD3DXBUFFER g_pBuffMatPlayer = NULL;		//マテリアルへのポインタ
-//DWORD g_dwNumMatPlayer = 0;					//マテリアル数
 Player g_player;
-//D3DXMATRIX g_mtxWorldPlayer;				//ワールドマトリックス
-//LPDIRECT3DTEXTURE9 g_apTexturemodel[16] = {};	//テクスチャポインタ
 int g_nIdxShadow = -1;
 
 //ファイル名
@@ -269,9 +264,9 @@ void UpdatePlayer(void)
 	g_player.move.x += (0 - g_player.move.x) * DUMP_COEF;
 	g_player.move.z += (0 - g_player.move.z) * DUMP_COEF;
 
-	if (GetKeyboardTrigger(DIK_SPACE) == true)
+	if (GetMouseClickTrigger(MOUSE_CLICK_LEFT) == true)
 	{
-		SetBullet(g_player.pos, 5.0f, g_player.rot.y, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+		SetBullet(g_player.pos + D3DXVECTOR3(0.0f, 40.0f, 0.0f) , 5.0f, g_player.rot.y, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 
 	//影位置設定

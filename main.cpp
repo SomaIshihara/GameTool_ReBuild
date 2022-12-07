@@ -117,7 +117,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hInstancePrev, LPSTR lpCmdLine
 	UpdateWindow(hWnd);
 
 	//カーソルを消す
-	//SetShowCursor(false);
+	SetShowCursor(false);
 
 	//メッセージループ
 	while (1)
@@ -134,7 +134,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hInstancePrev, LPSTR lpCmdLine
 #endif
 
 		//カーソル表示非表示更新
-		//UpdateShowCursor();
+		UpdateShowCursor();
 
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) != 0)
 		{//windowsの処理
@@ -204,19 +204,19 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		switch (wParam)
 		{
 		case VK_ESCAPE:
-			//SetShowCursor(true);
+			SetShowCursor(true);
 			nID = MessageBox(hWnd, "終了しますか？", "終了メッセージ", MB_YESNO);
 
 			if (nID == IDYES)
 			{
 				DestroyWindow(hWnd);	//Destroyメッセージを送る
 			}
-			//SetShowCursor(false);
+			SetShowCursor(false);
 			break;
 		}
 		break;
 	case WM_CLOSE:
-		//SetShowCursor(true);
+		SetShowCursor(true);
 		nID = MessageBox(hWnd, "終了しますか？", "終了メッセージ", MB_YESNO);
 
 		if (nID == IDYES)
@@ -225,7 +225,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		else
 		{
-			//SetShowCursor(false);
+			SetShowCursor(false);
 			return 0;
 		}
 		break;
@@ -334,10 +334,10 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	InitDebugProc();
 
 	//壁生成
-	SetWall(D3DXVECTOR3(0.0f, 0.0f, 300.0f), D3DXVECTOR3(0.0f, 0.0f * D3DX_PI, 0.0f), 600.0f, 50.0f);	//前
-	SetWall(D3DXVECTOR3(0.0f, 0.0f, -300.0f), D3DXVECTOR3(0.0f, 1.0f * D3DX_PI, 0.0f), 600.0f, 50.0f);	//後ろ
-	SetWall(D3DXVECTOR3(-300.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, -0.5f * D3DX_PI, 0.0f), 600.0f, 50.0f);	//左
-	SetWall(D3DXVECTOR3(300.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.5f * D3DX_PI, 0.0f), 600.0f, 50.0f);	//右
+	SetWall(D3DXVECTOR3(0.0f, 0.0f, 800.0f), D3DXVECTOR3(0.0f, 0.0f * D3DX_PI, 0.0f), 1200.0f, 50.0f);		//前
+	SetWall(D3DXVECTOR3(0.0f, 0.0f, -800.0f), D3DXVECTOR3(0.0f, 1.0f * D3DX_PI, 0.0f), 1200.0f, 50.0f);		//後ろ
+	SetWall(D3DXVECTOR3(-600.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, -0.5f * D3DX_PI, 0.0f), 1600.0f, 50.0f);	//左
+	SetWall(D3DXVECTOR3(600.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.5f * D3DX_PI, 0.0f), 1600.0f, 50.0f);	//右
 	
 	//オブジェクト生成
 	SetObject(BLUEPRINTIDX_BRANCO, D3DXVECTOR3(100.0f, 7.0f, 100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 5);

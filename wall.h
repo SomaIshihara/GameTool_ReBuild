@@ -9,8 +9,8 @@
 
 //É}ÉNÉç
 #define MAX_WALL		(16)	//ï«ç≈ëÂêî
-#define WALL_WIDTH		(600)
-#define WALL_DEPTH		(600)
+#define WALL_WIDTH		(1200)
+#define WALL_DEPTH		(1600)
 
 //ï«ç\ë¢ëÃ
 typedef struct
