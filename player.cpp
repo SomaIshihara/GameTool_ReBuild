@@ -49,17 +49,16 @@ int g_nIdxShadow = -1;
 //ファイル名
 const char *c_pFileNamePlayer[] =
 {
-	"data\\MODEL\\sorano\\body.x",
-	"data\\MODEL\\sorano\\face.x",
-	"data\\MODEL\\sorano\\hair.x",
-	"data\\MODEL\\sorano\\right_sleeve.x",
-	"data\\MODEL\\sorano\\left_sleeve.x",
-	"data\\MODEL\\sorano\\right_arm.x",
-	"data\\MODEL\\sorano\\left_arm.x",
-	"data\\MODEL\\sorano\\right_leg.x",
-	"data\\MODEL\\sorano\\right_shoes.x",
-	"data\\MODEL\\sorano\\left_leg.x",
-	"data\\MODEL\\sorano\\left_shoes.x"
+	"data\\MODEL\\exithuman_x\\01_Body.x",
+	"data\\MODEL\\exithuman_x\\02_Head.x",
+	"data\\MODEL\\exithuman_x\\03_Left_Arm.x",
+	"data\\MODEL\\exithuman_x\\04_Left_Hand.x",
+	"data\\MODEL\\exithuman_x\\05_Right_Arm.x",
+	"data\\MODEL\\exithuman_x\\06_Right_Hand.x",
+	"data\\MODEL\\exithuman_x\\07_Left_Leg.x",
+	"data\\MODEL\\exithuman_x\\08_Left_Foot.x",
+	"data\\MODEL\\exithuman_x\\09_Right_Leg.x",
+	"data\\MODEL\\exithuman_x\\10_Right_Foot.x"
 };
 
 //========================
@@ -115,48 +114,44 @@ void InitPlayer(void)
 	//階層構造設定
 	//体
 	g_player.aModel[0].nIdxModelParent = -1;
-	g_player.aModel[0].pos = D3DXVECTOR3(0.0f, 25.0f, 0.0f);
+	g_player.aModel[0].pos = D3DXVECTOR3(0.0f, 35.0f, 0.0f);
 	g_player.aModel[0].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	//頭
 	g_player.aModel[1].nIdxModelParent = 0;
-	g_player.aModel[1].pos = D3DXVECTOR3(0.0f, 11.5f, 0.0f);
+	g_player.aModel[1].pos = D3DXVECTOR3(0.0f, 10.0f, 0.0f);
 	g_player.aModel[1].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	//髪
-	g_player.aModel[2].nIdxModelParent = 1;
-	g_player.aModel[2].pos = D3DXVECTOR3(0.0f, 10.0f, 1.5f);
-	g_player.aModel[2].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	//右袖
-	g_player.aModel[3].nIdxModelParent = 0;
-	g_player.aModel[3].pos = D3DXVECTOR3(-5.0f, 8.0f, 0.0f);
-	g_player.aModel[3].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	//左袖
-	g_player.aModel[4].nIdxModelParent = 0;
-	g_player.aModel[4].pos = D3DXVECTOR3(5.0f, 8.0f, 0.0f);
-	g_player.aModel[4].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	//右腕
-	g_player.aModel[5].nIdxModelParent = 3;
-	g_player.aModel[5].pos = D3DXVECTOR3(-4.5f, 0.0f, 0.0f);
-	g_player.aModel[5].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	//左腕
-	g_player.aModel[6].nIdxModelParent = 4;
-	g_player.aModel[6].pos = D3DXVECTOR3(4.5f, 0.0f, 0.0f);
-	g_player.aModel[6].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	//右腿
-	g_player.aModel[7].nIdxModelParent = 0;
-	g_player.aModel[7].pos = D3DXVECTOR3(-3.0f, -5.5f, 0.0f);
-	g_player.aModel[7].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	//右足
-	g_player.aModel[8].nIdxModelParent = 7;
-	g_player.aModel[8].pos = D3DXVECTOR3(0.0f, -15.0f, 0.0f);
-	g_player.aModel[8].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	g_player.aModel[2].nIdxModelParent = 0;
+	g_player.aModel[2].pos = D3DXVECTOR3(-5.0f, 7.0f, 0.0f);
+	g_player.aModel[2].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	//左手
+	g_player.aModel[3].nIdxModelParent = 2;
+	g_player.aModel[3].pos = D3DXVECTOR3(-10.0f, 0.0f, 0.0f);
+	g_player.aModel[3].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	//右腕
+	g_player.aModel[4].nIdxModelParent = 0;
+	g_player.aModel[4].pos = D3DXVECTOR3(5.0f, 7.0f, 0.0f);
+	g_player.aModel[4].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	//右手
+	g_player.aModel[5].nIdxModelParent = 4;
+	g_player.aModel[5].pos = D3DXVECTOR3(10.0f, 0.0f, 0.0f);
+	g_player.aModel[5].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	//左腿
-	g_player.aModel[9].nIdxModelParent = 0;
-	g_player.aModel[9].pos = D3DXVECTOR3(3.0f, -5.5f, 0.0f);
-	g_player.aModel[9].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	g_player.aModel[6].nIdxModelParent = 0;
+	g_player.aModel[6].pos = D3DXVECTOR3(-3.0f, -8.0f, 0.0f);
+	g_player.aModel[6].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	//左足
-	g_player.aModel[10].nIdxModelParent = 9;
-	g_player.aModel[10].pos = D3DXVECTOR3(0.0f, -15.0f, 0.0f);
-	g_player.aModel[10].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	g_player.aModel[7].nIdxModelParent = 6;
+	g_player.aModel[7].pos = D3DXVECTOR3(0.0f, -12.0f, 0.0f);
+	g_player.aModel[7].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	//右腿
+	g_player.aModel[8].nIdxModelParent = 0;
+	g_player.aModel[8].pos = D3DXVECTOR3(3.0f, -8.0f, 0.0f);
+	g_player.aModel[8].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	//右足
+	g_player.aModel[9].nIdxModelParent = 8;
+	g_player.aModel[9].pos = D3DXVECTOR3(0.0f, -12.0f, 0.0f);
+	g_player.aModel[9].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	//影設定
 	g_nIdxShadow = SetShadow();
@@ -260,7 +255,7 @@ void UpdatePlayer(void)
 	g_player.pos.z += g_player.move.z;
 
 	//壁当たり判定
-	CollisionWallPlayer(0);
+	//CollisionWallPlayer(0);
 
 	//オブジェクト当たり判定
 	CollisionObjPlayer();

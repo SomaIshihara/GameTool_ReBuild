@@ -9,7 +9,7 @@
 
 #include "model.h"
 
-#define MAX_PMODEL	(11)
+#define MAX_PMODEL	(10)
 
 //プレイヤー構造体
 typedef struct
