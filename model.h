@@ -7,6 +7,16 @@
 #ifndef _MODEL_H_
 #define _MODEL_H_
 
+//マクロ
+#define EXITHUMAN_MODEL_NUM	(10)	//非常口の人に使われているモデル数
+
+//モデル名列挙
+typedef enum
+{
+	MODELNAME_EXITHUMAN = 0,
+	MODELNAME_MAX
+} MODELNAME;
+
 //モデル構造体
 typedef struct
 {
@@ -17,6 +27,7 @@ typedef struct
 	D3DXVECTOR3 rot;		//向き
 	D3DXMATRIX mtxWorld;	//ワールドマトリ
 	LPDIRECT3DTEXTURE9 apTexture[16];	//テクスチャポインタ
+	int nPartsNum;			//パーツ総数
 	int nIdxModelParent;	//親モデルインデックス
 } Model;
 
@@ -25,5 +36,6 @@ void InitModel(void);
 void UninitModel(void);
 void UpdateModel(void);
 void DrawModel(void);
+Model *GetModel(MODELNAME name);
 
 #endif // !_MODEL_H_

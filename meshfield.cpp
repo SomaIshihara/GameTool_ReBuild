@@ -35,7 +35,7 @@ void InitMeshfield(void)
 
 	//テクスチャ読み込み
 	D3DXCreateTextureFromFile(pDevice,
-		"data\\TEXTURE\\field000.jpg",
+		"data\\TEXTURE\\map.png",
 		&g_pTextureMeshfield);
 
 	//頂点バッファの生成
@@ -53,6 +53,8 @@ void InitMeshfield(void)
 		D3DPOOL_MANAGED,
 		&g_pIdxBuffMeshField,
 		NULL);
+
+	int hoge = MESHFIELD_IDXNUM;
 
 	//変数初期化
 	g_posMeshfield = D3DXVECTOR3(-MESHFIELD_WIDTH / 2 * MESHFIELD_LENGTH, 0.0f, MESHFIELD_HEIGHT / 2 * MESHFIELD_LENGTH);
@@ -77,7 +79,7 @@ void InitMeshfield(void)
 		pVtx->col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 
 		//テクスチャ座標
-		pVtx->tex = D3DXVECTOR2((float)(nCount % (MESHFIELD_WIDTH + 1)), (float)(nCount / (MESHFIELD_WIDTH + 1)));
+		pVtx->tex = D3DXVECTOR2(((float)(nCount % (MESHFIELD_WIDTH + 1)) / (MESHFIELD_WIDTH + 1)), ((float)(nCount / (MESHFIELD_WIDTH + 1)) / (MESHFIELD_HEIGHT + 1)));
 	}
 
 	//頂点バッファをアンロック

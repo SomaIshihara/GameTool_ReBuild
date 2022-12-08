@@ -1,16 +1,19 @@
 //==========================================
 //
-//プレイヤープログラムのヘッダ[player.h]
+//敵プログラムのヘッダ[enemy.h]
 //Author:石原颯馬
 //
 //==========================================
-#ifndef _PLAYER_H_
-#define _PLAYER_H_
+#ifndef _ENEMY_H_
+#define _ENEMY_H_
 
 #include "main.h"
 #include "model.h"
 
-//プレイヤー構造体
+//マクロ
+#define MAX_ENEMY	(64)	//敵総数
+
+//敵構造体
 typedef struct
 {
 	D3DXVECTOR3 pos;		//位置
@@ -19,16 +22,17 @@ typedef struct
 	float fAngle;
 	D3DXVECTOR3 move;		//移動量
 	D3DXVECTOR3 rot;		//向き
-	Model aModel[EXITHUMAN_MODEL_NUM];		//（仮
+	Model *pModel;			//使用モデルポインタ
 	int nNumModel;			//パーツ総数
 	D3DXMATRIX mtxWorld;	//ワールドマトリ
-} Player;
+	int nIdxShadow;			//影番号
+} Enemy;
 
 //プロトタイプ宣言
-void InitPlayer(void);
-void UninitPlayer(void);
-void UpdatePlayer(void);
-void DrawPlayer(void);
-Player *GetPlayer(void);
+void InitEnemy(void);
+void UninitEnemy(void);
+void UpdateEnemy(void);
+void DrawEnemy(void);
+Enemy *GetEnemy(void);
 
-#endif // !_PLAYER_H_
+#endif // !_ENEMY_H_

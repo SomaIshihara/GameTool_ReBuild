@@ -6,16 +6,13 @@
 //==========================================
 #include "main.h"
 #include "input.h"
-#include "field.h"
 #include "wall.h"
 #include "camera.h"
 #include "light.h"
 #include "player.h"
 #include "shadow.h"
-#include "billboard.h"
 #include "bullet.h"
 #include "meshfield.h"
-#include "meshcylinder.h"
 #include "object.h"
 #include "debugproc.h"
 
@@ -322,11 +319,8 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	//オブジェクト初期化
 	InitCamera();
 	InitLight();
-	InitField();
 	InitMeshfield();
-	//InitMeshCylinder();
 	InitWall();
-	//InitBillboard();
 	InitBullet();
 	InitShadow();
 	InitPlayer();
@@ -342,6 +336,8 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	//オブジェクト生成
 	SetObject(BLUEPRINTIDX_BRANCO, D3DXVECTOR3(100.0f, 7.0f, 100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 5);
 	SetObject(BLUEPRINTIDX_TAKIBI, D3DXVECTOR3(-100.0f, 0.0f, 100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 5);
+	SetObject(BLUEPRINTIDX_JOBI, D3DXVECTOR3(-65.0f, 0.0f, -1430.0f), D3DXVECTOR3(0.0f, -0.5f * D3DX_PI, 0.0f), 5);
+	SetObject(BLUEPRINTIDX_SUBWAYENTRANCE, D3DXVECTOR3(300.0f, 0.0f, 1450.0f), D3DXVECTOR3(0.0f, 0.5f * D3DX_PI, 0.0f), 5);
 
 	return S_OK;
 }
@@ -357,11 +353,8 @@ void Uninit(void)
 	UninitPlayer();
 	UninitShadow();
 	UninitBullet();
-	//UninitBillboard();
 	UninitWall();
-	//UninitMeshCylinder();
 	UninitMeshfield();
-	UninitField();
 	UninitLight();
 	UninitCamera();
 
@@ -397,20 +390,11 @@ void Update(void)
 	//影
 	UpdateShadow();
 
-	//地面
-	UpdateField();
-
 	//メッシュフィールド
 	UpdateMeshfield();
 
-	//メッシュ筒
-	//UpdateMeshCylinder();
-
 	//壁
 	UpdateWall();
-
-	//ビルボード
-	//UpdateBillboard();
 
 	//弾
 	UpdateBullet();
@@ -456,30 +440,21 @@ void Draw(void)
 		PrintDebugProc("FPS:%d\n\n", g_nCountFPS);
 
 		//操作方法を文字にして送る
-		PrintDebugProc("移動:WASD, 弾発射:SPACE, 視点移動:マウス移動\n");
+		PrintDebugProc("移動:WASD, 弾発射:SPACE, 視点移動:マウス移動(F2で有効化)\n");
 		PrintDebugProc("オブジェクト再生成:F5\n\n");
 
 		//カメラ設定
 		SetCamera();
 
 		//オブジェクト描画
-		//地面
-		//DrawField();
-
 		//メッシュフィールド
 		DrawMeshfield();
-
-		//メッシュ筒
-		//DrawMeshCylinder();
 
 		//壁
 		DrawWall();
 
 		//影
 		DrawShadow();
-
-		//ビルボード
-		//DrawBillboard();
 
 		//弾
 		DrawBullet();

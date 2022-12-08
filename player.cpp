@@ -76,7 +76,7 @@ void InitPlayer(void)
 	g_player.fAngle = atan2f(PLAYER_WIDTH, PLAYER_DEPTH);
 
 	//Xファイル読み込み
-	for (int nCntModel = 0; nCntModel < MAX_PMODEL; nCntModel++)
+	for (int nCntModel = 0; nCntModel < EXITHUMAN_MODEL_NUM; nCntModel++)
 	{
 		D3DXLoadMeshFromX(
 			c_pFileNamePlayer[nCntModel],
@@ -157,7 +157,7 @@ void InitPlayer(void)
 //========================
 void UninitPlayer(void)
 {
-	for (int nCntModel = 0; nCntModel < MAX_PMODEL; nCntModel++)
+	for (int nCntModel = 0; nCntModel < EXITHUMAN_MODEL_NUM; nCntModel++)
 	{
 		//メッシュの破棄
 		if (g_player.aModel[nCntModel].pMesh != NULL)
@@ -283,6 +283,9 @@ void DrawPlayer(void)
 	D3DMATERIAL9 matDef;			//現在のマテリアル保存用
 	D3DXMATERIAL *pMat;				//マテリアルデータへのポインタ
 
+	//プレイヤー位置表示
+	PrintDebugProc("Player.Pos = (x = %f, y = %f, z = %f)", g_player.pos.x, g_player.pos.y, g_player.pos.z);
+
 	//"プレイヤーの"ワールドマトリックス初期化
 	D3DXMatrixIdentity(&g_player.mtxWorld);
 
@@ -300,7 +303,7 @@ void DrawPlayer(void)
 	//現在のマテリアル取得
 	pDevice->GetMaterial(&matDef);
 
-	for (int nCntModel = 0; nCntModel < MAX_PMODEL; nCntModel++)
+	for (int nCntModel = 0; nCntModel < EXITHUMAN_MODEL_NUM; nCntModel++)
 	{
 		D3DXMATRIX mtxRotModel, mtxTransModel;	//計算用
 		D3DXMATRIX mtxParent;					//親のマトリ

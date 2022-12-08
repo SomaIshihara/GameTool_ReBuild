@@ -15,14 +15,22 @@
 #define MODEL_MOVE_SPEED	(1.0f)	//モデル移動速度
 
 //グローバル変数
-LPD3DXMESH g_pMeshModel = NULL;			//メッシュへのポインタ
-LPD3DXBUFFER g_pBuffMatModel = NULL;	//マテリアルへのポインタ
-DWORD g_dwNumMatModel = 0;				//マテリアル数
-D3DXVECTOR3 g_posModel;					//位置
-D3DXVECTOR3 g_rotModel;					//向き
-D3DXMATRIX g_mtxWorldModel;				//ワールドマトリックス
-LPDIRECT3DTEXTURE9 g_apTexturemodel[16] = {};	//テクスチャポインタ
-//int g_nIdxShadow = -1;
+Model g_aModel[MODELNAME_MAX][EXITHUMAN_MODEL_NUM];	//モデル構造体
+
+//ファイルパス
+const char *c_pFileNameModel[] =
+{
+	"data\\MODEL\\exithuman_x\\01_Body.x",
+	"data\\MODEL\\exithuman_x\\02_Head.x",
+	"data\\MODEL\\exithuman_x\\03_Left_Arm.x",
+	"data\\MODEL\\exithuman_x\\04_Left_Hand.x",
+	"data\\MODEL\\exithuman_x\\05_Right_Arm.x",
+	"data\\MODEL\\exithuman_x\\06_Right_Hand.x",
+	"data\\MODEL\\exithuman_x\\07_Left_Leg.x",
+	"data\\MODEL\\exithuman_x\\08_Left_Foot.x",
+	"data\\MODEL\\exithuman_x\\09_Right_Leg.x",
+	"data\\MODEL\\exithuman_x\\10_Right_Foot.x"
+};
 
 //========================
 //初期化処理
@@ -32,42 +40,80 @@ void InitModel(void)
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();	//デバイスの取得
 
 	//変数初期化
-	g_posModel = D3DXVECTOR3(0.0f, 10.0f, 0.0f);
-	g_rotModel = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	//g_nIdxShadow = -1;
+	
 
 	//Xファイル読み込み
-	D3DXLoadMeshFromX(
-		"data\\MODEL\\car000.x",
-		D3DXMESH_SYSTEMMEM,
-		pDevice,
-		NULL,
-		&g_pBuffMatModel,
-		NULL,
-		&g_dwNumMatModel,
-		&g_pMeshModel);
-
-	//（本来は読み込めたかチェックがいる）
-
-	//テクスチャ読み込み
-	D3DXMATERIAL *pMat;	//マテリアルポインタ
-
-	//マテリアル情報に対するポインタ取得
-	pMat = (D3DXMATERIAL *)g_pBuffMatModel->GetBufferPointer();
-
-	for (int nCntTex = 0; nCntTex < (int)g_dwNumMatModel; nCntTex++)
+	for (int nCntParts = 0; nCntParts < EXITHUMAN_MODEL_NUM; nCntParts++)
 	{
-		if (pMat[nCntTex].pTextureFilename != NULL)
+		D3DXLoadMeshFromX(
+			c_pFileNameModel[nCntParts],
+			D3DXMESH_SYSTEMMEM,
+			pDevice,
+			NULL,
+			&g_aModel[0][nCntParts].pBuffMat,
+			NULL,
+			&g_aModel[0][nCntParts].dwNumMatModel,
+			&g_aModel[0][nCntParts].pMesh);
+
+		//テクスチャ読み込み
+		D3DXMATERIAL *pMat;	//マテリアルポインタ
+
+		//マテリアル情報に対するポインタ取得
+		pMat = (D3DXMATERIAL *)g_aModel[0][nCntParts].pBuffMat->GetBufferPointer();
+
+		for (int nCntTex = 0; nCntTex < (int)g_aModel[0][nCntParts].dwNumMatModel; nCntTex++)
 		{
-			//テクスチャ読み込み
-			D3DXCreateTextureFromFile(pDevice,
-				pMat[nCntTex].pTextureFilename,
-				&g_apTexturemodel[nCntTex]);
+			if (pMat[nCntTex].pTextureFilename != NULL)
+			{
+				//テクスチャ読み込み
+				D3DXCreateTextureFromFile(pDevice,
+					pMat[nCntTex].pTextureFilename,
+					&g_aModel[0][nCntParts].apTexture[nCntTex]);
+			}
 		}
 	}
 
-	//影設定
-	//g_nIdxShadow = SetShadow();
+	//階層構造設定
+	//体
+	g_aModel[0][0].nIdxModelParent = -1;
+	g_aModel[0][0].pos = D3DXVECTOR3(0.0f, 35.0f, 0.0f);
+	g_aModel[0][0].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	//頭
+	g_aModel[0][1].nIdxModelParent = 0;
+	g_aModel[0][1].pos = D3DXVECTOR3(0.0f, 10.0f, 0.0f);
+	g_aModel[0][1].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	//左腕
+	g_aModel[0][2].nIdxModelParent = 0;
+	g_aModel[0][2].pos = D3DXVECTOR3(-5.0f, 7.0f, 0.0f);
+	g_aModel[0][2].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	//左手
+	g_aModel[0][3].nIdxModelParent = 2;
+	g_aModel[0][3].pos = D3DXVECTOR3(-10.0f, 0.0f, 0.0f);
+	g_aModel[0][3].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	//右腕
+	g_aModel[0][4].nIdxModelParent = 0;
+	g_aModel[0][4].pos = D3DXVECTOR3(5.0f, 7.0f, 0.0f);
+	g_aModel[0][4].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	//右手
+	g_aModel[0][5].nIdxModelParent = 4;
+	g_aModel[0][5].pos = D3DXVECTOR3(10.0f, 0.0f, 0.0f);
+	g_aModel[0][5].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	//左腿
+	g_aModel[0][6].nIdxModelParent = 0;
+	g_aModel[0][6].pos = D3DXVECTOR3(-3.0f, -8.0f, 0.0f);
+	g_aModel[0][6].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	//左足
+	g_aModel[0][7].nIdxModelParent = 6;
+	g_aModel[0][7].pos = D3DXVECTOR3(0.0f, -12.0f, 0.0f);
+	g_aModel[0][7].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	//右腿
+	g_aModel[0][8].nIdxModelParent = 0;
+	g_aModel[0][8].pos = D3DXVECTOR3(3.0f, -8.0f, 0.0f);
+	g_aModel[0][8].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	//右足
+	g_aModel[0][9].nIdxModelParent = 8;
+	g_aModel[0][9].pos = D3DXVECTOR3(0.0f, -12.0f, 0.0f);
+	g_aModel[0][9].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 }
 
 //========================
@@ -75,18 +121,21 @@ void InitModel(void)
 //========================
 void UninitModel(void)
 {
-	//メッシュの破棄
-	if (g_pMeshModel != NULL)
+	for (int nCntModel = 0; nCntModel < EXITHUMAN_MODEL_NUM; nCntModel++)
 	{
-		g_pMeshModel->Release();
-		g_pMeshModel = NULL;
-	}
+		//メッシュの破棄
+		if (g_aModel[nCntModel][nCntModel].pMesh != NULL)
+		{
+			g_aModel[nCntModel][nCntModel].pMesh->Release();
+			g_aModel[nCntModel][nCntModel].pMesh = NULL;
+		}
 
-	//マテリアルの破棄
-	if (g_pBuffMatModel != NULL)
-	{
-		g_pBuffMatModel->Release();
-		g_pBuffMatModel = NULL;
+		//マテリアルの破棄
+		if (g_aModel[nCntModel][nCntModel].pBuffMat != NULL)
+		{
+			g_aModel[nCntModel][nCntModel].pBuffMat->Release();
+			g_aModel[nCntModel][nCntModel].pBuffMat = NULL;
+		}
 	}
 }
 
@@ -95,40 +144,7 @@ void UninitModel(void)
 //========================
 void UpdateModel(void)
 {
-	//モデル移動
-	if (GetKeyboardPress(DIK_A) == true)
-	{//-0.5pi[rad]
-		g_posModel.x += -cosf(GetCamera()->rot.y) * MODEL_MOVE_SPEED;
-		g_posModel.z += -sinf(GetCamera()->rot.y) * MODEL_MOVE_SPEED;
-		g_rotModel.y = -(float)fmod(GetCamera()->rot.y - 0.5f * D3DX_PI + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-	}
-	else if (GetKeyboardPress(DIK_D) == true)
-	{//0.5pi[rad]
-		g_posModel.x += cosf(GetCamera()->rot.y) * MODEL_MOVE_SPEED;
-		g_posModel.z += sinf(GetCamera()->rot.y) * MODEL_MOVE_SPEED;
-		g_rotModel.y = -(float)fmod(GetCamera()->rot.y + 0.5f * D3DX_PI + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-	}
-
-	if (GetKeyboardPress(DIK_W) == true)
-	{//1.0pi[rad]
-		g_posModel.x += -sinf(GetCamera()->rot.y) * MODEL_MOVE_SPEED;
-		g_posModel.z += cosf(GetCamera()->rot.y) * MODEL_MOVE_SPEED;
-		g_rotModel.y = -(float)fmod(GetCamera()->rot.y + 1.0f * D3DX_PI + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-	}
-	else if (GetKeyboardPress(DIK_S) == true)
-	{//0.0pi[rad]
-		g_posModel.x += sinf(GetCamera()->rot.y) * MODEL_MOVE_SPEED;
-		g_posModel.z += -cosf(GetCamera()->rot.y) * MODEL_MOVE_SPEED;
-		g_rotModel.y = -(float)fmod(GetCamera()->rot.y + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-	}
-
-	if (GetKeyboardTrigger(DIK_SPACE) == true)
-	{
-		SetBullet(g_posModel, 5.0f, g_rotModel.y, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-	}
-
-	//影位置設定
-	//SetPositionShadow(g_nIdxShadow, g_posModel);
+	
 }
 
 //========================
@@ -136,43 +152,13 @@ void UpdateModel(void)
 //========================
 void DrawModel(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = GetDevice();	//デバイスの取得
-	D3DXMATRIX mtxRot, mtxTrans;	//計算用
-	D3DMATERIAL9 matDef;			//現在のマテリアル保存用
-	D3DXMATERIAL *pMat;				//マテリアルデータへのポインタ
+	
+}
 
-	//ワールドマトリックス初期化
-	D3DXMatrixIdentity(&g_mtxWorldModel);
-
-	//向きを反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, g_rotModel.y, g_rotModel.x, g_rotModel.z);
-	D3DXMatrixMultiply(&g_mtxWorldModel, &g_mtxWorldModel, &mtxRot);
-
-	//位置反映
-	D3DXMatrixTranslation(&mtxTrans, g_posModel.x, g_posModel.y, g_posModel.z);
-	D3DXMatrixMultiply(&g_mtxWorldModel, &g_mtxWorldModel, &mtxTrans);
-
-	//ワールドマトリックス設定
-	pDevice->SetTransform(D3DTS_WORLD, &g_mtxWorldModel);
-
-	//現在のマテリアル取得
-	pDevice->GetMaterial(&matDef);
-
-	//マテリアルデータへのポインタ取得
-	pMat = (D3DXMATERIAL*)g_pBuffMatModel->GetBufferPointer();
-
-	for (int nCntMat = 0; nCntMat < (int)g_dwNumMatModel; nCntMat++)
-	{
-		//マテリアル設定
-		pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
-
-		//テクスチャ設定
-		pDevice->SetTexture(0, g_apTexturemodel[nCntMat]);
-
-		//モデル描画
-		g_pMeshModel->DrawSubset(nCntMat);
-	}
-
-	//マテリアルを戻す
-	pDevice->SetMaterial(&matDef);
+//========================
+//取得処理
+//========================
+Model *GetModel(MODELNAME name)
+{
+	return &g_aModel[name][0];
 }

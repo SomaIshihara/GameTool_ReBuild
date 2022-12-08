@@ -25,7 +25,9 @@ int g_nNumObj = 0;
 const char* c_apFilePathObject[] =
 {
 	"data\\MODEL\\obj_branco_01.x",
-	"data\\MODEL\\takibi001.x"
+	"data\\MODEL\\takibi001.x",
+	"data\\MODEL\\jobi.x",
+	"data\\MODEL\\subway_entrance.x"
 };
 
 //========================
@@ -191,6 +193,7 @@ void UpdateObject(void)
 		//オブジェクト生成
 		SetObject(BLUEPRINTIDX_BRANCO, D3DXVECTOR3(100.0f, 7.0f, 100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 5);
 		SetObject(BLUEPRINTIDX_TAKIBI, D3DXVECTOR3(-100.0f, 0.0f, 100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 5);
+		SetObject(BLUEPRINTIDX_JOBI, D3DXVECTOR3(300.0f, 0.0f, 1450.0f), D3DXVECTOR3(0.0f, -0.25f * D3DX_PI, 0.0f), 5);
 	}
 }
 
