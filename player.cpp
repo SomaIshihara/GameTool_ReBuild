@@ -18,6 +18,7 @@
 //マクロ
 #define PLAYER_MOVE_SPEED	(5.0f)	//プレイヤー移動速度
 #define DUMP_COEF			(0.4f)	//減衰係数
+#define BULLET_SPEED		(15.0f)	//弾の速さ
 
 //仮
 #define PLAYER_WIDTH		(20.0f)
@@ -266,7 +267,7 @@ void UpdatePlayer(void)
 
 	if (GetMouseClickTrigger(MOUSE_CLICK_LEFT) == true)
 	{
-		SetBullet(g_player.pos + D3DXVECTOR3(0.0f, 40.0f, 0.0f) , 5.0f, g_player.rot.y, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+		SetBullet(g_player.pos + D3DXVECTOR3(0.0f, 40.0f, 0.0f) , BULLET_SPEED, g_player.rot.y, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 
 	//影位置設定

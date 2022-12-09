@@ -22,10 +22,21 @@ typedef enum
 //設計図の名前
 typedef enum
 {
-	BLUEPRINTIDX_BRANCO = 0,
-	BLUEPRINTIDX_TAKIBI,
-	BLUEPRINTIDX_JOBI,
-	BLUEPRINTIDX_SUBWAYENTRANCE,
+	BLUEPRINTIDX_BRANCO = 0,		//仮:ブランコ
+	BLUEPRINTIDX_TAKIBI,			//仮:焚火
+	BLUEPRINTIDX_JOBI,				//情ビ（スタート
+	BLUEPRINTIDX_SUBWAYENTRANCE,	//地下鉄入口（ゴール
+	BLUEPRINTIDX_ROCK_01,			//石01
+	BLUEPRINTIDX_ROCK_02,			//石02
+	BLUEPRINTIDX_ROCK_03,			//石03
+	BLUEPRINTIDX_ROCK_04,			//石04
+	BLUEPRINTIDX_ROCK_05,			//石05
+	BLUEPRINTIDX_ROCK_06,			//石06
+	BLUEPRINTIDX_ROCK_07,			//石07
+	BLUEPRINTIDX_ROCK_08,			//石09
+	BLUEPRINTIDX_ROCK_09,			//石09
+	BLUEPRINTIDX_ROCK_10,			//石10
+	BLUEPRINTIDX_ROCK_11,			//石11
 	BLUEPRINTIDX_MAX
 } BLUEPRINTIDX;
 
@@ -52,6 +63,7 @@ typedef struct
 	D3DXMATRIX mtxWorld;	//ワールドマトリックス
 
 	//ステータス関係
+	bool bLifeUse;			//体力の項目を使用するか
 	int nLife;				//体力
 	OBJSTATE state;			//状態
 	int nCounterState;		//状態遷移までの時間
@@ -68,7 +80,7 @@ void InitObject(void);
 void UninitObject(void);
 void UpdateObject(void);
 void DrawObject(void);
-void SetObject(BLUEPRINTIDX bpidx, D3DXVECTOR3 pos, D3DXVECTOR3 rot, int nLife);
+void SetObject(BLUEPRINTIDX bpidx, D3DXVECTOR3 pos, D3DXVECTOR3 rot, bool bLifeUse, int nLife);
 Object *GetObj(void);
 BluePrint *GetBluePrint(void);
 void HitObj(int nNumObj);

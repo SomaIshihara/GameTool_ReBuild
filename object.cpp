@@ -27,7 +27,18 @@ const char* c_apFilePathObject[] =
 	"data\\MODEL\\obj_branco_01.x",
 	"data\\MODEL\\takibi001.x",
 	"data\\MODEL\\jobi.x",
-	"data\\MODEL\\subway_entrance.x"
+	"data\\MODEL\\subway_entrance.x",
+	"data\\MODEL\\Rock_xfile\\Rock_01.x",
+	"data\\MODEL\\Rock_xfile\\Rock_02.x",
+	"data\\MODEL\\Rock_xfile\\Rock_03.x",
+	"data\\MODEL\\Rock_xfile\\Rock_04.x",
+	"data\\MODEL\\Rock_xfile\\Rock_05.x",
+	"data\\MODEL\\Rock_xfile\\Rock_06.x",
+	"data\\MODEL\\Rock_xfile\\Rock_07.x",
+	"data\\MODEL\\Rock_xfile\\Rock_08.x",
+	"data\\MODEL\\Rock_xfile\\Rock_09.x",
+	"data\\MODEL\\Rock_xfile\\Rock_10.x",
+	"data\\MODEL\\Rock_xfile\\Rock_11.x"
 };
 
 //========================
@@ -191,9 +202,10 @@ void UpdateObject(void)
 	if (GetKeyboardTrigger(DIK_F5) == true && g_nNumObj == 0)
 	{
 		//オブジェクト生成
-		SetObject(BLUEPRINTIDX_BRANCO, D3DXVECTOR3(100.0f, 7.0f, 100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 5);
-		SetObject(BLUEPRINTIDX_TAKIBI, D3DXVECTOR3(-100.0f, 0.0f, 100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 5);
-		SetObject(BLUEPRINTIDX_JOBI, D3DXVECTOR3(300.0f, 0.0f, 1450.0f), D3DXVECTOR3(0.0f, -0.25f * D3DX_PI, 0.0f), 5);
+		SetObject(BLUEPRINTIDX_BRANCO, D3DXVECTOR3(100.0f, 7.0f, 100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), true, 5);
+		SetObject(BLUEPRINTIDX_TAKIBI, D3DXVECTOR3(-100.0f, 0.0f, 100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), true, 5);
+		SetObject(BLUEPRINTIDX_JOBI, D3DXVECTOR3(-65.0f, 0.0f, -1430.0f), D3DXVECTOR3(0.0f, -0.5f * D3DX_PI, 0.0f), false, 5);
+		SetObject(BLUEPRINTIDX_SUBWAYENTRANCE, D3DXVECTOR3(300.0f, 0.0f, 1450.0f), D3DXVECTOR3(0.0f, 0.5f * D3DX_PI, 0.0f), false, 5);
 	}
 }
 
@@ -260,7 +272,7 @@ void DrawObject(void)
 //========================
 //表示処理
 //========================
-void SetObject(BLUEPRINTIDX bpidx, D3DXVECTOR3 pos, D3DXVECTOR3 rot, int nLife)
+void SetObject(BLUEPRINTIDX bpidx, D3DXVECTOR3 pos, D3DXVECTOR3 rot, bool bLifeUse, int nLife)
 {
 	for (int nCntObj = 0; nCntObj < MAX_OBJECT; nCntObj++)
 	{
@@ -270,6 +282,7 @@ void SetObject(BLUEPRINTIDX bpidx, D3DXVECTOR3 pos, D3DXVECTOR3 rot, int nLife)
 			g_aObject[nCntObj].bpidx = bpidx;
 			g_aObject[nCntObj].pos = pos;
 			g_aObject[nCntObj].rot = rot;
+			g_aObject[nCntObj].bLifeUse = bLifeUse;
 			g_aObject[nCntObj].nLife = nLife;
 
 			//影設定
@@ -308,7 +321,12 @@ BluePrint *GetBluePrint(void)
 //========================
 void HitObj(int nNumObj)
 {
-	g_aObject[nNumObj].nLife--;
+	//体力の項目を使用するならダメージ
+	if (g_aObject[nNumObj].bLifeUse == true)
+	{
+		g_aObject[nNumObj].nLife--;
+	}
+
 	if (g_aObject[nNumObj].nLife <= 0)
 	{//ぶっこわーす処理
 		DestroyObj(nNumObj);

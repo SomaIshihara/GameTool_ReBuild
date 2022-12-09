@@ -13,7 +13,7 @@
 //マクロ
 #define CAMERA_MOVE_SPEED	(1.0f)	//カメラ移動速度
 #define CAMERA_KEY_ROT_SPEED	(0.005f)	//キーボード入力での回転速度
-#define CAMERA_MOU_ROT_SPEED	(0.002f)	//マウス移動での回転速度
+#define CAMERA_MOU_ROT_SPEED	(0.003f)	//マウス移動での回転速度
 
 //プロト
 void FixPosV(void);
