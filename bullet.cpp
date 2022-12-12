@@ -322,7 +322,7 @@ void CollisionObjBullet(int nCount)
 	D3DXVECTOR3 vecMove;
 	float fAreaA, fAreaB;
 
-	for (int nCntObj = 0; nCntObj < MAX_BLUEPRINT; nCntObj++, pObject++)
+	for (int nCntObj = 0; nCntObj < BLUEPRINTIDX_MAX; nCntObj++, pObject++)
 	{
 		if (pObject->bUse == true)
 		{

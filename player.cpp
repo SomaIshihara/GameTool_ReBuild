@@ -388,31 +388,31 @@ void CollisionObjPlayer(void)
 	Object *obj = GetObj();
 	BluePrint *pBPrint = GetBluePrint();
 
-	for (int nCntObj = 0; nCntObj < MAX_BLUEPRINT; nCntObj++, obj++)
+	for (int nCntObj = 0; nCntObj < BLUEPRINTIDX_MAX; nCntObj++, obj++)
 	{
 		if (obj->bUse == true)
 		{
-			if (g_player.pos.z >= obj->pos.z + pBPrint->vtxMin.z && g_player.pos.z <= obj->pos.z + pBPrint->vtxMax.z)
+			if (g_player.pos.z >= obj->pos.z + (pBPrint + obj->bpidx)->vtxMin.z && g_player.pos.z <= obj->pos.z + (pBPrint + obj->bpidx)->vtxMax.z)
 			{
-				if (g_player.posOld.x <= obj->pos.x + pBPrint->vtxMin.x && g_player.pos.x > obj->pos.x + pBPrint->vtxMin.x)
+				if (g_player.posOld.x <= obj->pos.x + (pBPrint + obj->bpidx)->vtxMin.x && g_player.pos.x > obj->pos.x + (pBPrint + obj->bpidx)->vtxMin.x)
 				{
-					g_player.pos.x = obj->pos.x + pBPrint->vtxMin.x;
+					g_player.pos.x = obj->pos.x + (pBPrint + obj->bpidx)->vtxMin.x;
 				}
-				if (g_player.posOld.x >= obj->pos.x + pBPrint->vtxMax.x && g_player.pos.x < obj->pos.x + pBPrint->vtxMax.x)
+				if (g_player.posOld.x >= obj->pos.x + (pBPrint + obj->bpidx)->vtxMax.x && g_player.pos.x < obj->pos.x + (pBPrint + obj->bpidx)->vtxMax.x)
 				{
-					g_player.pos.x = obj->pos.x + pBPrint->vtxMax.x;
+					g_player.pos.x = obj->pos.x + (pBPrint + obj->bpidx)->vtxMax.x;
 				}
 			}
 
-			if (g_player.pos.x >= obj->pos.x + pBPrint->vtxMin.x && g_player.pos.x <= obj->pos.x + pBPrint->vtxMax.x)
+			if (g_player.pos.x >= obj->pos.x + (pBPrint + obj->bpidx)->vtxMin.x && g_player.pos.x <= obj->pos.x + (pBPrint + obj->bpidx)->vtxMax.x)
 			{
-				if (g_player.posOld.z <= obj->pos.z + pBPrint->vtxMin.z && g_player.pos.z > obj->pos.z + pBPrint->vtxMin.z)
+				if (g_player.posOld.z <= obj->pos.z + (pBPrint + obj->bpidx)->vtxMin.z && g_player.pos.z > obj->pos.z + (pBPrint + obj->bpidx)->vtxMin.z)
 				{
-					g_player.pos.z = obj->pos.z + pBPrint->vtxMin.z;
+					g_player.pos.z = obj->pos.z + (pBPrint + obj->bpidx)->vtxMin.z;
 				}
-				if (g_player.posOld.z >= obj->pos.z + pBPrint->vtxMax.z && g_player.pos.z < obj->pos.z + pBPrint->vtxMax.z)
+				if (g_player.posOld.z >= obj->pos.z + (pBPrint + obj->bpidx)->vtxMax.z && g_player.pos.z < obj->pos.z + (pBPrint + obj->bpidx)->vtxMax.z)
 				{
-					g_player.pos.z = obj->pos.z + pBPrint->vtxMax.z;
+					g_player.pos.z = obj->pos.z + (pBPrint + obj->bpidx)->vtxMax.z;
 				}
 			}
 		}

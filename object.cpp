@@ -12,20 +12,18 @@
 #include "bullet.h"
 
 //マクロ
-#define OBJ_MOVE_SPEED	(1.0f)	//モデル移動速度
+#define OBJ_MOVE_SPEED		(1.0f)	//モデル移動速度
 #define OBJ_RED_ALPHA		(0.5f)	//赤さんの不透明度
-#define OBJ_DAMAGE_TIME	(5)		//ダメージ状態にする時間(F)
+#define OBJ_DAMAGE_TIME		(5)		//ダメージ状態にする時間(F)
 
 //グローバル変数
-BluePrint g_aBPrint[MAX_BLUEPRINT];
+BluePrint g_aBPrint[BLUEPRINTIDX_MAX];
 Object g_aObject[MAX_OBJECT];
 int g_nNumObj = 0;
 
 //ファイルパス
 const char* c_apFilePathObject[] =
 {
-	"data\\MODEL\\obj_branco_01.x",
-	"data\\MODEL\\takibi001.x",
 	"data\\MODEL\\jobi.x",
 	"data\\MODEL\\subway_entrance.x",
 	"data\\MODEL\\Rock_xfile\\Rock_01.x",
@@ -38,7 +36,13 @@ const char* c_apFilePathObject[] =
 	"data\\MODEL\\Rock_xfile\\Rock_08.x",
 	"data\\MODEL\\Rock_xfile\\Rock_09.x",
 	"data\\MODEL\\Rock_xfile\\Rock_10.x",
-	"data\\MODEL\\Rock_xfile\\Rock_11.x"
+	"data\\MODEL\\Rock_xfile\\Rock_11.x",
+	"data\\MODEL\\building002.x",
+	"data\\MODEL\\building102.x",
+	"data\\MODEL\\building202.x",
+	"data\\MODEL\\building302.x",
+	"data\\MODEL\\building402.x",
+	"data\\MODEL\\building502.x"
 };
 
 //========================
@@ -53,7 +57,7 @@ void InitObject(void)
 	BYTE *pVtxBuff;		//頂点バッファポインタ
 
 	//変数初期化
-	for (int nCntModel = 0; nCntModel < MAX_BLUEPRINT && nCntModel < (sizeof c_apFilePathObject / sizeof(char *)); nCntModel++)
+	for (int nCntModel = 0; nCntModel < BLUEPRINTIDX_MAX && nCntModel < (sizeof c_apFilePathObject / sizeof(char *)); nCntModel++)
 	{
 		//Xファイル読み込み		
 		if (SUCCEEDED(D3DXLoadMeshFromX(
@@ -149,7 +153,7 @@ void InitObject(void)
 //========================
 void UninitObject(void)
 {
-	for (int nCount = 0; nCount < MAX_BLUEPRINT; nCount++)
+	for (int nCount = 0; nCount < BLUEPRINTIDX_MAX; nCount++)
 	{
 		//メッシュの破棄
 		if (g_aBPrint[nCount].pMesh != NULL)
@@ -202,8 +206,6 @@ void UpdateObject(void)
 	if (GetKeyboardTrigger(DIK_F5) == true && g_nNumObj == 0)
 	{
 		//オブジェクト生成
-		SetObject(BLUEPRINTIDX_BRANCO, D3DXVECTOR3(100.0f, 7.0f, 100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), true, 5);
-		SetObject(BLUEPRINTIDX_TAKIBI, D3DXVECTOR3(-100.0f, 0.0f, 100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), true, 5);
 		SetObject(BLUEPRINTIDX_JOBI, D3DXVECTOR3(-65.0f, 0.0f, -1430.0f), D3DXVECTOR3(0.0f, -0.5f * D3DX_PI, 0.0f), false, 5);
 		SetObject(BLUEPRINTIDX_SUBWAYENTRANCE, D3DXVECTOR3(300.0f, 0.0f, 1450.0f), D3DXVECTOR3(0.0f, 0.5f * D3DX_PI, 0.0f), false, 5);
 	}
@@ -222,7 +224,7 @@ void DrawObject(void)
 	//現在のマテリアル取得
 	pDevice->GetMaterial(&matDef);
 
-	for (int nCount = 0; nCount < MAX_BLUEPRINT; nCount++)
+	for (int nCount = 0; nCount < BLUEPRINTIDX_MAX; nCount++)
 	{
 		if (g_aObject[nCount].bUse == true)
 		{
@@ -241,9 +243,9 @@ void DrawObject(void)
 			pDevice->SetTransform(D3DTS_WORLD, &g_aObject[nCount].mtxWorld);
 
 			//マテリアルデータへのポインタ取得
-			pMat = (D3DXMATERIAL*)g_aBPrint[nCount].pBuffMat->GetBufferPointer();
+			pMat = (D3DXMATERIAL*)g_aBPrint[g_aObject[nCount].bpidx].pBuffMat->GetBufferPointer();
 
-			for (int nCntMat = 0; nCntMat < (int)g_aBPrint[nCount].dwNumMat; nCntMat++)
+			for (int nCntMat = 0; nCntMat < (int)g_aBPrint[g_aObject[nCount].bpidx].dwNumMat; nCntMat++)
 			{
 				//マテリアル設定
 				D3DMATERIAL9 changeMat = pMat[nCntMat].MatD3D;
@@ -257,10 +259,10 @@ void DrawObject(void)
 				pDevice->SetMaterial(&changeMat);
 
 				//テクスチャ設定
-				pDevice->SetTexture(0, g_aBPrint[nCount].apTexture[nCntMat]);
+				pDevice->SetTexture(0, g_aBPrint[g_aObject[nCount].bpidx].apTexture[nCntMat]);
 
 				//モデル描画
-				g_aBPrint[nCount].pMesh->DrawSubset(nCntMat);
+				g_aBPrint[g_aObject[nCount].bpidx].pMesh->DrawSubset(nCntMat);
 			}
 		}
 	}
