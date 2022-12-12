@@ -1,0 +1,493 @@
+#==============================================================================
+#
+# 『モデルビューワ』スクリプトファイル [model.txt]
+# Author : AKIRA TANAKA
+#
+#==============================================================================
+SCRIPT			# この行は絶対消さないこと！
+
+#------------------------------------------------------------------------------
+# テクスチャ数
+#------------------------------------------------------------------------------
+NUM_TEXTURE = 6
+
+#------------------------------------------------------------------------------
+# テクスチャファイル名
+#------------------------------------------------------------------------------
+TEXTURE_FILENAME = data/TEXTURE/sky000.jpg			# [0]空テクスチャ
+TEXTURE_FILENAME = data/TEXTURE/mountain000.png		# [1]山テクスチャ
+TEXTURE_FILENAME = data/TEXTURE/field003.jpg		# [2]地面テクスチャ
+TEXTURE_FILENAME = data/TEXTURE/wall100.jpg			# [3]壁テクスチャ
+TEXTURE_FILENAME = data/TEXTURE/tree000.png			# [4]木テクスチャ
+TEXTURE_FILENAME = data/TEXTURE/effect000.jpg		# [5]エフェクトテクスチャ
+
+#------------------------------------------------------------------------------
+# モデル数
+#------------------------------------------------------------------------------
+NUM_MODEL = 15
+
+#------------------------------------------------------------------------------
+# モデルファイル名
+#------------------------------------------------------------------------------
+MODEL_FILENAME = data/MODEL/stone000.x				# [0]岩(小)
+MODEL_FILENAME = data/MODEL/stone001.x				# [1]岩(中)
+MODEL_FILENAME = data/MODEL/stone002.x				# [2]岩(大)
+MODEL_FILENAME = data/MODEL/wall000.x				# [3]岩壁(小)
+MODEL_FILENAME = data/MODEL/wall001.x				# [4]岩壁(中)
+MODEL_FILENAME = data/MODEL/wall002.x				# [5]岩壁(大)
+MODEL_FILENAME = data/MODEL/debris000.x				# [6]鉄骨ガレキ(小)
+MODEL_FILENAME = data/MODEL/debris001.x				# [7]鉄骨ガレキ(中)
+MODEL_FILENAME = data/MODEL/debris002.x				# [8]鉄骨ガレキ(大)
+MODEL_FILENAME = data/MODEL/debris100.x				# [9]板ガレキ(小)
+MODEL_FILENAME = data/MODEL/debris101.x				# [10]板ガレキ(中)
+MODEL_FILENAME = data/MODEL/debris102.x				# [11]板ガレキ(大)
+MODEL_FILENAME = data/MODEL/pillar000.x				# [12]柱(小)
+MODEL_FILENAME = data/MODEL/pillar001.x				# [13]柱(中)
+MODEL_FILENAME = data/MODEL/pillar002.x				# [14]柱(大)
+
+#------------------------------------------------------------------------------
+# カメラ情報
+#------------------------------------------------------------------------------
+CAMERASET
+	POS = 0.0 180.0 -720.0			# 視点
+	REF = 0.0 0.0 0.0				# 注視点
+END_CAMERASET
+
+#------------------------------------------------------------------------------
+# ライト情報
+#------------------------------------------------------------------------------
+LIGHTSET
+	DIRECTION = 0.22 -0.87 0.44		# 方向
+	DIFFUSE = 1.0 1.0 1.0			# 拡散光
+END_LIGHTSET
+
+LIGHTSET
+	DIRECTION = -0.18 0.88 -0.44	# 方向
+	DIFFUSE = 0.65 0.65 0.65		# 拡散光
+END_LIGHTSET
+
+LIGHTSET
+	DIRECTION = 0.89 -0.11 0.44		# 方向
+	DIFFUSE = 0.15 0.15 0.15		# 拡散光
+END_LIGHTSET
+
+#------------------------------------------------------------------------------
+# 空情報
+#------------------------------------------------------------------------------
+SKYSET
+	TEXTYPE = 0
+	MOVE = 0.00002
+END_SKYSET
+
+#------------------------------------------------------------------------------
+# 山情報
+#------------------------------------------------------------------------------
+MOUNTAINSET
+	TEXTYPE = 1
+END_MOUNTAINSET
+
+#------------------------------------------------------------------------------
+# 地面情報
+#------------------------------------------------------------------------------
+FIELDSET
+	TEXTYPE = 2
+	POS = 0 0 0
+	ROT = 0 0 0
+	BLOCK = 16 16
+	SIZE = 80 80
+END_FIELDSET
+
+#------------------------------------------------------------------------------
+# 壁情報
+#------------------------------------------------------------------------------
+WALLSET
+	TEXTYPE = 3
+	POS = 0 -80 640
+	ROT = 0 180 0
+	BLOCK = 16 1
+	SIZE = 80 80
+END_WALLSET
+
+WALLSET
+	TEXTYPE = 3
+	POS = 640 -80 0
+	ROT = 0 270 0
+	BLOCK = 16 1
+	SIZE = 80 80
+END_WALLSET
+
+WALLSET
+	TEXTYPE = 3
+	POS = 0 -80 -640
+	ROT = 0 0 0
+	BLOCK = 16 1
+	SIZE = 80 80
+END_WALLSET
+
+WALLSET
+	TEXTYPE = 3
+	POS = -640 -80 0
+	ROT = 0 90 0
+	BLOCK = 16 1
+	SIZE = 80 80
+END_WALLSET
+
+
+#------------------------------------------------------------------------------
+# モデル配置情報
+#------------------------------------------------------------------------------
+#------------------
+# 岩１個目
+#------------------
+MODELSET
+	TYPE = 13
+	POS = -120 0 -120
+	ROT = 0 90 0
+END_MODELSET
+
+#------------------------------------------------------------------------------
+# ビルボード配置情報
+#------------------------------------------------------------------------------
+#>>******************** [ここからコメントアウト] ********************
+#------------------
+# 林奥側
+#------------------
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = -500 0 620
+	SIZE = 120 220
+	ORIGIN = 60 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = -400 0 610
+	SIZE = 120 240
+	ORIGIN = 60 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = -300 0 635
+	SIZE = 120 240
+	ORIGIN = 60 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = -200 0 600
+	SIZE = 140 260
+	ORIGIN = 70 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = -100 0 600
+	SIZE = 130 230
+	ORIGIN = 65 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = 0 0 620
+	SIZE = 120 240
+	ORIGIN = 60 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = 100 0 625
+	SIZE = 110 230
+	ORIGIN = 55 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = 200 0 610
+	SIZE = 130 250
+	ORIGIN = 65 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = 300 0 600
+	SIZE = 120 240
+	ORIGIN = 60 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = 400 0 600
+	SIZE = 130 260
+	ORIGIN = 65 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = 500 0 600
+	SIZE = 120 240
+	ORIGIN = 60 0
+END_BILLBOARDSET
+
+#------------------
+# 林右側
+#------------------
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = 620 0 500
+	SIZE = 120 220
+	ORIGIN = 60 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = 610 0 400
+	SIZE = 120 240
+	ORIGIN = 60 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = 635 0 300
+	SIZE = 120 240
+	ORIGIN = 60 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = 600 0 200
+	SIZE = 140 260
+	ORIGIN = 70 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = 600 0 100
+	SIZE = 130 230
+	ORIGIN = 65 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = 620 0 0
+	SIZE = 120 240
+	ORIGIN = 60 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = 625 0 -100
+	SIZE = 110 230
+	ORIGIN = 55 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = 610 0 -200
+	SIZE = 130 250
+	ORIGIN = 65 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = 600 0 -300
+	SIZE = 120 240
+	ORIGIN = 60 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = 600 0 -400
+	SIZE = 130 260
+	ORIGIN = 65 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = 600 0 -500
+	SIZE = 120 240
+	ORIGIN = 60 0
+END_BILLBOARDSET
+
+#------------------
+# 林手前側
+#------------------
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = 500 0 -620
+	SIZE = 120 220
+	ORIGIN = 60 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = 400 0 -610
+	SIZE = 120 240
+	ORIGIN = 60 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = 300 0 -635
+	SIZE = 120 240
+	ORIGIN = 60 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = 200 0 -600
+	SIZE = 140 260
+	ORIGIN = 70 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = 100 0 -600
+	SIZE = 130 230
+	ORIGIN = 65 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = 0 0 -620
+	SIZE = 120 240
+	ORIGIN = 60 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = -100 0 -625
+	SIZE = 110 230
+	ORIGIN = 55 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = -200 0 -610
+	SIZE = 130 250
+	ORIGIN = 65 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = -300 0 -600
+	SIZE = 120 240
+	ORIGIN = 60 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = -400 0 -600
+	SIZE = 130 260
+	ORIGIN = 65 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = -500 0 -600
+	SIZE = 120 240
+	ORIGIN = 60 0
+END_BILLBOARDSET
+
+#------------------
+# 林左側
+#------------------
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = -620 0 -500
+	SIZE = 120 220
+	ORIGIN = 60 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = -610 0 -400
+	SIZE = 120 240
+	ORIGIN = 60 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = -635 0 -300
+	SIZE = 120 240
+	ORIGIN = 60 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = -600 0 -200
+	SIZE = 140 260
+	ORIGIN = 70 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = -600 0 -100
+	SIZE = 130 230
+	ORIGIN = 65 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = -620 0 0
+	SIZE = 120 240
+	ORIGIN = 60 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = -625 0 100
+	SIZE = 110 230
+	ORIGIN = 55 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = -610 0 200
+	SIZE = 130 250
+	ORIGIN = 65 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = -600 0 300
+	SIZE = 120 240
+	ORIGIN = 60 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = -600 0 400
+	SIZE = 130 260
+	ORIGIN = 65 0
+END_BILLBOARDSET
+
+BILLBOARDSET
+	TEXTYPE = 4
+	POS = -600 0 500
+	SIZE = 120 240
+	ORIGIN = 60 0
+END_BILLBOARDSET
+
+#------------------
+# 光
+#------------------
+BILLBOARDSET
+	TEXTYPE = 5
+	POS = 0 200 0
+	SIZE = 120 120
+	BLEND = 1
+	SHADOW = 0
+END_BILLBOARDSET
+#<<******************** [ここまでコメントアウト] ********************
+
+#------------------------------------------------------------------------------
+# プレイヤー情報
+#------------------------------------------------------------------------------
+PLAYERSET
+	MOTION_FILENAME = data/motion.txt
+	POS = 0 0 0
+	ROT = 0 0 0
+END_PLAYERSET
+
+END_SCRIPT		# この行は絶対消さないこと！

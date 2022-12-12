@@ -79,5 +79,6 @@
 void InitFile(void);
 void UninitFile(void);
 void UpdateFile(void);
+void LoadMapFile();
 
 #endif

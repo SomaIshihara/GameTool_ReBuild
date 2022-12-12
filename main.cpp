@@ -13,7 +13,9 @@
 #include "shadow.h"
 #include "bullet.h"
 #include "meshfield.h"
+#include "sky.h"
 #include "object.h"
+#include "file.h"
 #include "debugproc.h"
 
 //マクロ定義
@@ -319,6 +321,7 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	//オブジェクト初期化
 	InitCamera();
 	InitLight();
+	InitSky();
 	InitMeshfield();
 	InitWall();
 	InitBullet();
@@ -326,6 +329,12 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	InitPlayer();
 	InitObject();
 	InitDebugProc();
+
+	//ファイル初期化
+	InitFile();
+
+	//ファイル読み込み
+	//LoadMapFile();
 
 	//壁生成
 	SetWall(D3DXVECTOR3(0.0f, 0.0f, 1120.0f), D3DXVECTOR3(0.0f, 0.0f * D3DX_PI, 0.0f), 2720.0f, 80.0f);		//前
@@ -371,6 +380,7 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 void Uninit(void)
 {
 	//終了処理（自分が作ったものを捨てる）
+	UninitFile();
 	UninitDebugProc();
 	UninitObject();
 	UninitPlayer();
@@ -378,6 +388,7 @@ void Uninit(void)
 	UninitBullet();
 	UninitWall();
 	UninitMeshfield();
+	UninitSky();
 	UninitLight();
 	UninitCamera();
 
@@ -410,8 +421,14 @@ void Update(void)
 	//キーボードの更新
 	UpdateKeyboard();
 
+	//ファイル
+	UpdateFile();
+
 	//影
 	UpdateShadow();
+
+	//空
+	UpdateSky();
 
 	//メッシュフィールド
 	UpdateMeshfield();
@@ -470,6 +487,9 @@ void Draw(void)
 		SetCamera();
 
 		//オブジェクト描画
+		//空
+		DrawSky();
+
 		//メッシュフィールド
 		DrawMeshfield();
 
