@@ -224,7 +224,7 @@ void DrawObject(void)
 	//Œ»Ý‚Ìƒ}ƒeƒŠƒAƒ‹Žæ“¾
 	pDevice->GetMaterial(&matDef);
 
-	for (int nCount = 0; nCount < BLUEPRINTIDX_MAX; nCount++)
+	for (int nCount = 0; nCount < MAX_OBJECT; nCount++)
 	{
 		if (g_aObject[nCount].bUse == true)
 		{

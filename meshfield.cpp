@@ -79,7 +79,7 @@ void InitMeshfield(void)
 		pVtx->col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 
 		//テクスチャ座標
-		pVtx->tex = D3DXVECTOR2(((float)(nCount % (MESHFIELD_WIDTH + 1)) / (MESHFIELD_WIDTH + 1)), ((float)(nCount / (MESHFIELD_WIDTH + 1)) / (MESHFIELD_HEIGHT + 1)));
+		pVtx->tex = D3DXVECTOR2(((float)(nCount % (MESHFIELD_WIDTH + 1)) / (MESHFIELD_WIDTH)), ((float)(nCount / (MESHFIELD_WIDTH + 1)) / (MESHFIELD_HEIGHT)));
 	}
 
 	//頂点バッファをアンロック
