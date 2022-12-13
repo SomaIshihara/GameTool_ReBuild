@@ -271,8 +271,8 @@ void UpdatePlayer(void)
 	//移動量減衰
 	g_player.move.x += (0 - g_player.move.x) * DUMP_COEF;
 	g_player.move.z += (0 - g_player.move.z) * DUMP_COEF;
-
-	if (GetMouseClickTrigger(MOUSE_CLICK_LEFT) == true)
+	//GetMouseClickTrigger
+	if (GetMouseClickPress(MOUSE_CLICK_LEFT) == true)
 	{
 		SetBullet(g_player.pos + D3DXVECTOR3(0.0f, 40.0f, 0.0f) , BULLET_SPEED, g_player.rot.y, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 	}
@@ -392,38 +392,114 @@ void CollisionWallPlayer(int nNumber)
 //========================
 void CollisionObjPlayer(void)
 {
-	Object *obj = GetObj();
 	BluePrint *pBPrint = GetBluePrint();
+	Object *pObject = GetObj();
 
-	for (int nCntObj = 0; nCntObj < BLUEPRINTIDX_MAX; nCntObj++, obj++)
+	D3DXVECTOR3 pos0x, pos1x, pos0z, pos1z;
+	D3DXVECTOR3 vecLinex, vecToPosx, vecToPosxOps, vecLinez, vecToPosz, vecToPoszOps;
+	D3DXVECTOR3 vecMove;
+
+	float fAreaA, fAreaB;
+
+	for (int nCntObj = 0; nCntObj < BLUEPRINTIDX_MAX; nCntObj++, pObject++)
 	{
-		if (obj->bUse == true)
+		if (pObject->bUse == true)
 		{
-			if (g_player.pos.z >= obj->pos.z + (pBPrint + obj->bpidx)->vtxMin.z && g_player.pos.z <= obj->pos.z + (pBPrint + obj->bpidx)->vtxMax.z)
+			////あらかじめ計算
+			//float fPosXMax = pObject->pos.x + (pBPrint + pObject->bpidx)->vtxMax.x;
+			//float fPosXMin = pObject->pos.x + (pBPrint + pObject->bpidx)->vtxMin.x;
+			//float fPosZMax = pObject->pos.z + (pBPrint + pObject->bpidx)->vtxMax.z;
+			//float fPosZMin = pObject->pos.z + (pBPrint + pObject->bpidx)->vtxMin.z;
+
+			//if (g_player.pos.z >= fPosZMin && g_player.pos.z <= fPosZMax)
+			//{
+			//	if (g_player.posOld.x <= fPosXMin && g_player.pos.x > fPosXMin)
+			//	{
+			//		g_player.pos.x = pObject->pos.x + (pBPrint + pObject->bpidx)->vtxMin.x;
+			//	}
+			//	if (g_player.posOld.x >= fPosXMax && g_player.pos.x < fPosXMax)
+			//	{
+			//		g_player.pos.x = pObject->pos.x + (pBPrint + pObject->bpidx)->vtxMax.x;
+			//	}
+			//}
+
+			//if (g_player.pos.x >= fPosXMin && g_player.pos.x <= fPosXMax)
+			//{
+			//	if (g_player.posOld.z <= fPosZMin && g_player.pos.z > fPosZMin)
+			//	{
+			//		g_player.pos.z = pObject->pos.z + (pBPrint + pObject->bpidx)->vtxMin.z;
+			//	}
+			//	if (g_player.posOld.z >= fPosZMax && g_player.pos.z < fPosZMax)
+			//	{
+			//		g_player.pos.z = pObject->pos.z + (pBPrint + pObject->bpidx)->vtxMax.z;
+			//	}
+			//}
+			//各2頂点求める
+			pos0x = pObject->pos + D3DXVECTOR3(pBPrint->vtxMin.x, 0.0f, pBPrint->vtxMin.z);
+			pos0x.x *= cosf(pObject->rot.y);
+			pos0x.z *= sinf(pObject->rot.y);
+			pos1x = pObject->pos + D3DXVECTOR3(pBPrint->vtxMax.x, 0.0f, pBPrint->vtxMin.z);
+			pos1x.x *= cosf(pObject->rot.y);
+			pos1x.z *= sinf(pObject->rot.y);
+			pos0z = pObject->pos + D3DXVECTOR3(pBPrint->vtxMax.x, 0.0f, pBPrint->vtxMin.z);
+			pos0z.x *= cosf(pObject->rot.y);
+			pos0z.z *= sinf(pObject->rot.y);
+			pos1z = pObject->pos + D3DXVECTOR3(pBPrint->vtxMax.x, 0.0f, pBPrint->vtxMax.z);
+			pos1z.x *= cosf(pObject->rot.y);
+			pos1z.z *= sinf(pObject->rot.y);
+
+			//ベクトル求める
+			//move
+			vecMove = g_player.pos - g_player.posOld;
+
+			//X
+			vecLinex = pos1x - pos0x;
+			//右方向の計算
+			vecToPosx = g_player.pos - pos0x;
+
+			//左方向の計算
+			vecToPosxOps = g_player.pos - (pObject->pos + D3DXVECTOR3(pBPrint->vtxMax.x, 0.0f, pBPrint->vtxMax.z));
+
+			//Z
+			vecLinez = pos1z - pos0z;
+			//上方向の計算
+			vecToPosz = g_player.pos - pos0z;
+			//下方向の計算
+			vecToPoszOps = g_player.pos - (pObject->pos + D3DXVECTOR3(pBPrint->vtxMin.x, 0.0f, pBPrint->vtxMax.z));
+
+			//当たり判定本番
+			//X
+			//面積求める
+			fAreaA = (vecToPosx.z * vecMove.x) - (vecToPosx.x * vecMove.z);
+			fAreaB = (vecLinex.z * vecMove.x) - (vecLinex.x * vecMove.z);
+
+			//左側AND範囲内
+			if ((vecLinex.z * vecToPosx.x) - (vecLinex.x * vecToPosx.z) <= 0 && (-vecLinex.z * vecToPosxOps.x) - (-vecLinex.x * vecToPosxOps.z) <= 0)
 			{
-				if (g_player.posOld.x <= obj->pos.x + (pBPrint + obj->bpidx)->vtxMin.x && g_player.pos.x > obj->pos.x + (pBPrint + obj->bpidx)->vtxMin.x)
-				{
-					g_player.pos.x = obj->pos.x + (pBPrint + obj->bpidx)->vtxMin.x;
-				}
-				if (g_player.posOld.x >= obj->pos.x + (pBPrint + obj->bpidx)->vtxMax.x && g_player.pos.x < obj->pos.x + (pBPrint + obj->bpidx)->vtxMax.x)
-				{
-					g_player.pos.x = obj->pos.x + (pBPrint + obj->bpidx)->vtxMax.x;
+				if (fAreaA / fAreaB >= 0.0f && fAreaA / fAreaB <= 1.0f)
+				{//ごっつん
+					//assert(false);
 				}
 			}
 
-			if (g_player.pos.x >= obj->pos.x + (pBPrint + obj->bpidx)->vtxMin.x && g_player.pos.x <= obj->pos.x + (pBPrint + obj->bpidx)->vtxMax.x)
+			//Z
+			//面積求める
+			fAreaA = (vecToPosz.z * vecMove.x) - (vecToPosz.x * vecMove.z);
+			fAreaB = (vecLinez.z * vecMove.x) - (vecLinez.x * vecMove.z);
+
+			//左側AND範囲内
+			if ((vecLinez.z * vecToPosz.x) - (vecLinex.z * vecToPosz.z) <= 0 && (-vecLinez.z * vecToPoszOps.x) - (-vecLinez.x * vecToPoszOps.z) <= 0)
 			{
-				if (g_player.posOld.z <= obj->pos.z + (pBPrint + obj->bpidx)->vtxMin.z && g_player.pos.z > obj->pos.z + (pBPrint + obj->bpidx)->vtxMin.z)
-				{
-					g_player.pos.z = obj->pos.z + (pBPrint + obj->bpidx)->vtxMin.z;
-				}
-				if (g_player.posOld.z >= obj->pos.z + (pBPrint + obj->bpidx)->vtxMax.z && g_player.pos.z < obj->pos.z + (pBPrint + obj->bpidx)->vtxMax.z)
-				{
-					g_player.pos.z = obj->pos.z + (pBPrint + obj->bpidx)->vtxMax.z;
+				if (fAreaA / fAreaB >= 0.0f && fAreaA / fAreaB <= 1.0f)
+				{//ごっつん
+					//assert(false);
 				}
 			}
 		}
 	}
+
+	//ここから先は引っ張ってきたやつ
+	
 }
 
 //========================
