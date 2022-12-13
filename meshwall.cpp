@@ -9,11 +9,11 @@
 #include "input.h"
 
 //マクロ
-#define MESHFIELD_LENGTH	(160.0f)	//1枚当たりの長さ
-#define MESHFIELD_WIDTH		(17)		//横の分割数
-#define MESHFIELD_HEIGHT	(14)		//縦の分割数
-#define MESHFIELD_IDXNUM	(((MESHFIELD_WIDTH + 1) * MESHFIELD_HEIGHT * 2) + (2 * (MESHFIELD_HEIGHT - 1)))	//インデックス数
-#define MESHFIELD_POLYNUM	(MESHFIELD_IDXNUM - 2)	//ポリゴン数
+#define MESHFIELD_LENGTH	(1.0f)
+#define MESHFIELD_WIDTH		(28 * 5)
+#define MESHFIELD_HEIGHT	(34 * 5)
+#define MESHFIELD_IDXNUM	(((MESHFIELD_WIDTH + 1) * MESHFIELD_HEIGHT * 2) + (2 * (MESHFIELD_HEIGHT - 1)))
+#define MESHFIELD_POLYNUM	(MESHFIELD_IDXNUM - 2)
 
 //プロト
 WORD *SetIdxSwaingField(int nCntWidth, WORD *pIdx);
@@ -35,7 +35,7 @@ void InitMeshfield(void)
 
 	//テクスチャ読み込み
 	D3DXCreateTextureFromFile(pDevice,
-		"data\\TEXTURE\\map_Route.png",
+		"data\\TEXTURE\\field000.jpg",
 		&g_pTextureMeshfield);
 
 	//頂点バッファの生成
@@ -57,7 +57,7 @@ void InitMeshfield(void)
 	int hoge = MESHFIELD_IDXNUM;
 
 	//変数初期化
-	g_posMeshfield = D3DXVECTOR3((float)-MESHFIELD_WIDTH / 2 * MESHFIELD_LENGTH, 0.0f, (float)MESHFIELD_HEIGHT / 2 * MESHFIELD_LENGTH);
+	g_posMeshfield = D3DXVECTOR3(-MESHFIELD_WIDTH / 2 * MESHFIELD_LENGTH, 0.0f, MESHFIELD_HEIGHT / 2 * MESHFIELD_LENGTH);
 	g_rotMeshfield = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	VERTEX_3D *pVtx;
@@ -79,7 +79,7 @@ void InitMeshfield(void)
 		pVtx->col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 
 		//テクスチャ座標
-		pVtx->tex = D3DXVECTOR2(((float)(nCount % (MESHFIELD_WIDTH + 1)) / (MESHFIELD_WIDTH)), ((float)(nCount / (MESHFIELD_WIDTH + 1)) / (MESHFIELD_HEIGHT)));
+		pVtx->tex = D3DXVECTOR2(((float)(nCount % (MESHFIELD_WIDTH + 1)) / (MESHFIELD_WIDTH + 1)), ((float)(nCount / (MESHFIELD_WIDTH + 1)) / (MESHFIELD_HEIGHT + 1)));
 	}
 
 	//頂点バッファをアンロック

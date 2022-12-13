@@ -109,7 +109,24 @@ void LoadMapFile(void)
 			}
 
 			//文字列チェック
-			if (bRead == true)
+			if (strncmp(&aCode[0], CODE_SCRIPT, sizeof CODE_SCRIPT / sizeof(char) - 1) == 0)
+			{//読み取り開始
+				bRead = true;
+			}
+			else if (strncmp(&aCode[0], CODE_END_SCRIPT, sizeof CODE_END_SCRIPT / sizeof(char) - 1) == 0)
+			{//読み取り終了
+				bRead = false;
+				break;
+			}
+			else if (aCode[0] == EOF)
+			{//EOFかもしれない
+				if (feof(pFile))
+				{//いや、これはEOFだ
+					bRead = false;
+					break;
+				}
+			}
+			else if (bRead == true)
 			{//読み取り
 				switch (g_readStat)
 				{
@@ -291,15 +308,15 @@ void LoadMapFile(void)
 
 						//X座標読み取り
 						pSprit = strtok(NULL, " =\n");
-						g_rot.x = (atof(pSprit) / 360) * D3DX_PI;
+						g_rot.x = (atof(pSprit) / 180) * D3DX_PI;
 
 						//Y座標読み取り
 						pSprit = strtok(NULL, " =\n");
-						g_rot.y = (atof(pSprit) / 360) * D3DX_PI;
+						g_rot.y = (atof(pSprit) / 180) * D3DX_PI;
 
 						//Z座標読み取り
 						pSprit = strtok(NULL, " =\n");
-						g_rot.z = (atof(pSprit) / 360) * D3DX_PI;
+						g_rot.z = (atof(pSprit) / 180) * D3DX_PI;
 					}
 					else if (strncmp(&aCode[0], CODE_STATE, sizeof CODE_STATE / sizeof(char) - 1) == 0)
 					{//状態指定
@@ -363,23 +380,6 @@ void LoadMapFile(void)
 					}
 					break;
 				}
-			}
-			else if (strncmp(&aCode[0], CODE_END_SCRIPT, sizeof CODE_END_SCRIPT / sizeof(char) - 1) == 0)
-			{//読み取り終了
-				bRead = false;
-				break;
-			}
-			else if (aCode[0] == EOF)
-			{//EOFかもしれない
-				if (feof(pFile))
-				{//いや、これはEOFだ
-					bRead = false;
-					break;
-				}
-			}
-			else if (strncmp(&aCode[0], CODE_SCRIPT, sizeof CODE_SCRIPT / sizeof(char) - 1) == 0)
-			{//読み取り開始
-				bRead = true;
 			}
 		}
 		

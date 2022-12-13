@@ -10,14 +10,14 @@
 
 //マクロ
 #define SKY_DIVISION_HORIZONTAL	(8)				//横の分割数
-#define SKY_DIVISION_VERTICAL	(16)				//縦の分割数
-#define SKY_DIST_HEIGHT		(200.0f)
+#define SKY_DIVISION_VERTICAL	(16)			//縦の分割数
+#define SKY_DIST_HEIGHT		(200.0f)			//縦の頂点間隔
 #define SKY_RADIUS			(2500.0f)			//半径
-#define SKY_NONDRAW_AREA	(0.4f)			//空のメッシュドームを描画しない割合
-#define SKY_SUMMIT_NUM	((SKY_DIVISION_VERTICAL + 1) * (SKY_DIVISION_HORIZONTAL + 1))
-#define SKY_IDXNUM		(((SKY_DIVISION_VERTICAL + 1) * SKY_DIVISION_HORIZONTAL * 2) + (2 * (SKY_DIVISION_HORIZONTAL - 1)))
-#define SKY_POLYNUM		(SKY_IDXNUM - 2)
-#define SKY_NORVECTER	(-1)		//法線の向き（1で表・-1で裏）
+#define SKY_NONDRAW_AREA	(0.4f)				//空のメッシュドームを描画しない割合
+#define SKY_SUMMIT_NUM	((SKY_DIVISION_VERTICAL + 1) * (SKY_DIVISION_HORIZONTAL + 1))	//頂点数
+#define SKY_IDXNUM		(((SKY_DIVISION_VERTICAL + 1) * SKY_DIVISION_HORIZONTAL * 2) + (2 * (SKY_DIVISION_HORIZONTAL - 1)))	//インデックス数
+#define SKY_POLYNUM		(SKY_IDXNUM - 2)		//ポリゴン数
+#define SKY_NORVECTER	(-1)					//法線の向き（1で表・-1で裏）
 
 //プロト
 WORD *SetIdxSwaingCylinder(int nCntWidth, WORD *pIdx);

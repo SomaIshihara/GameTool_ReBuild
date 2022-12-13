@@ -137,11 +137,157 @@ END_WALLSET
 # モデル配置情報
 #------------------------------------------------------------------------------
 #------------------
-# 岩１個目
+# スタート（情ビ）・ゴール（地下鉄入口）
 #------------------
+#---JOBI---
+MODELSET
+	TYPE = 0
+	POS = -300 0 -840
+	ROT = 0 180 0
+END_MODELSET
+
+#---SUBWAY---
+MODELSET
+	TYPE = 1
+	POS = 120 0 880
+	ROT = 0 90 0
+END_MODELSET
+
+#------------------
+# ビル群1個目
+#------------------
+#---Set 1---
 MODELSET
 	TYPE = 13
 	POS = -120 0 -120
+	ROT = 0 0 0
+END_MODELSET
+MODELSET
+	TYPE = 14
+	POS = -200 0 -120
+	ROT = 0 0 0
+END_MODELSET
+MODELSET
+	TYPE = 15
+	POS = -280 0 -120
+	ROT = 0 0 0
+END_MODELSET
+MODELSET
+	TYPE = 16
+	POS = -360 0 -120
+	ROT = 0 0 0
+END_MODELSET
+
+#---Set 2---
+MODELSET
+	TYPE = 16
+	POS = -120 0 120
+	ROT = 0 180 0
+END_MODELSET
+MODELSET
+	TYPE = 14
+	POS = -200 0 120
+	ROT = 0 180 0
+END_MODELSET
+MODELSET
+	TYPE = 13
+	POS = -280 0 120
+	ROT = 0 180 0
+END_MODELSET
+MODELSET
+	TYPE = 15
+	POS = -360 0 120
+	ROT = 0 180 0
+END_MODELSET
+
+#---Set 3---
+MODELSET
+	TYPE = 15
+	POS = -120 0 -40
+	ROT = 0 -90 0
+END_MODELSET
+MODELSET
+	TYPE = 14
+	POS = -120 0 40
+	ROT = 0 -90 0
+END_MODELSET
+MODELSET
+	TYPE = 13
+	POS = -360 0 -40
+	ROT = 0 90 0
+END_MODELSET
+MODELSET
+	TYPE = 16
+	POS = -360 0 40
+	ROT = 0 90 0
+END_MODELSET
+
+#------------------
+# ビル群2個目
+#------------------
+#---Set 1---
+MODELSET
+	TYPE = 13
+	POS = -600 0 -120
+	ROT = 0 0 0
+END_MODELSET
+MODELSET
+	TYPE = 14
+	POS = -680 0 -120
+	ROT = 0 0 0
+END_MODELSET
+MODELSET
+	TYPE = 15
+	POS = -760 0 -120
+	ROT = 0 0 0
+END_MODELSET
+MODELSET
+	TYPE = 16
+	POS = -840 0 -120
+	ROT = 0 0 0
+END_MODELSET
+
+#---Set 2---
+MODELSET
+	TYPE = 16
+	POS = -600 0 120
+	ROT = 0 180 0
+END_MODELSET
+MODELSET
+	TYPE = 14
+	POS = -680 0 120
+	ROT = 0 180 0
+END_MODELSET
+MODELSET
+	TYPE = 13
+	POS = -760 0 120
+	ROT = 0 180 0
+END_MODELSET
+MODELSET
+	TYPE = 15
+	POS = -840 0 120
+	ROT = 0 180 0
+END_MODELSET
+
+#---Set 3---
+MODELSET
+	TYPE = 15
+	POS = -600 0 -40
+	ROT = 0 -90 0
+END_MODELSET
+MODELSET
+	TYPE = 14
+	POS = -600 0 40
+	ROT = 0 -90 0
+END_MODELSET
+MODELSET
+	TYPE = 13
+	POS = -840 0 -40
+	ROT = 0 90 0
+END_MODELSET
+MODELSET
+	TYPE = 16
+	POS = -840 0 40
 	ROT = 0 90 0
 END_MODELSET
 
