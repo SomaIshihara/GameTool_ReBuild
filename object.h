@@ -8,7 +8,7 @@
 #define _OBJECT_H_
 
 //マクロ
-#define MAX_OBJECT				(128)
+#define MAX_OBJECT				(512)
 #define OBJ_MAX_TEXTURE			(16)
 
 //オブジェクト状態列挙
