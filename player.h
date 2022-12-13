@@ -14,7 +14,7 @@
 typedef struct
 {
 	D3DXVECTOR3 pos;		//ˆÊ’u
-	D3DXVECTOR3 posOld;
+	D3DXVECTOR3 posOld;		//‘O‰ñ‚ÌˆÊ’u
 	float fLength;
 	float fAngle;
 	D3DXVECTOR3 move;		//ˆÚ“®—Ê
