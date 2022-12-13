@@ -16,7 +16,7 @@
 #include <assert.h>
 
 //マクロ
-#define PLAYER_MOVE_SPEED	(5.0f)	//プレイヤー移動速度
+#define PLAYER_MOVE_SPEED	(7.0f)	//プレイヤー移動速度
 #define DUMP_COEF			(0.4f)	//減衰係数
 #define BULLET_SPEED		(15.0f)	//弾の速さ
 

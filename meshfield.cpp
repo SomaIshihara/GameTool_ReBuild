@@ -9,9 +9,9 @@
 #include "input.h"
 
 //É}ÉNÉç
-#define MESHFIELD_LENGTH	(80.0f)
-#define MESHFIELD_WIDTH		(34)
-#define MESHFIELD_HEIGHT	(28)
+#define MESHFIELD_LENGTH	(160.0f)
+#define MESHFIELD_WIDTH		(17)
+#define MESHFIELD_HEIGHT	(14)
 #define MESHFIELD_IDXNUM	(((MESHFIELD_WIDTH + 1) * MESHFIELD_HEIGHT * 2) + (2 * (MESHFIELD_HEIGHT - 1)))
 #define MESHFIELD_POLYNUM	(MESHFIELD_IDXNUM - 2)
 
@@ -57,7 +57,7 @@ void InitMeshfield(void)
 	int hoge = MESHFIELD_IDXNUM;
 
 	//ïœêîèâä˙âª
-	g_posMeshfield = D3DXVECTOR3(-MESHFIELD_WIDTH / 2 * MESHFIELD_LENGTH, 0.0f, MESHFIELD_HEIGHT / 2 * MESHFIELD_LENGTH);
+	g_posMeshfield = D3DXVECTOR3((float)-MESHFIELD_WIDTH / 2 * MESHFIELD_LENGTH, 0.0f, (float)MESHFIELD_HEIGHT / 2 * MESHFIELD_LENGTH);
 	g_rotMeshfield = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	VERTEX_3D *pVtx;

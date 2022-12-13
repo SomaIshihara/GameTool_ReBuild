@@ -14,6 +14,7 @@
 #define CAMERA_MOVE_SPEED	(1.0f)	//カメラ移動速度
 #define CAMERA_KEY_ROT_SPEED	(0.005f)	//キーボード入力での回転速度
 #define CAMERA_MOU_ROT_SPEED	(0.003f)	//マウス移動での回転速度
+#define CAMERA_LENGTH		(5200.0f)		//カメラが見える最大距離
 
 //プロト
 void FixPosV(void);
@@ -173,7 +174,7 @@ void SetCamera(void)
 	D3DXMatrixIdentity(&g_camera.mtxProjection);
 
 	//作成
-	D3DXMatrixPerspectiveFovLH(&g_camera.mtxProjection, D3DXToRadian(45.0f), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 10.0f, 2000.0f);
+	D3DXMatrixPerspectiveFovLH(&g_camera.mtxProjection, D3DXToRadian(45.0f), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 10.0f, CAMERA_LENGTH);
 
 	//設定
 	pDevice->SetTransform(D3DTS_PROJECTION, &g_camera.mtxProjection);

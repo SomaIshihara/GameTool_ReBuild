@@ -9,14 +9,15 @@
 #include "input.h"
 
 //マクロ
-#define SKY_DIVISION_WIDTH	(2)				//横の分割数
-#define SKY_DIVISION_HEIGHT	(16)			//縦の分割数
-#define SKY_RADIUS_WIDTH	(40.0f)
-#define SKY_RADIUS			(1100.0f)			//半径
-#define SKY_SUMMIT_NUM	((SKY_DIVISION_HEIGHT + 1) * (SKY_DIVISION_WIDTH + 1))
-#define SKY_IDXNUM		(((SKY_DIVISION_HEIGHT + 1) * (SKY_DIVISION_WIDTH + 1)) + (2 * (SKY_DIVISION_WIDTH - 1)))
+#define SKY_DIVISION_HORIZONTAL	(8)				//横の分割数
+#define SKY_DIVISION_VERTICAL	(16)				//縦の分割数
+#define SKY_DIST_HEIGHT		(200.0f)
+#define SKY_RADIUS			(2500.0f)			//半径
+#define SKY_NONDRAW_AREA	(0.4f)			//空のメッシュドームを描画しない割合
+#define SKY_SUMMIT_NUM	((SKY_DIVISION_VERTICAL + 1) * (SKY_DIVISION_HORIZONTAL + 1))
+#define SKY_IDXNUM		(((SKY_DIVISION_VERTICAL + 1) * SKY_DIVISION_HORIZONTAL * 2) + (2 * (SKY_DIVISION_HORIZONTAL - 1)))
 #define SKY_POLYNUM		(SKY_IDXNUM - 2)
-#define SKY_NORVECTER	(1)		//法線の向き（1で表・-1で裏）
+#define SKY_NORVECTER	(-1)		//法線の向き（1で表・-1で裏）
 
 //プロト
 WORD *SetIdxSwaingCylinder(int nCntWidth, WORD *pIdx);
@@ -61,7 +62,7 @@ void InitSky(void)
 	//変数初期化
 	g_posSky = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	g_rotSky = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	g_cullMode = D3DCULL_CCW;
+	g_cullMode = D3DCULL_CW;
 
 	VERTEX_3D *pVtx;
 
@@ -70,16 +71,18 @@ void InitSky(void)
 	g_pVtxbuffSky->Lock(0, 0, (void **)&pVtx, 0);
 
 	//頂点座標+テクスチャ座標
-	for (int nCntHeight = 0; nCntHeight < SKY_DIVISION_WIDTH + 1; nCntHeight++)
+	for (int nCntHorizontal = 0; nCntHorizontal < SKY_DIVISION_HORIZONTAL + 1; nCntHorizontal++)
 	{
-		for (int nCntDivision = 0; nCntDivision < SKY_DIVISION_HEIGHT + 1; nCntDivision++, pVtx++)
+		for (int nCntVertical = 0; nCntVertical < SKY_DIVISION_VERTICAL + 1; nCntVertical++, pVtx++)
 		{
 			//計算用
-			float fAngle = fmodf(((float)nCntDivision / (SKY_DIVISION_HEIGHT / 2) * D3DX_PI) + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
+			float fAngle = fmodf(((float)nCntVertical / (SKY_DIVISION_VERTICAL / 2) * D3DX_PI) + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
 			D3DXVECTOR3 nor;
 
 			//頂点座標（相対座標）
-			pVtx->pos = D3DXVECTOR3(sinf(fAngle) * SKY_RADIUS_WIDTH, SKY_RADIUS_WIDTH * (SKY_DIVISION_WIDTH - nCntHeight), -cosf(fAngle) * SKY_RADIUS_WIDTH);
+			pVtx->pos = D3DXVECTOR3(sinf(fAngle) * SKY_RADIUS * sinf((SKY_NONDRAW_AREA + ((float)nCntHorizontal / SKY_DIVISION_HORIZONTAL) * (0.5f - SKY_NONDRAW_AREA)) * D3DX_PI),
+				SKY_DIST_HEIGHT * (SKY_DIVISION_HORIZONTAL - nCntHorizontal), 
+				-cosf(fAngle) * SKY_RADIUS * sinf((SKY_NONDRAW_AREA + ((float)nCntHorizontal / SKY_DIVISION_HORIZONTAL) * (0.5f - SKY_NONDRAW_AREA)) * D3DX_PI));
 
 			//法線ベクトル
 			nor = pVtx->pos;	//頂点位置代入
@@ -93,7 +96,7 @@ void InitSky(void)
 			pVtx->col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 
 			//テクスチャ座標
-			pVtx->tex = D3DXVECTOR2((float)(nCntDivision % (SKY_DIVISION_HEIGHT + 1)), (float)(nCntHeight / SKY_DIVISION_WIDTH));
+			pVtx->tex = D3DXVECTOR2(((float)nCntVertical / SKY_DIVISION_VERTICAL), ((float)nCntHorizontal / SKY_DIVISION_HORIZONTAL));
 		}
 	}
 
@@ -107,18 +110,18 @@ void InitSky(void)
 	//バッファロック
 	g_pIdxBuffSky->Lock(0, 0, (void **)&pIdx, 0);
 
-	for (nCntWidth = 0; nCntWidth < SKY_DIVISION_WIDTH - 1; nCntWidth++)
+	for (nCntWidth = 0; nCntWidth < SKY_DIVISION_HORIZONTAL - 1; nCntWidth++)
 	{
 		//グネグネパート
 		pIdx = SetIdxSwaingCylinder(nCntWidth, pIdx);
 		
 		//チョン打ちするパート
 		//最後のインデックス情報を次のにも入れる
-		*pIdx = SKY_DIVISION_WIDTH + (SKY_DIVISION_WIDTH + 1) * nCntWidth;
+		*pIdx = SKY_DIVISION_VERTICAL + (SKY_DIVISION_VERTICAL + 1) * nCntWidth;
 		pIdx++;
 
 		//その次のに次のループで最初に入る数字を入れる
-		*pIdx = (SKY_DIVISION_WIDTH + 1) + (SKY_DIVISION_WIDTH + 1) * (nCntWidth + 1);
+		*pIdx = (SKY_DIVISION_VERTICAL + 1) + (SKY_DIVISION_VERTICAL + 1) * (nCntWidth + 1);
 		pIdx++;
 	}
 
@@ -202,7 +205,7 @@ void DrawSky(void)
 	pDevice->SetTexture(0, g_pTextureSky);
 
 	//ポリゴン描画（インデックスされたやつ）
-	pDevice->DrawIndexedPrimitive(D3DPT_TRIANGLESTRIP, 0, 0, (SKY_DIVISION_HEIGHT + 1) * (SKY_DIVISION_WIDTH + 1), 0, SKY_POLYNUM);
+	pDevice->DrawIndexedPrimitive(D3DPT_TRIANGLESTRIP, 0, 0, SKY_SUMMIT_NUM, 0, SKY_POLYNUM);
 
 	//カリング戻す
 	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
@@ -214,9 +217,9 @@ void DrawSky(void)
 WORD *SetIdxSwaingCylinder(int nCntWidth, WORD *pIdx)
 {
 	//グネグネパート
-	for (int nCountHeight = 0; nCountHeight < (SKY_DIVISION_HEIGHT + 1) * 2; nCountHeight++, pIdx++)
+	for (int nCountHeight = 0; nCountHeight < (SKY_DIVISION_VERTICAL + 1) * 2; nCountHeight++, pIdx++)
 	{
-		*pIdx = (SKY_DIVISION_HEIGHT + 1) * ((nCountHeight % 2) ^ 0x1) + nCountHeight / 2 + (SKY_DIVISION_WIDTH + 1) * nCntWidth;
+		*pIdx = (SKY_DIVISION_VERTICAL + 1) * ((nCountHeight % 2) ^ 0x1) + nCountHeight / 2 + (SKY_DIVISION_VERTICAL + 1) * nCntWidth;
 	}
 	return pIdx;
 }
