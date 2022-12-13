@@ -28,5 +28,6 @@ void UninitCamera(void);
 void UpdateCamera(void);
 void SetCamera(void);
 Camera *GetCamera(void);
+void ResetCamera(void);
 
 #endif // !_CAMERA_H_

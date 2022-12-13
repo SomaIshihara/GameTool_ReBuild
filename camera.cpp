@@ -24,7 +24,7 @@ void FixRot(void);
 //グローバル変数
 Camera g_camera;	//カメラ情報
 LPD3DXFONT g_pFontCamera = NULL;	//フォントへのポインタ
-bool g_bDebugCamera = false;			//カーソル表示非表示切り替え
+bool g_bDebugCamera = true;			//カーソル表示非表示切り替え
 
 //========================
 //初期化処理
@@ -47,6 +47,9 @@ void InitCamera(void)
 	g_camera.rotDest = D3DXVECTOR3(0.0f, 50.0f, -100.0f);
 	g_camera.fLength = 200.0f;
 	FixPosV();
+
+	//カメラ操作可能
+	g_bDebugCamera = true;
 }
 
 //========================
@@ -62,7 +65,7 @@ void UninitCamera(void)
 //========================
 void UpdateCamera(void)
 {
-	if (GetKeyboardTrigger(DIK_F2) == true)
+	if (GetKeyboardTrigger(DIK_F1) == true)
 	{
 		g_bDebugCamera = g_bDebugCamera ? false : true;
 	}
@@ -240,4 +243,18 @@ void FixRot(void)
 Camera *GetCamera(void) 
 {
 	return &g_camera;
+}
+
+//========================
+//カメラ位置向きを元に戻す
+//========================
+void ResetCamera(void)
+{
+	g_camera.posV = D3DXVECTOR3(0.0f, 50.0f, -100.0f);
+	g_camera.posVDest = D3DXVECTOR3(0.0f, 50.0f, -100.0f);
+	g_camera.posR = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	g_camera.posRDest = D3DXVECTOR3(0.0f, 50.0f, -100.0f);
+	g_camera.vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	g_camera.rot = D3DXVECTOR3(-0.5f, 0.0f, 0.0f);
+	g_camera.rotDest = D3DXVECTOR3(0.0f, 50.0f, -100.0f);
 }

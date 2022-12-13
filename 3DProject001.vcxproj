@@ -157,6 +157,7 @@
     <ClCompile Include="debucproc.cpp" />
     <ClCompile Include="explosion.cpp" />
     <ClCompile Include="file.cpp" />
+    <ClCompile Include="game.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="light.cpp" />
     <ClCompile Include="main.cpp" />
@@ -164,8 +165,10 @@
     <ClCompile Include="model.cpp" />
     <ClCompile Include="object.cpp" />
     <ClCompile Include="player.cpp" />
+    <ClCompile Include="result.cpp" />
     <ClCompile Include="shadow.cpp" />
     <ClCompile Include="sky.cpp" />
+    <ClCompile Include="title.cpp" />
     <ClCompile Include="wall.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -174,6 +177,7 @@
     <ClInclude Include="debugproc.h" />
     <ClInclude Include="explosion.h" />
     <ClInclude Include="file.h" />
+    <ClInclude Include="game.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="main.h" />
@@ -181,8 +185,10 @@
     <ClInclude Include="model.h" />
     <ClInclude Include="object.h" />
     <ClInclude Include="player.h" />
+    <ClInclude Include="result.h" />
     <ClInclude Include="shadow.h" />
     <ClInclude Include="sky.h" />
+    <ClInclude Include="title.h" />
     <ClInclude Include="wall.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

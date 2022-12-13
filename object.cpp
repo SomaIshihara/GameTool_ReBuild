@@ -235,8 +235,7 @@ void UpdateObject(void)
 	if (GetKeyboardTrigger(DIK_F5) == true && g_nNumObj == 0)
 	{
 		//オブジェクト生成
-		SetObject(BLUEPRINTIDX_JOBI, D3DXVECTOR3(-65.0f, 0.0f, -1430.0f), D3DXVECTOR3(0.0f, -0.5f * D3DX_PI, 0.0f), false, 5);
-		SetObject(BLUEPRINTIDX_SUBWAYENTRANCE, D3DXVECTOR3(300.0f, 0.0f, 1450.0f), D3DXVECTOR3(0.0f, 0.5f * D3DX_PI, 0.0f), false, 5);
+		//今は何もしない
 	}
 }
 

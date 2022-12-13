@@ -60,6 +60,7 @@ typedef struct
 //プロトタイプ宣言
 LPDIRECT3DDEVICE9 GetDevice(void);
 void SetShowCursor(bool bDisp);
-void DrawFPS(void);
+void SetMode(MODE mode);
+MODE GetMode(void);
 
 #endif // !_MAIN_H_

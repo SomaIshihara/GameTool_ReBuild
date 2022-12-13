@@ -6,17 +6,13 @@
 //==========================================
 #include "main.h"
 #include "input.h"
-#include "wall.h"
 #include "camera.h"
 #include "light.h"
-#include "player.h"
-#include "shadow.h"
-#include "bullet.h"
-#include "meshfield.h"
-#include "sky.h"
-#include "object.h"
 #include "file.h"
 #include "debugproc.h"
+#include "title.h"
+#include "game.h"
+#include "result.h"
 
 //マクロ定義
 #define WINDOW_NAME		"hogehoge"
@@ -321,26 +317,13 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	//オブジェクト初期化
 	InitCamera();
 	InitLight();
-	InitSky();
-	InitMeshfield();
-	InitWall();
-	InitBullet();
-	InitShadow();
-	InitPlayer();
-	InitObject();
 	InitDebugProc();
+
+	//まとまったもの
+	SetMode(MODE_TITLE);
 
 	//ファイル初期化
 	InitFile();
-
-	//ファイル読み込み・オブジェクト生成
-	LoadMapFile();
-
-	//壁生成
-	SetWall(D3DXVECTOR3(0.0f, 0.0f, 1120.0f), D3DXVECTOR3(0.0f, 0.0f * D3DX_PI, 0.0f), 2720.0f, 80.0f);		//前
-	SetWall(D3DXVECTOR3(0.0f, 0.0f, -1120.0f), D3DXVECTOR3(0.0f, 1.0f * D3DX_PI, 0.0f), 2720.0f, 80.0f);	//後ろ
-	SetWall(D3DXVECTOR3(-1360.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, -0.5f * D3DX_PI, 0.0f), 2240.0f, 50.0f);	//左
-	SetWall(D3DXVECTOR3(1360.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.5f * D3DX_PI, 0.0f), 2240.0f, 50.0f);		//右
 	
 	return S_OK;
 }
@@ -351,15 +334,14 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 void Uninit(void)
 {
 	//終了処理（自分が作ったものを捨てる）
+	//まとまったもの
+	UninitResult();
+	UninitGame();
+	UninitTitle();
+
+	//単品
 	UninitFile();
 	UninitDebugProc();
-	UninitObject();
-	UninitPlayer();
-	UninitShadow();
-	UninitBullet();
-	UninitWall();
-	UninitMeshfield();
-	UninitSky();
 	UninitLight();
 	UninitCamera();
 
@@ -395,26 +377,19 @@ void Update(void)
 	//ファイル
 	UpdateFile();
 
-	//影
-	UpdateShadow();
-
-	//空
-	UpdateSky();
-
-	//メッシュフィールド
-	UpdateMeshfield();
-
-	//壁
-	UpdateWall();
-
-	//弾
-	UpdateBullet();
-
-	//プレイヤー
-	UpdatePlayer();
-
-	//オブジェクト
-	UpdateObject();
+	//まとまったものから選ぶ
+	switch (g_mode)
+	{
+	case MODE_TITLE:
+		UpdateTitle();
+		break;
+	case MODE_GAME:
+		UpdateGame();
+		break;
+	case MODE_RESULT:
+		UpdateResult();
+		break;
+	}
 
 	//カメラ
 	UpdateCamera();
@@ -451,33 +426,28 @@ void Draw(void)
 		PrintDebugProc("FPS:%d\n\n", g_nCountFPS);
 
 		//操作方法を文字にして送る
-		PrintDebugProc("移動:WASD, 弾発射:SPACE, 視点移動:マウス移動(F2で有効化)\n");
-		PrintDebugProc("オブジェクト再生成:F5\n\n");
+		PrintDebugProc("移動:WASD, 弾発射:SPACE, 視点移動:マウス移動(F1で有効無効切り替え)\n");
+		PrintDebugProc("[ゲーム画面以外]マウス左クリック:遷移\n");
+		PrintDebugProc("[ゲーム画面]クリア判定:F2,ゲームオーバー判定:F3\n\n");
+		//PrintDebugProc("オブジェクト再生成:F5\n\n");
 
 		//カメラ設定
 		SetCamera();
 
 		//オブジェクト描画
-		//空
-		DrawSky();
-
-		//メッシュフィールド
-		DrawMeshfield();
-
-		//壁
-		DrawWall();
-
-		//影
-		DrawShadow();
-
-		//弾
-		DrawBullet();
-
-		//プレイヤー
-		DrawPlayer();
-
-		//オブジェクト
-		DrawObject();
+		//まとまったものから選ぶ
+		switch (g_mode)
+		{
+		case MODE_TITLE:
+			DrawTitle();
+			break;
+		case MODE_GAME:
+			DrawGame();
+			break;
+		case MODE_RESULT:
+			DrawResult();
+			break;
+		}
 
 		//デバッグ表示
 		DrawDebugProc();
@@ -534,4 +504,49 @@ void UpdateShowCursor(void)
 		while (ShowCursor(TRUE) <= -SHOWCURSOR_COUNTER);
 		ShowCursor(FALSE);
 	}
+}
+
+//========================
+//設定処理
+//========================
+void SetMode(MODE mode)
+{
+	//現在の画面終了
+	switch (g_mode)
+	{
+	case MODE_TITLE:
+		UninitTitle();
+		break;
+	case MODE_GAME:
+		UninitGame();
+		break;
+	case MODE_RESULT:
+		UninitResult();
+		break;
+	}
+
+	//次の画面初期化
+	switch (mode)
+	{
+	case MODE_TITLE:
+		InitTitle();
+		break;
+	case MODE_GAME:
+		InitGame();
+		break;
+	case MODE_RESULT:
+		InitResult();
+		break;
+	}
+
+	//代入
+	g_mode = mode;
+}
+
+//========================
+//取得処理
+//========================
+MODE GetMode(void) 
+{
+	return g_mode;
 }

@@ -37,6 +37,12 @@
     <Filter Include="ヘッダー ファイル\Effect">
       <UniqueIdentifier>{69defe04-b228-4f34-9391-10acddba3a74}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Transition">
+      <UniqueIdentifier>{ee77debc-09f6-4282-a324-16ffc9dab4f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Transition">
+      <UniqueIdentifier>{d3018829-cda9-4b93-8a6c-72c53a9df157}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="input.cpp">
@@ -84,6 +90,15 @@
     <ClCompile Include="sky.cpp">
       <Filter>ソース ファイル\Object</Filter>
     </ClCompile>
+    <ClCompile Include="title.cpp">
+      <Filter>ソース ファイル\Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="game.cpp">
+      <Filter>ソース ファイル\Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="result.cpp">
+      <Filter>ソース ファイル\Transition</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="input.h">
@@ -130,6 +145,15 @@
     </ClInclude>
     <ClInclude Include="sky.h">
       <Filter>ヘッダー ファイル\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="title.h">
+      <Filter>ヘッダー ファイル\Transition</Filter>
+    </ClInclude>
+    <ClInclude Include="game.h">
+      <Filter>ヘッダー ファイル\Transition</Filter>
+    </ClInclude>
+    <ClInclude Include="result.h">
+      <Filter>ヘッダー ファイル\Transition</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
