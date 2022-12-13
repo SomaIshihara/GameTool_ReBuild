@@ -10,9 +10,12 @@
 #include <stdio.h>
 #include <stdarg.h>
 
+//マクロ
+#define DEBPRO_MAX_STR	(2048)			//確保する文字数
+
 //グローバル変数
-LPD3DXFONT g_pFont = NULL;	//フォントへのポインタ
-char g_aStrPrint[2048];		//表示文字バッファ
+LPD3DXFONT g_pFont = NULL;				//フォントへのポインタ
+char g_aStrPrint[DEBPRO_MAX_STR];		//表示文字バッファ
 
 //========================
 //初期化処理

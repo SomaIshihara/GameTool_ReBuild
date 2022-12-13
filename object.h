@@ -9,6 +9,7 @@
 
 //マクロ
 #define MAX_OBJECT				(128)
+#define OBJ_MAX_TEXTURE			(16)
 
 //オブジェクト状態列挙
 typedef enum
@@ -50,8 +51,8 @@ typedef struct
 	//オブジェクト見た目関係
 	LPD3DXMESH pMesh = NULL;				//メッシュへのポインタ
 	LPD3DXBUFFER pBuffMat = NULL;			//マテリアルへのポインタ
-	DWORD dwNumMat = 0;						//マテリアル数
-	LPDIRECT3DTEXTURE9 apTexture[16] = {};	//テクスチャポインタ
+	DWORD dwNumMat;							//マテリアル数
+	LPDIRECT3DTEXTURE9 apTexture[OBJ_MAX_TEXTURE] = {};	//テクスチャポインタ
 	D3DXVECTOR3 vtxMin, vtxMax;				//小さい頂点・大きい頂点
 } BluePrint;
 

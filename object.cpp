@@ -57,6 +57,26 @@ void InitObject(void)
 	BYTE *pVtxBuff;		//頂点バッファポインタ
 
 	//変数初期化
+	for (int nCntInitBP = 0; nCntInitBP < BLUEPRINTIDX_MAX; nCntInitBP++)
+	{
+		g_aBPrint[nCntInitBP].dwNumMat = 0;
+		g_aBPrint[nCntInitBP].vtxMin = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		g_aBPrint[nCntInitBP].vtxMax = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	}
+	for (int nCntInitOBJ = 0; nCntInitOBJ < MAX_OBJECT; nCntInitOBJ++)
+	{
+		g_aObject[nCntInitOBJ].bpidx = {};
+		g_aObject[nCntInitOBJ].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		g_aObject[nCntInitOBJ].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		g_aObject[nCntInitOBJ].bLifeUse = true;
+		g_aObject[nCntInitOBJ].nLife = 0;
+		g_aObject[nCntInitOBJ].state = OBJSTATE_BROKEN;
+		g_aObject[nCntInitOBJ].nCounterState = 0;
+		g_aObject[nCntInitOBJ].nIdxShadow = -1;
+		g_aObject[nCntInitOBJ].bUse = false;
+	}
+
+	//読み込み
 	for (int nCntModel = 0; nCntModel < BLUEPRINTIDX_MAX && nCntModel < (sizeof c_apFilePathObject / sizeof(char *)); nCntModel++)
 	{
 		//Xファイル読み込み		
@@ -155,6 +175,15 @@ void UninitObject(void)
 {
 	for (int nCount = 0; nCount < BLUEPRINTIDX_MAX; nCount++)
 	{
+		//テクスチャ破棄
+		for (int nCntUniniTex = 0; nCntUniniTex < OBJ_MAX_TEXTURE; nCntUniniTex++)
+		{
+			if (g_aBPrint[nCount].apTexture[nCntUniniTex] != NULL)
+			{
+				g_aBPrint[nCount].apTexture[nCntUniniTex]->Release();
+				g_aBPrint[nCount].apTexture[nCntUniniTex] = NULL;
+			}
+		}
 		//メッシュの破棄
 		if (g_aBPrint[nCount].pMesh != NULL)
 		{

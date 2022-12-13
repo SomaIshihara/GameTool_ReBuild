@@ -72,6 +72,12 @@ void InitPlayer(void)
 	g_player.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	g_nIdxShadow = -1;
 
+	for (int nCntInitModel = 0; nCntInitModel < EXITHUMAN_MODEL_NUM; nCntInitModel++)
+	{
+		g_player.aModel[nCntInitModel] = {};
+	}
+	g_player.nNumModel = 0;
+
 	//‘ÎŠpü‚Ì’·‚³EŠp“x
 	g_player.fLength = sqrtf(PLAYER_WIDTH * PLAYER_WIDTH + PLAYER_DEPTH * PLAYER_DEPTH) * 0.5f;
 	g_player.fAngle = atan2f(PLAYER_WIDTH, PLAYER_DEPTH);

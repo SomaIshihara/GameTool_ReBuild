@@ -40,7 +40,13 @@ void InitModel(void)
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();	//デバイスの取得
 
 	//変数初期化
-	
+	for (int nCntInitModel = 0; nCntInitModel < MODELNAME_MAX; nCntInitModel++)
+	{
+		for (int nCntInitParts = 0; nCntInitParts < EXITHUMAN_MODEL_NUM; nCntInitParts++)
+		{
+			g_aModel[nCntInitModel][nCntInitParts] = {};
+		}
+	}
 
 	//Xファイル読み込み
 	for (int nCntParts = 0; nCntParts < EXITHUMAN_MODEL_NUM; nCntParts++)

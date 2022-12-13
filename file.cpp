@@ -37,7 +37,6 @@ typedef enum
 } READSTAT;
 
 //グローバル
-bool g_bSkipCr;
 READSTAT g_readStat = READSTAT_NONE;
 
 //取得したもの
@@ -53,7 +52,14 @@ bool g_bUseShadow = true;		//デフォルトはtrue
 //========================
 void InitFile()
 {
-	
+	//変数初期化
+	g_readStat = READSTAT_NONE;
+	g_nType = 0;
+	g_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	g_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	g_nState = 0;
+	g_bUseCollision = true;		//デフォルトはtrue
+	g_bUseShadow = true;		//デフォルトはtrue
 }
 
 //========================

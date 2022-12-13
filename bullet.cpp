@@ -62,6 +62,7 @@ void InitBullet(void)
 		g_aBullet[nCntBullet].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 		g_aBullet[nCntBullet].posOld = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 		g_aBullet[nCntBullet].move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		g_aBullet[nCntBullet].col = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);
 		g_aBullet[nCntBullet].nLife = 100;
 		g_aBullet[nCntBullet].nIdxShadow = -1;
 		g_aBullet[nCntBullet].bUse = false;

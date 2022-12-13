@@ -39,9 +39,12 @@ void InitCamera(void)
 		"Terminal", &g_pFontCamera);
 
 	g_camera.posV = D3DXVECTOR3(0.0f, 50.0f, -100.0f);
+	g_camera.posVDest = D3DXVECTOR3(0.0f, 50.0f, -100.0f);
 	g_camera.posR = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	g_camera.posRDest = D3DXVECTOR3(0.0f, 50.0f, -100.0f);
 	g_camera.vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	g_camera.rot = D3DXVECTOR3(-0.5f, 0.0f, 0.0f);
+	g_camera.rotDest = D3DXVECTOR3(0.0f, 50.0f, -100.0f);
 	g_camera.fLength = 200.0f;
 	FixPosV();
 }

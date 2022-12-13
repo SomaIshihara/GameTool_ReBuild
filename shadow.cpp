@@ -37,9 +37,12 @@ void InitShadow(void)
 		NULL);
 
 	//•Ï”‰Šú‰»
-	g_aShadow[0].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	g_aShadow[0].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	g_aShadow[0].bUse = false;
+	for (int nCntInitShadow = 0; nCntInitShadow < MAX_SHADOW; nCntInitShadow++)
+	{
+		g_aShadow[nCntInitShadow].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		g_aShadow[nCntInitShadow].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		g_aShadow[nCntInitShadow].bUse = false;
+	}
 
 	VERTEX_3D *pVtx;
 
