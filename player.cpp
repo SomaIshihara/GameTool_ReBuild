@@ -11,6 +11,7 @@
 #include "camera.h"
 #include "bullet.h"
 #include "wall.h"
+#include "meshfield.h"
 #include "object.h"
 #include "debugproc.h"
 #include <assert.h>
@@ -257,7 +258,7 @@ void UpdatePlayer(void)
 	g_player.pos.z += g_player.move.z;
 
 	//壁当たり判定
-	//CollisionWallPlayer(0);
+	CollisionWallPlayer(0);
 
 	//オブジェクト当たり判定
 	CollisionObjPlayer();
@@ -367,22 +368,22 @@ void DrawPlayer(void)
 //========================
 void CollisionWallPlayer(int nNumber)
 {
-	if (g_player.pos.x + PLAYER_WIDTH / 2 > WALL_WIDTH / 2)
+	if (g_player.pos.x + PLAYER_WIDTH / 2 > MESHFIELD_WIDTH * MESHFIELD_LENGTH / 2)
 	{
-		g_player.pos.x = WALL_WIDTH / 2 - PLAYER_WIDTH / 2;
+		g_player.pos.x = MESHFIELD_WIDTH * MESHFIELD_LENGTH / 2 - PLAYER_WIDTH / 2;
 	}
-	else if (g_player.pos.x - PLAYER_WIDTH / 2 < -WALL_WIDTH / 2)
+	else if (g_player.pos.x - PLAYER_WIDTH / 2 < -MESHFIELD_WIDTH * MESHFIELD_LENGTH / 2)
 	{
-		g_player.pos.x = -WALL_WIDTH / 2 + PLAYER_WIDTH / 2;
+		g_player.pos.x = -MESHFIELD_WIDTH * MESHFIELD_LENGTH / 2 + PLAYER_WIDTH / 2;
 	}
 
-	if (g_player.pos.z + PLAYER_DEPTH / 2 > WALL_DEPTH / 2)
+	if (g_player.pos.z + PLAYER_DEPTH / 2 > MESHFIELD_HEIGHT * MESHFIELD_LENGTH / 2)
 	{
-		g_player.pos.z = WALL_DEPTH / 2 - PLAYER_DEPTH / 2;
+		g_player.pos.z = MESHFIELD_HEIGHT * MESHFIELD_LENGTH / 2 - PLAYER_DEPTH / 2;
 	}
-	else if (g_player.pos.z - PLAYER_DEPTH / 2 < -WALL_DEPTH / 2)
+	else if (g_player.pos.z - PLAYER_DEPTH / 2 < -MESHFIELD_HEIGHT * MESHFIELD_LENGTH / 2)
 	{
-		g_player.pos.z = -WALL_DEPTH / 2 + PLAYER_DEPTH / 2;
+		g_player.pos.z = -MESHFIELD_HEIGHT * MESHFIELD_LENGTH / 2 + PLAYER_DEPTH / 2;
 	}
 }
 

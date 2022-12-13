@@ -9,9 +9,6 @@
 #include "input.h"
 
 //マクロ
-#define MESHFIELD_LENGTH	(160.0f)	//1枚当たりの長さ
-#define MESHFIELD_WIDTH		(17)		//横の分割数
-#define MESHFIELD_HEIGHT	(14)		//縦の分割数
 #define MESHFIELD_IDXNUM	(((MESHFIELD_WIDTH + 1) * MESHFIELD_HEIGHT * 2) + (2 * (MESHFIELD_HEIGHT - 1)))	//インデックス数
 #define MESHFIELD_POLYNUM	(MESHFIELD_IDXNUM - 2)	//ポリゴン数
 
