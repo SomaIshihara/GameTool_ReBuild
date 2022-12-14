@@ -258,7 +258,7 @@ void UpdatePlayer(void)
 	g_player.pos.z += g_player.move.z;
 
 	//壁当たり判定
-	CollisionWallPlayer(0);
+	//CollisionWallPlayer(0);
 
 	//オブジェクト当たり判定
 	CollisionObjPlayer();

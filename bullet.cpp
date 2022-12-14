@@ -337,33 +337,54 @@ void CollisionObjBullet(int nCount)
 		if (pObject->bUse == true)
 		{
 			//各頂点求める
-			pos0 = pObject->pos + D3DXVECTOR3((pbprint + pObject->bpidx)->vtxMin.x, 0.0f, (pbprint + pObject->bpidx)->vtxMin.z);
-			pos1 = pObject->pos + D3DXVECTOR3((pbprint + pObject->bpidx)->vtxMax.x, 0.0f, (pbprint + pObject->bpidx)->vtxMin.z);
-			pos2 = pObject->pos + D3DXVECTOR3((pbprint + pObject->bpidx)->vtxMax.x, 0.0f, (pbprint + pObject->bpidx)->vtxMax.z);
-			pos3 = pObject->pos + D3DXVECTOR3((pbprint + pObject->bpidx)->vtxMin.x, 0.0f, (pbprint + pObject->bpidx)->vtxMax.z);
+			float fLength;
+
+			fLength = sqrtf(pow(pObject->pos.x - (pbprint + pObject->bpidx)->vtxMin.x, 2) + pow(pObject->pos.z - (pbprint + pObject->bpidx)->vtxMin.z, 2));
+			pos0.x = pObject->pos.x + sinf(pObject->rot.y) * fLength;
+			pos0.y = 0.0f;
+			pos0.z = pObject->pos.z + cosf(pObject->rot.y) * fLength;
+			//pos0 = pObject->pos + D3DXVECTOR3((pbprint + pObject->bpidx)->vtxMin.x, 0.0f, (pbprint + pObject->bpidx)->vtxMin.z);
+
+			fLength = sqrtf(pow(pObject->pos.x - (pbprint + pObject->bpidx)->vtxMax.x, 2) + pow(pObject->pos.z - (pbprint + pObject->bpidx)->vtxMin.z, 2));
+			pos1.x = pObject->pos.x + sinf(pObject->rot.y) * fLength;
+			pos1.y = 0.0f;
+			pos1.z = pObject->pos.z + cosf(pObject->rot.y) * fLength;
+			//pos1 = pObject->pos + D3DXVECTOR3((pbprint + pObject->bpidx)->vtxMax.x, 0.0f, (pbprint + pObject->bpidx)->vtxMin.z);
+
+			fLength = sqrtf(pow(pObject->pos.x - (pbprint + pObject->bpidx)->vtxMax.x, 2) + pow(pObject->pos.z - (pbprint + pObject->bpidx)->vtxMax.z, 2));
+			pos2.x = pObject->pos.x + sinf(pObject->rot.y) * fLength;
+			pos2.y = 0.0f;
+			pos2.z = pObject->pos.z + cosf(pObject->rot.y) * fLength;
+			//pos2 = pObject->pos + D3DXVECTOR3((pbprint + pObject->bpidx)->vtxMax.x, 0.0f, (pbprint + pObject->bpidx)->vtxMax.z);
+
+			fLength = sqrtf(pow(pObject->pos.x - (pbprint + pObject->bpidx)->vtxMin.x, 2) + pow(pObject->pos.z - (pbprint + pObject->bpidx)->vtxMax.z, 2));
+			pos3.x = pObject->pos.x + sinf(pObject->rot.y) * fLength;
+			pos3.y = 0.0f;
+			pos3.z = pObject->pos.z + cosf(pObject->rot.y) * fLength;
+			//pos3 = pObject->pos + D3DXVECTOR3((pbprint + pObject->bpidx)->vtxMin.x, 0.0f, (pbprint + pObject->bpidx)->vtxMax.z);
 
 			//ベクトル求める
 			//move
 			vecMove = g_aBullet[nCount].pos - g_aBullet[nCount].posOld;
 
 			//X
-			vecLineRight = pos1 - pos0;
-			vecLineLeft = pos3 - pos2;
 			//右方向の計算
+			vecLineRight = pos1 - pos0;
 			vecToPosRight = g_aBullet[nCount].pos - pos0;
 			vecToPosOldRight = g_aBullet[nCount].posOld - pos0;
 
 			//左方向の計算
+			vecLineLeft = pos3 - pos2;
 			vecToPosLeft = g_aBullet[nCount].pos - pos2;
 			vecToPosOldLeft = g_aBullet[nCount].posOld - pos2;
 
 			//Z
-			vecLineUp = pos2 - pos1;
-			vecLineDown = pos0 - pos3;
 			//上方向の計算
+			vecLineUp = pos2 - pos1;
 			vecToPosUp = g_aBullet[nCount].pos - pos1;
 			vecToPosOldUp = g_aBullet[nCount].posOld - pos1;
 			//下方向の計算
+			vecLineDown = pos0 - pos3;
 			vecToPosDown = g_aBullet[nCount].pos - pos3;
 			vecToPosOldDown = g_aBullet[nCount].posOld - pos3;
 
