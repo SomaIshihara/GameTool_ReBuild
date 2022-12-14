@@ -115,6 +115,12 @@ void DrawWall(void)
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();	//デバイスの取得
 	D3DXMATRIX mtxRot, mtxTrans;	//計算用
 
+	//頂点バッファをデータストリームに設定
+	pDevice->SetStreamSource(0, g_pVtxbuffWall, 0, sizeof(VERTEX_3D));
+
+	//頂点フォーマットの設定
+	pDevice->SetFVF(FVF_VERTEX_3D);
+
 	for (nCntWall = 0; nCntWall < MAX_WALL; nCntWall++)
 	{
 		if (g_wall[nCntWall].bUse == true)
@@ -129,19 +135,7 @@ void DrawWall(void)
 			//位置反映
 			D3DXMatrixTranslation(&mtxTrans, g_wall[nCntWall].pos.x, g_wall[nCntWall].pos.y, g_wall[nCntWall].pos.z);
 			D3DXMatrixMultiply(&g_wall[nCntWall].mtxWorld, &g_wall[nCntWall].mtxWorld, &mtxTrans);
-		}
-	}
 
-	//頂点バッファをデータストリームに設定
-	pDevice->SetStreamSource(0, g_pVtxbuffWall, 0, sizeof(VERTEX_3D));
-
-	//頂点フォーマットの設定
-	pDevice->SetFVF(FVF_VERTEX_3D);
-
-	for (nCntWall = 0; nCntWall < MAX_WALL; nCntWall++)
-	{
-		if (g_wall[nCntWall].bUse == true)
-		{
 			//ワールドマトリックス設定
 			pDevice->SetTransform(D3DTS_WORLD, &g_wall[nCntWall].mtxWorld);
 

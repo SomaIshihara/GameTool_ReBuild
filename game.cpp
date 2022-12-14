@@ -116,12 +116,14 @@ void DrawGame(void)
 	//影
 	DrawShadow();
 
-	//弾
-	DrawBullet();
+	
 
 	//プレイヤー
 	DrawPlayer();
 
 	//オブジェクト
 	DrawObject();
+
+	//弾
+	DrawBullet();
 }

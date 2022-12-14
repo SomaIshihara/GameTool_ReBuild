@@ -123,6 +123,15 @@ void DrawShadow(void)
 	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
 
+	//頂点バッファをデータストリームに設定
+	pDevice->SetStreamSource(0, g_pVtxbuffShadow, 0, sizeof(VERTEX_3D));
+
+	//頂点フォーマットの設定
+	pDevice->SetFVF(FVF_VERTEX_3D);
+
+	//テクスチャ設定
+	pDevice->SetTexture(0, g_pTextureShadow);
+
 	for (nCntShadow = 0; nCntShadow < MAX_SHADOW; nCntShadow++)
 	{
 		if (g_aShadow[nCntShadow].bUse == true)
@@ -137,22 +146,7 @@ void DrawShadow(void)
 			//位置反映
 			D3DXMatrixTranslation(&mtxTrans, g_aShadow[nCntShadow].pos.x, g_aShadow[nCntShadow].pos.y, g_aShadow[nCntShadow].pos.z);
 			D3DXMatrixMultiply(&g_aShadow[nCntShadow].mtxWorld, &g_aShadow[nCntShadow].mtxWorld, &mtxTrans);
-		}
-	}
 
-	//頂点バッファをデータストリームに設定
-	pDevice->SetStreamSource(0, g_pVtxbuffShadow, 0, sizeof(VERTEX_3D));
-
-	//頂点フォーマットの設定
-	pDevice->SetFVF(FVF_VERTEX_3D);
-
-	//テクスチャ設定
-	pDevice->SetTexture(0, g_pTextureShadow);
-
-	for (nCntShadow = 0; nCntShadow < MAX_SHADOW; nCntShadow++)
-	{
-		if (g_aShadow[nCntShadow].bUse == true)
-		{
 			//ワールドマトリックス設定
 			pDevice->SetTransform(D3DTS_WORLD, &g_aShadow[nCntShadow].mtxWorld);
 

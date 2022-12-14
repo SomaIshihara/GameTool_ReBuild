@@ -188,6 +188,15 @@ void DrawBullet(void)
 	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);	//Zテストを行わない
 	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);	//Zバッファの有効・無効設定
 
+	//頂点バッファをデータストリームに設定
+	pDevice->SetStreamSource(0, g_pVtxbuffBullet, 0, sizeof(VERTEX_3D));
+
+	//頂点フォーマットの設定
+	pDevice->SetFVF(FVF_VERTEX_3D);
+
+	//テクスチャ設定
+	pDevice->SetTexture(0, g_pTextureBullet);
+
 	for (nCntBullet = 0; nCntBullet < MAX_BULLET; nCntBullet++)
 	{
 		if (g_aBullet[nCntBullet].bUse)
@@ -208,22 +217,7 @@ void DrawBullet(void)
 			//位置反映
 			D3DXMatrixTranslation(&mtxTrans, g_aBullet[nCntBullet].pos.x, g_aBullet[nCntBullet].pos.y, g_aBullet[nCntBullet].pos.z);
 			D3DXMatrixMultiply(&g_mtxWorldBullet[nCntBullet], &g_mtxWorldBullet[nCntBullet], &mtxTrans);
-		}
-	}
 
-	//頂点バッファをデータストリームに設定
-	pDevice->SetStreamSource(0, g_pVtxbuffBullet, 0, sizeof(VERTEX_3D));
-
-	//頂点フォーマットの設定
-	pDevice->SetFVF(FVF_VERTEX_3D);
-
-	//テクスチャ設定
-	pDevice->SetTexture(0, g_pTextureBullet);
-
-	for (nCntBullet = 0; nCntBullet < MAX_BULLET; nCntBullet++)
-	{
-		if (g_aBullet[nCntBullet].bUse)
-		{
 			//ワールドマトリックス設定
 			pDevice->SetTransform(D3DTS_WORLD, &g_mtxWorldBullet[nCntBullet]);
 
@@ -316,94 +310,119 @@ void CollisionWallBullet(int nCount)
 //========================
 void CollisionObjBullet(int nCount)
 {
+	//=pos0~pos3の説明==================
+	// pos3		pos2
+	//	・<-----・		矢印:vecLine
+	//	｜		↑
+	//	｜		｜
+	//	↓		｜
+	//	・----->・
+	// pos0		pos1
+	//==================================
+
 	BluePrint *pbprint = GetBluePrint();
 	Object *pObject = GetObj();
-	D3DXVECTOR3 pos0x, pos1x, pos0z, pos1z;
-	D3DXVECTOR3 vecLinex, vecToPosx, vecToPosxOps, vecLinez, vecToPosz, vecToPoszOps;
+	D3DXVECTOR3 pos0, pos1, pos2, pos3;
+	D3DXVECTOR3 vecLineRight, vecToPosRight, vecToPosOldRight;
+	D3DXVECTOR3 vecLineLeft, vecToPosLeft, vecToPosOldLeft;
+	D3DXVECTOR3 vecLineUp, vecToPosUp, vecToPosOldUp;
+	D3DXVECTOR3 vecLineDown, vecToPosDown, vecToPosOldDown;
 	D3DXVECTOR3 vecMove;
-	float fAreaAN, fAreaAO, fAreaB;
+	float fAreaARight, fAreaALeft, fAreaBRight, fAreaBLeft;
+	float fAreaAUp, fAreaADown, fAreaBUp, fAreaBDown;
+
 
 	for (int nCntObj = 0; nCntObj < BLUEPRINTIDX_MAX; nCntObj++, pObject++)
 	{
 		if (pObject->bUse == true)
 		{
-			//各2頂点求める
-			pos0x = pObject->pos + D3DXVECTOR3(pbprint->vtxMin.x, 0.0f, pbprint->vtxMin.z);
-			pos0x.x *= cosf(pObject->rot.y);
-			pos0x.z *= sinf(pObject->rot.y);
-			pos1x = pObject->pos + D3DXVECTOR3(pbprint->vtxMax.x, 0.0f, pbprint->vtxMin.z);
-			pos1x.x *= cosf(pObject->rot.y);
-			pos1x.z *= sinf(pObject->rot.y);
-			pos0z = pObject->pos + D3DXVECTOR3(pbprint->vtxMax.x, 0.0f, pbprint->vtxMin.z);
-			pos0z.x *= cosf(pObject->rot.y);
-			pos0z.z *= sinf(pObject->rot.y);
-			pos1z = pObject->pos + D3DXVECTOR3(pbprint->vtxMax.x, 0.0f, pbprint->vtxMax.z);
-			pos1z.x *= cosf(pObject->rot.y);
-			pos1z.z *= sinf(pObject->rot.y);
+			//各頂点求める
+			pos0 = pObject->pos + D3DXVECTOR3((pbprint + pObject->bpidx)->vtxMin.x, 0.0f, (pbprint + pObject->bpidx)->vtxMin.z);
+			pos1 = pObject->pos + D3DXVECTOR3((pbprint + pObject->bpidx)->vtxMax.x, 0.0f, (pbprint + pObject->bpidx)->vtxMin.z);
+			pos2 = pObject->pos + D3DXVECTOR3((pbprint + pObject->bpidx)->vtxMax.x, 0.0f, (pbprint + pObject->bpidx)->vtxMax.z);
+			pos3 = pObject->pos + D3DXVECTOR3((pbprint + pObject->bpidx)->vtxMin.x, 0.0f, (pbprint + pObject->bpidx)->vtxMax.z);
 
 			//ベクトル求める
 			//move
 			vecMove = g_aBullet[nCount].pos - g_aBullet[nCount].posOld;
 
 			//X
-			vecLinex = pos1x - pos0x;
+			vecLineRight = pos1 - pos0;
+			vecLineLeft = pos3 - pos2;
 			//右方向の計算
-			vecToPosx = g_aBullet[nCount].pos - pos0x;
+			vecToPosRight = g_aBullet[nCount].pos - pos0;
+			vecToPosOldRight = g_aBullet[nCount].posOld - pos0;
 
 			//左方向の計算
-			vecToPosxOps = g_aBullet[nCount].pos - (pObject->pos + D3DXVECTOR3(pbprint->vtxMax.x, 0.0f, pbprint->vtxMax.z));
+			vecToPosLeft = g_aBullet[nCount].pos - pos2;
+			vecToPosOldLeft = g_aBullet[nCount].posOld - pos2;
 
 			//Z
-			vecLinez = pos1z - pos0z;
+			vecLineUp = pos2 - pos1;
+			vecLineDown = pos0 - pos3;
 			//上方向の計算
-			vecToPosz = g_aBullet[nCount].pos - pos0z;
+			vecToPosUp = g_aBullet[nCount].pos - pos1;
+			vecToPosOldUp = g_aBullet[nCount].posOld - pos1;
 			//下方向の計算
-			vecToPoszOps = g_aBullet[nCount].pos - (pObject->pos + D3DXVECTOR3(pbprint->vtxMin.x, 0.0f, pbprint->vtxMax.z));
+			vecToPosDown = g_aBullet[nCount].pos - pos3;
+			vecToPosOldDown = g_aBullet[nCount].posOld - pos3;
 
 			//当たり判定本番
 			//X
 			//面積求める
-			fAreaAN = (vecToPosx.z * vecMove.x) - (vecToPosx.x * vecMove.z);
-			fAreaAO = (vecToPosxOps.z * vecMove.x) - (vecToPosxOps.x * vecMove.z);
-			fAreaB = (vecLinex.z * vecMove.x) - (vecLinex.x * vecMove.z);
+			fAreaARight = (vecToPosRight.z * vecMove.x) - (vecToPosRight.x * vecMove.z);
+			fAreaALeft = (vecToPosLeft.z * vecMove.x) - (vecToPosLeft.x * vecMove.z);
+			fAreaBRight = (vecLineRight.z * vecMove.x) - (vecLineRight.x * vecMove.z);
+			fAreaBLeft = (vecLineLeft.z * vecMove.x) - (vecLineLeft.x * vecMove.z);
 
-			//左側AND範囲内
-			if ((vecLinex.z * vecToPosx.x) - (vecLinex.x * vecToPosx.z) <= 0 && (-vecLinex.z * vecToPosxOps.x) - (-vecLinex.x * vecToPosxOps.z) <= 0)
+			//左側AND範囲内vecToPosOldOps
+			if ((vecLineRight.z * vecToPosRight.x) - (vecLineRight.x * vecToPosRight.z) <= 0.0f && (vecLineRight.z * vecToPosOldRight.x) - (vecLineRight.x * vecToPosOldRight.z) >= 0.0f)
 			{
- 				if (fAreaAN / fAreaB >= 0.0f && fAreaAN / fAreaB <= 1.0f)
+ 				if (fAreaARight / fAreaBRight >= 0.0f && fAreaARight / fAreaBRight <= 1.0f)
 				{
 					g_aBullet[nCount].bUse = false;
 					HitObj(nCntObj);
 					ReleaseIdxShadow(g_aBullet[nCount].nIdxShadow);
+					break;
 				}
-				if (fAreaAO / fAreaB >= 0.0f && fAreaAO / fAreaB <= 1.0f)
+			}
+			else if ((vecLineLeft.z * vecToPosLeft.x) - (vecLineLeft.x * vecToPosLeft.z) <= 0.0f && (vecLineLeft.z * vecToPosOldLeft.x) - (vecLineLeft.x * vecToPosOldLeft.z) >= 0.0f)
+			{
+				if (fAreaALeft / fAreaBLeft >= 0.0f && fAreaALeft / fAreaBLeft <= 1.0f)
 				{
 					g_aBullet[nCount].bUse = false;
 					HitObj(nCntObj);
 					ReleaseIdxShadow(g_aBullet[nCount].nIdxShadow);
+					break;
 				}
 			}
 
 			//Z
 			//面積求める
-			fAreaAN = (vecToPosz.z * vecMove.x) - (vecToPosz.x * vecMove.z);
-			fAreaAO = (vecToPoszOps.z * vecMove.x) - (vecToPoszOps.x * vecMove.z);
-			fAreaB = (vecLinez.z * vecMove.x) - (vecLinez.x * vecMove.z);
+			fAreaAUp = (vecToPosUp.z * vecMove.x) - (vecToPosUp.x * vecMove.z);
+			fAreaADown = (vecToPosDown.z * vecMove.x) - (vecToPosDown.x * vecMove.z);
+			fAreaBUp = (vecLineUp.z * vecMove.x) - (vecLineUp.x * vecMove.z);
+			fAreaBDown = (vecLineDown.z * vecMove.x) - (vecLineDown.x * vecMove.z);
 
-			//左側AND範囲内
-			if ((vecLinez.z * vecToPosz.x) - (vecLinex.z * vecToPosz.z) <= 0 && (-vecLinez.z * vecToPoszOps.x) - (-vecLinez.x * vecToPoszOps.z) <= 0)
+			//左側AND範囲内vecToPosOldOps
+			if ((vecLineUp.z * vecToPosUp.x) - (vecLineUp.x * vecToPosUp.z) <= 0.0f && (vecLineUp.z * vecToPosOldUp.x) - (vecLineUp.x * vecToPosOldUp.z) >= 0.0f)
 			{
-				if (fAreaAN / fAreaB >= 0.0f && fAreaAN / fAreaB <= 1.0f)
+				if (fAreaAUp / fAreaBUp >= 0.0f && fAreaAUp / fAreaBUp <= 1.0f)
 				{
 					g_aBullet[nCount].bUse = false;
 					HitObj(nCntObj);
 					ReleaseIdxShadow(g_aBullet[nCount].nIdxShadow);
+					break;
 				}
-				else if (fAreaAO / fAreaB >= 0.0f && fAreaAO / fAreaB <= 1.0f)
+			}
+			else if ((vecLineDown.z * vecToPosDown.x) - (vecLineDown.x * vecToPosDown.z) <= 0.0f && (vecLineDown.z * vecToPosOldDown.x) - (vecLineDown.x * vecToPosOldDown.z) >= 0.0f)
+			{
+				if (fAreaADown / fAreaBDown >= 0.0f && fAreaADown / fAreaBDown <= 1.0f)
 				{
 					g_aBullet[nCount].bUse = false;
 					HitObj(nCntObj);
 					ReleaseIdxShadow(g_aBullet[nCount].nIdxShadow);
+					break;
 				}
 			}
 		}

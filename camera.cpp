@@ -15,6 +15,8 @@
 #define CAMERA_KEY_ROT_SPEED	(0.005f)	//キーボード入力での回転速度
 #define CAMERA_MOU_ROT_SPEED	(0.003f)	//マウス移動での回転速度
 #define CAMERA_LENGTH		(5200.0f)		//カメラが見える最大距離
+#define CAMERA_ROT_X_MIN	(-0.5f)			//カメラのX角度の最低値[rad]
+#define CAMERA_ROT_X_MAX	(-0.05f)			//カメラのX角度の最低値[rad]
 
 //プロト
 void FixPosV(void);
@@ -38,14 +40,17 @@ void InitCamera(void)
 		SHIFTJIS_CHARSET, OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH,
 		"Terminal", &g_pFontCamera);
 
-	g_camera.posV = D3DXVECTOR3(0.0f, 50.0f, -100.0f);
-	g_camera.posVDest = D3DXVECTOR3(0.0f, 50.0f, -100.0f);
-	g_camera.posR = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	g_camera.posRDest = D3DXVECTOR3(0.0f, 50.0f, -100.0f);
-	g_camera.vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-	g_camera.rot = D3DXVECTOR3(-0.5f, 0.0f, 0.0f);
-	g_camera.rotDest = D3DXVECTOR3(0.0f, 50.0f, -100.0f);
 	g_camera.fLength = 200.0f;
+	g_camera.posV = D3DXVECTOR3(0.0f, 50.0f, -g_camera.fLength);
+	g_camera.posVDest = D3DXVECTOR3(0.0f, 50.0f, -g_camera.fLength);
+	g_camera.posR = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	g_camera.posRDest = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	g_camera.rot = D3DXVECTOR3(-0.5f, 0.0f, 0.0f);
+	g_camera.rotDest = D3DXVECTOR3(-0.5f, 0.0f, 0.0f);
+	g_camera.vecU.x = sinf(g_camera.rot.x) * sinf(g_camera.rot.y);
+	g_camera.vecU.y = cosf(g_camera.rot.x);
+	g_camera.vecU.z = sinf(g_camera.rot.x) * cosf(g_camera.rot.y) * -1;
+	D3DXVec3Normalize(&g_camera.vecU, &g_camera.vecU);
 	FixPosV();
 
 	//カメラ操作可能
@@ -231,9 +236,13 @@ void FixRot(void)
 	g_camera.rot.z = (float)fmod(g_camera.rot.z + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
 
 	//[カメラ制限]x回転の制限
-	if (fabsf(g_camera.rot.x) >= 0.5f * D3DX_PI)
+	if (g_camera.rot.x >= CAMERA_ROT_X_MAX * D3DX_PI)
 	{
-		g_camera.rot.x = copysignf(0.5f * D3DX_PI, g_camera.rot.x);
+		g_camera.rot.x = CAMERA_ROT_X_MAX * D3DX_PI;
+	}
+	else if (g_camera.rot.x <= CAMERA_ROT_X_MIN * D3DX_PI)
+	{
+		g_camera.rot.x = CAMERA_ROT_X_MIN * D3DX_PI;
 	}
 }
 
@@ -250,11 +259,16 @@ Camera *GetCamera(void)
 //========================
 void ResetCamera(void)
 {
-	g_camera.posV = D3DXVECTOR3(0.0f, 50.0f, -100.0f);
-	g_camera.posVDest = D3DXVECTOR3(0.0f, 50.0f, -100.0f);
+	g_camera.fLength = 200.0f;
+	g_camera.posV = D3DXVECTOR3(0.0f, 50.0f, -g_camera.fLength);
+	g_camera.posVDest = D3DXVECTOR3(0.0f, 50.0f, -g_camera.fLength);
 	g_camera.posR = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	g_camera.posRDest = D3DXVECTOR3(0.0f, 50.0f, -100.0f);
-	g_camera.vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	g_camera.posRDest = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	g_camera.rot = D3DXVECTOR3(-0.5f, 0.0f, 0.0f);
-	g_camera.rotDest = D3DXVECTOR3(0.0f, 50.0f, -100.0f);
+	g_camera.rotDest = D3DXVECTOR3(-0.5f, 0.0f, 0.0f);
+	g_camera.vecU.x = sinf(g_camera.rot.x) * sinf(g_camera.rot.y);
+	g_camera.vecU.y = cosf(g_camera.rot.x);
+	g_camera.vecU.z = sinf(g_camera.rot.x) * cosf(g_camera.rot.y) * -1;
+	D3DXVec3Normalize(&g_camera.vecU, &g_camera.vecU);
+	FixPosV();
 }
