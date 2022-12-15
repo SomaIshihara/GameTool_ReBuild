@@ -16,6 +16,7 @@
 #define MAX_BULLET				(128)	//弾の最大数
 #define BULLET_TEXSIZE_WIDTH	(12)	//弾のサイズ（幅）
 #define BULLET_TEXSIZE_HEIGHT	(12)	//弾のサイズ（高さ）
+#define TASUKIGAKE(ax,az,bx,bz)	((az * bx) - (ax * bz))
 
 //仮
 #define POS0	D3DXVECTOR3(-100.0f,0.0f,100.0f)
@@ -332,36 +333,79 @@ void CollisionObjBullet(int nCount)
 	float fAreaAUp, fAreaADown, fAreaBUp, fAreaBDown;
 
 
-	for (int nCntObj = 0; nCntObj < BLUEPRINTIDX_MAX; nCntObj++, pObject++)
+	for (int nCntObj = 0; nCntObj < MAX_OBJECT; nCntObj++, pObject++)
 	{
 		if (pObject->bUse == true)
 		{
 			//各頂点求める
+			float fLengthX, fLengthZ;
 			float fLength;
+			float fAngle;
+			float rot;
 
-			fLength = sqrtf(pow(pObject->pos.x - (pbprint + pObject->bpidx)->vtxMin.x, 2) + pow(pObject->pos.z - (pbprint + pObject->bpidx)->vtxMin.z, 2));
-			pos0.x = pObject->pos.x + sinf(pObject->rot.y) * fLength;
+			//-pos0---------------------------------------------------------------------------------------------------------------------------
+			//頂点と中心の距離をXとZ別々で計算する
+			fLengthX = pObject->pos.x - (pObject->pos.x + (pbprint + pObject->bpidx)->vtxMin.x);
+			fLengthZ = pObject->pos.z - (pObject->pos.z + (pbprint + pObject->bpidx)->vtxMin.z);
+
+			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
+			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
+			//0 - 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
+			rot = (float)fmod(-fAngle + pObject->rot.y + (D3DX_PI * 3), D3DX_PI * 2) - D3DX_PI;
+
+			//角度に応じて頂点の位置をずらす
+			pos0.x = pObject->pos.x + sinf(rot) * fLength;
 			pos0.y = 0.0f;
-			pos0.z = pObject->pos.z + cosf(pObject->rot.y) * fLength;
-			//pos0 = pObject->pos + D3DXVECTOR3((pbprint + pObject->bpidx)->vtxMin.x, 0.0f, (pbprint + pObject->bpidx)->vtxMin.z);
+			pos0.z = pObject->pos.z - cosf(rot) * fLength;
+			//-pos0---------------------------------------------------------------------------------------------------------------------------
 
-			fLength = sqrtf(pow(pObject->pos.x - (pbprint + pObject->bpidx)->vtxMax.x, 2) + pow(pObject->pos.z - (pbprint + pObject->bpidx)->vtxMin.z, 2));
-			pos1.x = pObject->pos.x + sinf(pObject->rot.y) * fLength;
+			//-pos1---------------------------------------------------------------------------------------------------------------------------
+			//頂点と中心の距離をXとZ別々で計算する
+			fLengthX = pObject->pos.x - (pObject->pos.x + (pbprint + pObject->bpidx)->vtxMax.x);
+			fLengthZ = pObject->pos.z - (pObject->pos.z + (pbprint + pObject->bpidx)->vtxMin.z);
+
+			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
+			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
+			//0 + 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
+			rot = (float)fmod(fAngle + pObject->rot.y + (D3DX_PI * 3), D3DX_PI * 2) - D3DX_PI;
+
+			//角度に応じて頂点の位置をずらす
+			pos1.x = pObject->pos.x - sinf(rot) * fLength;
 			pos1.y = 0.0f;
-			pos1.z = pObject->pos.z + cosf(pObject->rot.y) * fLength;
-			//pos1 = pObject->pos + D3DXVECTOR3((pbprint + pObject->bpidx)->vtxMax.x, 0.0f, (pbprint + pObject->bpidx)->vtxMin.z);
+			pos1.z = pObject->pos.z - cosf(rot) * fLength;
+			//-pos1---------------------------------------------------------------------------------------------------------------------------
 
-			fLength = sqrtf(pow(pObject->pos.x - (pbprint + pObject->bpidx)->vtxMax.x, 2) + pow(pObject->pos.z - (pbprint + pObject->bpidx)->vtxMax.z, 2));
-			pos2.x = pObject->pos.x + sinf(pObject->rot.y) * fLength;
+			//-pos2---------------------------------------------------------------------------------------------------------------------------
+			//頂点と中心の距離をXとZ別々で計算する
+			fLengthX = pObject->pos.x - (pObject->pos.x + (pbprint + pObject->bpidx)->vtxMax.x);
+			fLengthZ = pObject->pos.z - (pObject->pos.z + (pbprint + pObject->bpidx)->vtxMax.z);
+
+			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
+			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
+			//PI - 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
+			rot = (float)fmod(D3DX_PI - fAngle + pObject->rot.y + (D3DX_PI * 3), D3DX_PI * 2) - D3DX_PI;
+
+			//角度に応じて頂点の位置をずらす
+			pos2.x = pObject->pos.x - sinf(rot) * fLength;
 			pos2.y = 0.0f;
-			pos2.z = pObject->pos.z + cosf(pObject->rot.y) * fLength;
-			//pos2 = pObject->pos + D3DXVECTOR3((pbprint + pObject->bpidx)->vtxMax.x, 0.0f, (pbprint + pObject->bpidx)->vtxMax.z);
+			pos2.z = pObject->pos.z + cosf(rot) * fLength;
+			//-pos2---------------------------------------------------------------------------------------------------------------------------
 
-			fLength = sqrtf(pow(pObject->pos.x - (pbprint + pObject->bpidx)->vtxMin.x, 2) + pow(pObject->pos.z - (pbprint + pObject->bpidx)->vtxMax.z, 2));
-			pos3.x = pObject->pos.x + sinf(pObject->rot.y) * fLength;
+			//-pos3---------------------------------------------------------------------------------------------------------------------------
+			//頂点と中心の距離をXとZ別々で計算する
+			fLengthX = pObject->pos.x - (pObject->pos.x + (pbprint + pObject->bpidx)->vtxMin.x);
+			fLengthZ = pObject->pos.z - (pObject->pos.z + (pbprint + pObject->bpidx)->vtxMax.z);
+
+			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
+			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
+			//-PI + 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
+			rot = (float)fmod(-D3DX_PI + fAngle + pObject->rot.y + (D3DX_PI * 3), D3DX_PI * 2) - D3DX_PI;
+
+			//角度に応じて頂点の位置をずらす
+			pos3.x = pObject->pos.x + sinf(rot) * fLength;
 			pos3.y = 0.0f;
-			pos3.z = pObject->pos.z + cosf(pObject->rot.y) * fLength;
-			//pos3 = pObject->pos + D3DXVECTOR3((pbprint + pObject->bpidx)->vtxMin.x, 0.0f, (pbprint + pObject->bpidx)->vtxMax.z);
+			pos3.z = pObject->pos.z + cosf(rot) * fLength;
+			//-pos3---------------------------------------------------------------------------------------------------------------------------
 
 			//ベクトル求める
 			//move
