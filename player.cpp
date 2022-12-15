@@ -392,114 +392,179 @@ void CollisionWallPlayer(int nNumber)
 //========================
 void CollisionObjPlayer(void)
 {
-	BluePrint *pBPrint = GetBluePrint();
+	//=pos0~pos3の説明==================
+	// pos3		pos2
+	//	・<-----・		矢印:vecLine
+	//	｜		↑
+	//	｜		｜
+	//	↓		｜
+	//	・----->・
+	// pos0		pos1
+	//==================================
+
+	BluePrint *pbprint = GetBluePrint();
 	Object *pObject = GetObj();
-
-	D3DXVECTOR3 pos0x, pos1x, pos0z, pos1z;
-	D3DXVECTOR3 vecLinex, vecToPosx, vecToPosxOps, vecLinez, vecToPosz, vecToPoszOps;
+	D3DXVECTOR3 pos0, pos1, pos2, pos3;
+	D3DXVECTOR3 vecLineRight, vecToPosRight, vecToPosOldRight;
+	D3DXVECTOR3 vecLineLeft, vecToPosLeft, vecToPosOldLeft;
+	D3DXVECTOR3 vecLineUp, vecToPosUp, vecToPosOldUp;
+	D3DXVECTOR3 vecLineDown, vecToPosDown, vecToPosOldDown;
 	D3DXVECTOR3 vecMove;
+	float fAreaARight, fAreaALeft, fAreaBRight, fAreaBLeft;
+	float fAreaAUp, fAreaADown, fAreaBUp, fAreaBDown;
 
-	float fAreaA, fAreaB;
 
-	for (int nCntObj = 0; nCntObj < BLUEPRINTIDX_MAX; nCntObj++, pObject++)
+	for (int nCntObj = 0; nCntObj < MAX_OBJECT; nCntObj++, pObject++)
 	{
 		if (pObject->bUse == true)
 		{
-			////あらかじめ計算
-			//float fPosXMax = pObject->pos.x + (pBPrint + pObject->bpidx)->vtxMax.x;
-			//float fPosXMin = pObject->pos.x + (pBPrint + pObject->bpidx)->vtxMin.x;
-			//float fPosZMax = pObject->pos.z + (pBPrint + pObject->bpidx)->vtxMax.z;
-			//float fPosZMin = pObject->pos.z + (pBPrint + pObject->bpidx)->vtxMin.z;
+			//各頂点求める
+			float fLengthX, fLengthZ;
+			float fLength;
+			float fAngle;
+			float rot;
 
-			//if (g_player.pos.z >= fPosZMin && g_player.pos.z <= fPosZMax)
-			//{
-			//	if (g_player.posOld.x <= fPosXMin && g_player.pos.x > fPosXMin)
-			//	{
-			//		g_player.pos.x = pObject->pos.x + (pBPrint + pObject->bpidx)->vtxMin.x;
-			//	}
-			//	if (g_player.posOld.x >= fPosXMax && g_player.pos.x < fPosXMax)
-			//	{
-			//		g_player.pos.x = pObject->pos.x + (pBPrint + pObject->bpidx)->vtxMax.x;
-			//	}
-			//}
+			//-pos0---------------------------------------------------------------------------------------------------------------------------
+			//頂点と中心の距離をXとZ別々で計算する
+			fLengthX = pObject->pos.x - (pObject->pos.x + (pbprint + pObject->bpidx)->vtxMin.x);
+			fLengthZ = pObject->pos.z - (pObject->pos.z + (pbprint + pObject->bpidx)->vtxMin.z);
 
-			//if (g_player.pos.x >= fPosXMin && g_player.pos.x <= fPosXMax)
-			//{
-			//	if (g_player.posOld.z <= fPosZMin && g_player.pos.z > fPosZMin)
-			//	{
-			//		g_player.pos.z = pObject->pos.z + (pBPrint + pObject->bpidx)->vtxMin.z;
-			//	}
-			//	if (g_player.posOld.z >= fPosZMax && g_player.pos.z < fPosZMax)
-			//	{
-			//		g_player.pos.z = pObject->pos.z + (pBPrint + pObject->bpidx)->vtxMax.z;
-			//	}
-			//}
-			//各2頂点求める
-			pos0x = pObject->pos + D3DXVECTOR3(pBPrint->vtxMin.x, 0.0f, pBPrint->vtxMin.z);
-			pos0x.x *= cosf(pObject->rot.y);
-			pos0x.z *= sinf(pObject->rot.y);
-			pos1x = pObject->pos + D3DXVECTOR3(pBPrint->vtxMax.x, 0.0f, pBPrint->vtxMin.z);
-			pos1x.x *= cosf(pObject->rot.y);
-			pos1x.z *= sinf(pObject->rot.y);
-			pos0z = pObject->pos + D3DXVECTOR3(pBPrint->vtxMax.x, 0.0f, pBPrint->vtxMin.z);
-			pos0z.x *= cosf(pObject->rot.y);
-			pos0z.z *= sinf(pObject->rot.y);
-			pos1z = pObject->pos + D3DXVECTOR3(pBPrint->vtxMax.x, 0.0f, pBPrint->vtxMax.z);
-			pos1z.x *= cosf(pObject->rot.y);
-			pos1z.z *= sinf(pObject->rot.y);
+			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
+			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
+																	//0 - 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
+			rot = (float)fmod(-fAngle + pObject->rot.y + (D3DX_PI * 3), D3DX_PI * 2) - D3DX_PI;
+
+			//角度に応じて頂点の位置をずらす
+			pos0.x = pObject->pos.x + sinf(rot) * fLength;
+			pos0.y = 0.0f;
+			pos0.z = pObject->pos.z - cosf(rot) * fLength;
+			//-pos0---------------------------------------------------------------------------------------------------------------------------
+
+			//-pos1---------------------------------------------------------------------------------------------------------------------------
+			//頂点と中心の距離をXとZ別々で計算する
+			fLengthX = pObject->pos.x - (pObject->pos.x + (pbprint + pObject->bpidx)->vtxMax.x);
+			fLengthZ = pObject->pos.z - (pObject->pos.z + (pbprint + pObject->bpidx)->vtxMin.z);
+
+			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
+			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
+																	//0 + 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
+			rot = (float)fmod(fAngle + pObject->rot.y + (D3DX_PI * 3), D3DX_PI * 2) - D3DX_PI;
+
+			//角度に応じて頂点の位置をずらす
+			pos1.x = pObject->pos.x - sinf(rot) * fLength;
+			pos1.y = 0.0f;
+			pos1.z = pObject->pos.z - cosf(rot) * fLength;
+			//-pos1---------------------------------------------------------------------------------------------------------------------------
+
+			//-pos2---------------------------------------------------------------------------------------------------------------------------
+			//頂点と中心の距離をXとZ別々で計算する
+			fLengthX = pObject->pos.x - (pObject->pos.x + (pbprint + pObject->bpidx)->vtxMax.x);
+			fLengthZ = pObject->pos.z - (pObject->pos.z + (pbprint + pObject->bpidx)->vtxMax.z);
+
+			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
+			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
+																	//PI - 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
+			rot = (float)fmod(D3DX_PI - fAngle + pObject->rot.y + (D3DX_PI * 3), D3DX_PI * 2) - D3DX_PI;
+
+			//角度に応じて頂点の位置をずらす
+			pos2.x = pObject->pos.x - sinf(rot) * fLength;
+			pos2.y = 0.0f;
+			pos2.z = pObject->pos.z + cosf(rot) * fLength;
+			//-pos2---------------------------------------------------------------------------------------------------------------------------
+
+			//-pos3---------------------------------------------------------------------------------------------------------------------------
+			//頂点と中心の距離をXとZ別々で計算する
+			fLengthX = pObject->pos.x - (pObject->pos.x + (pbprint + pObject->bpidx)->vtxMin.x);
+			fLengthZ = pObject->pos.z - (pObject->pos.z + (pbprint + pObject->bpidx)->vtxMax.z);
+
+			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
+			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
+																	//-PI + 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
+			rot = (float)fmod(-D3DX_PI + fAngle + pObject->rot.y + (D3DX_PI * 3), D3DX_PI * 2) - D3DX_PI;
+
+			//角度に応じて頂点の位置をずらす
+			pos3.x = pObject->pos.x + sinf(rot) * fLength;
+			pos3.y = 0.0f;
+			pos3.z = pObject->pos.z + cosf(rot) * fLength;
+			//-pos3---------------------------------------------------------------------------------------------------------------------------
 
 			//ベクトル求める
 			//move
 			vecMove = g_player.pos - g_player.posOld;
 
 			//X
-			vecLinex = pos1x - pos0x;
 			//右方向の計算
-			vecToPosx = g_player.pos - pos0x;
+			vecLineRight = pos1 - pos0;
+			vecToPosRight = g_player.pos - pos0;
+			vecToPosOldRight = g_player.posOld - pos0;
 
 			//左方向の計算
-			vecToPosxOps = g_player.pos - (pObject->pos + D3DXVECTOR3(pBPrint->vtxMax.x, 0.0f, pBPrint->vtxMax.z));
+			vecLineLeft = pos3 - pos2;
+			vecToPosLeft = g_player.pos - pos2;
+			vecToPosOldLeft = g_player.posOld - pos2;
 
 			//Z
-			vecLinez = pos1z - pos0z;
 			//上方向の計算
-			vecToPosz = g_player.pos - pos0z;
+			vecLineUp = pos2 - pos1;
+			vecToPosUp = g_player.pos - pos1;
+			vecToPosOldUp = g_player.posOld - pos1;
 			//下方向の計算
-			vecToPoszOps = g_player.pos - (pObject->pos + D3DXVECTOR3(pBPrint->vtxMin.x, 0.0f, pBPrint->vtxMax.z));
+			vecLineDown = pos0 - pos3;
+			vecToPosDown = g_player.pos - pos3;
+			vecToPosOldDown = g_player.posOld - pos3;
 
 			//当たり判定本番
 			//X
 			//面積求める
-			fAreaA = (vecToPosx.z * vecMove.x) - (vecToPosx.x * vecMove.z);
-			fAreaB = (vecLinex.z * vecMove.x) - (vecLinex.x * vecMove.z);
+			fAreaARight = (vecToPosRight.z * vecMove.x) - (vecToPosRight.x * vecMove.z);
+			fAreaALeft = (vecToPosLeft.z * vecMove.x) - (vecToPosLeft.x * vecMove.z);
+			fAreaBRight = (vecLineRight.z * vecMove.x) - (vecLineRight.x * vecMove.z);
+			fAreaBLeft = (vecLineLeft.z * vecMove.x) - (vecLineLeft.x * vecMove.z);
 
-			//左側AND範囲内
-			if ((vecLinex.z * vecToPosx.x) - (vecLinex.x * vecToPosx.z) <= 0 && (-vecLinex.z * vecToPosxOps.x) - (-vecLinex.x * vecToPosxOps.z) <= 0)
+			//左側AND範囲内vecToPosOldOps
+			if ((vecLineRight.z * vecToPosRight.x) - (vecLineRight.x * vecToPosRight.z) <= 0.0f && (vecLineRight.z * vecToPosOldRight.x) - (vecLineRight.x * vecToPosOldRight.z) >= 0.0f)
 			{
-				if (fAreaA / fAreaB >= 0.0f && fAreaA / fAreaB <= 1.0f)
+				if (fAreaARight / fAreaBRight >= 0.0f && fAreaARight / fAreaBRight <= 1.0f)
 				{//ごっつん
 					//assert(false);
+					break;
+				}
+			}
+			else if ((vecLineLeft.z * vecToPosLeft.x) - (vecLineLeft.x * vecToPosLeft.z) <= 0.0f && (vecLineLeft.z * vecToPosOldLeft.x) - (vecLineLeft.x * vecToPosOldLeft.z) >= 0.0f)
+			{
+				if (fAreaALeft / fAreaBLeft >= 0.0f && fAreaALeft / fAreaBLeft <= 1.0f)
+				{//ごっつん
+					//assert(false);
+					break;
 				}
 			}
 
 			//Z
 			//面積求める
-			fAreaA = (vecToPosz.z * vecMove.x) - (vecToPosz.x * vecMove.z);
-			fAreaB = (vecLinez.z * vecMove.x) - (vecLinez.x * vecMove.z);
+			fAreaAUp = (vecToPosUp.z * vecMove.x) - (vecToPosUp.x * vecMove.z);
+			fAreaADown = (vecToPosDown.z * vecMove.x) - (vecToPosDown.x * vecMove.z);
+			fAreaBUp = (vecLineUp.z * vecMove.x) - (vecLineUp.x * vecMove.z);
+			fAreaBDown = (vecLineDown.z * vecMove.x) - (vecLineDown.x * vecMove.z);
 
-			//左側AND範囲内
-			if ((vecLinez.z * vecToPosz.x) - (vecLinex.z * vecToPosz.z) <= 0 && (-vecLinez.z * vecToPoszOps.x) - (-vecLinez.x * vecToPoszOps.z) <= 0)
+			//左側AND範囲内vecToPosOldOps
+			if ((vecLineUp.z * vecToPosUp.x) - (vecLineUp.x * vecToPosUp.z) <= 0.0f && (vecLineUp.z * vecToPosOldUp.x) - (vecLineUp.x * vecToPosOldUp.z) >= 0.0f)
 			{
-				if (fAreaA / fAreaB >= 0.0f && fAreaA / fAreaB <= 1.0f)
+				if (fAreaAUp / fAreaBUp >= 0.0f && fAreaAUp / fAreaBUp <= 1.0f)
 				{//ごっつん
 					//assert(false);
+					break;
+				}
+			}
+			else if ((vecLineDown.z * vecToPosDown.x) - (vecLineDown.x * vecToPosDown.z) <= 0.0f && (vecLineDown.z * vecToPosOldDown.x) - (vecLineDown.x * vecToPosOldDown.z) >= 0.0f)
+			{
+				if (fAreaADown / fAreaBDown >= 0.0f && fAreaADown / fAreaBDown <= 1.0f)
+				{//ごっつん
+					//assert(false);
+					break;
 				}
 			}
 		}
 	}
-
-	//ここから先は引っ張ってきたやつ
-	
 }
 
 //========================
