@@ -204,20 +204,20 @@ void UpdatePlayer(void)
 		if (GetKeyboardPress(DIK_A) == true)
 		{
 			g_player.rot.y = -(float)fmod(GetCamera()->rot.y + ROT_WA + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-			g_player.move.x = sinf((float)fmod((g_player.rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * PLAYER_MOVE_SPEED;
-			g_player.move.z = cosf((float)fmod((g_player.rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * PLAYER_MOVE_SPEED;
+			g_player.move.x = sinf(FIX_ROT((g_player.rot.y + D3DX_PI))) * PLAYER_MOVE_SPEED;
+			g_player.move.z = cosf(FIX_ROT((g_player.rot.y + D3DX_PI))) * PLAYER_MOVE_SPEED;
 		}
 		else if (GetKeyboardPress(DIK_D) == true)
 		{
 			g_player.rot.y = -(float)fmod(GetCamera()->rot.y + ROT_WD + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-			g_player.move.x = sinf((float)fmod((g_player.rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * PLAYER_MOVE_SPEED;
-			g_player.move.z = cosf((float)fmod((g_player.rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * PLAYER_MOVE_SPEED;
+			g_player.move.x = sinf(FIX_ROT((g_player.rot.y + D3DX_PI))) * PLAYER_MOVE_SPEED;
+			g_player.move.z = cosf(FIX_ROT((g_player.rot.y + D3DX_PI))) * PLAYER_MOVE_SPEED;
 		}
 		else
 		{
 			g_player.rot.y = -(float)fmod(GetCamera()->rot.y + ROT_W + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-			g_player.move.x = sinf((float)fmod((g_player.rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * PLAYER_MOVE_SPEED;
-			g_player.move.z = cosf((float)fmod((g_player.rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * PLAYER_MOVE_SPEED;
+			g_player.move.x = sinf(FIX_ROT((g_player.rot.y + D3DX_PI))) * PLAYER_MOVE_SPEED;
+			g_player.move.z = cosf(FIX_ROT((g_player.rot.y + D3DX_PI))) * PLAYER_MOVE_SPEED;
 		}
 	}
 	else if (GetKeyboardPress(DIK_S) == true)
@@ -225,33 +225,33 @@ void UpdatePlayer(void)
 		if (GetKeyboardPress(DIK_A) == true)
 		{
 			g_player.rot.y = -(float)fmod(GetCamera()->rot.y + ROT_SA + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-			g_player.move.x = sinf((float)fmod((g_player.rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * PLAYER_MOVE_SPEED;
-			g_player.move.z = cosf((float)fmod((g_player.rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * PLAYER_MOVE_SPEED;
+			g_player.move.x = sinf(FIX_ROT((g_player.rot.y + D3DX_PI))) * PLAYER_MOVE_SPEED;
+			g_player.move.z = cosf(FIX_ROT((g_player.rot.y + D3DX_PI))) * PLAYER_MOVE_SPEED;
 		}
 		else if (GetKeyboardPress(DIK_D) == true)
 		{
 			g_player.rot.y = -(float)fmod(GetCamera()->rot.y + ROT_SD + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-			g_player.move.x = sinf((float)fmod((g_player.rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * PLAYER_MOVE_SPEED;
-			g_player.move.z = cosf((float)fmod((g_player.rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * PLAYER_MOVE_SPEED;
+			g_player.move.x = sinf(FIX_ROT((g_player.rot.y + D3DX_PI))) * PLAYER_MOVE_SPEED;
+			g_player.move.z = cosf(FIX_ROT((g_player.rot.y + D3DX_PI))) * PLAYER_MOVE_SPEED;
 		}
 		else
 		{
 			g_player.rot.y = -(float)fmod(GetCamera()->rot.y + ROT_S + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-			g_player.move.x = sinf((float)fmod((g_player.rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * PLAYER_MOVE_SPEED;
-			g_player.move.z = cosf((float)fmod((g_player.rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * PLAYER_MOVE_SPEED;
+			g_player.move.x = sinf(FIX_ROT((g_player.rot.y + D3DX_PI))) * PLAYER_MOVE_SPEED;
+			g_player.move.z = cosf(FIX_ROT((g_player.rot.y + D3DX_PI))) * PLAYER_MOVE_SPEED;
 		}
 	}
 	else if (GetKeyboardPress(DIK_A) == true)
 	{
 		g_player.rot.y = -(float)fmod(GetCamera()->rot.y + ROT_A + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-		g_player.move.x = sinf((float)fmod((g_player.rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * PLAYER_MOVE_SPEED;
-		g_player.move.z = cosf((float)fmod((g_player.rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * PLAYER_MOVE_SPEED;
+		g_player.move.x = sinf(FIX_ROT((g_player.rot.y + D3DX_PI))) * PLAYER_MOVE_SPEED;
+		g_player.move.z = cosf(FIX_ROT((g_player.rot.y + D3DX_PI))) * PLAYER_MOVE_SPEED;
 	}
 	else if (GetKeyboardPress(DIK_D) == true)
 	{
 		g_player.rot.y = -(float)fmod(GetCamera()->rot.y + ROT_D + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-		g_player.move.x = sinf((float)fmod((g_player.rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * PLAYER_MOVE_SPEED;
-		g_player.move.z = cosf((float)fmod((g_player.rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * PLAYER_MOVE_SPEED;
+		g_player.move.x = sinf(FIX_ROT((g_player.rot.y + D3DX_PI))) * PLAYER_MOVE_SPEED;
+		g_player.move.z = cosf(FIX_ROT((g_player.rot.y + D3DX_PI))) * PLAYER_MOVE_SPEED;
 	}
 
 	//ボタン操作に応じてプレイヤー・カメラ視点・注視点移動
@@ -432,8 +432,8 @@ void CollisionObjPlayer(void)
 
 			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
 			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
-																	//0 - 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
-			rot = (float)fmod(-fAngle - pObject->rot.y + (D3DX_PI * 3), D3DX_PI * 2) - D3DX_PI;
+			//0 - 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
+			rot = FIX_ROT(-fAngle - pObject->rot.y);
 
 			//角度に応じて頂点の位置をずらす
 			pos0.x = pObject->pos.x + sinf(rot) * fLength;
@@ -448,9 +448,9 @@ void CollisionObjPlayer(void)
 
 			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
 			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
-																	//0 + 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
-			rot = (float)fmod(-fAngle - pObject->rot.y + (D3DX_PI * 3), D3DX_PI * 2) - D3DX_PI;
-
+			//0 + 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
+			rot = FIX_ROT(-fAngle - pObject->rot.y);
+			
 			//角度に応じて頂点の位置をずらす
 			pos1.x = pObject->pos.x + sinf(rot) * fLength;
 			pos1.y = 0.0f;
@@ -464,9 +464,9 @@ void CollisionObjPlayer(void)
 
 			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
 			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
-																	//PI - 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
-			rot = (float)fmod(D3DX_PI - fAngle - pObject->rot.y + (D3DX_PI * 3), D3DX_PI * 2) - D3DX_PI;
-
+			//PI - 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
+			rot = FIX_ROT(D3DX_PI - fAngle - pObject->rot.y);
+			
 			//角度に応じて頂点の位置をずらす
 			pos2.x = pObject->pos.x - sinf(rot) * fLength;
 			pos2.y = 0.0f;
@@ -480,9 +480,9 @@ void CollisionObjPlayer(void)
 
 			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
 			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
-																	//-PI + 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
-			rot = (float)fmod(-D3DX_PI - fAngle - pObject->rot.y + (D3DX_PI * 3), D3DX_PI * 2) - D3DX_PI;
-
+			//-PI + 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
+			rot = FIX_ROT(-D3DX_PI - fAngle - pObject->rot.y);
+			
 			//角度に応じて頂点の位置をずらす
 			pos3.x = pObject->pos.x - sinf(rot) * fLength;
 			pos3.y = 0.0f;
@@ -528,8 +528,8 @@ void CollisionObjPlayer(void)
 				if (fAreaARight / fAreaBRight >= 0.0f && fAreaARight / fAreaBRight <= 1.0f)
 				{//ごっつん
 					float fRate = fAreaARight / fAreaBRight;
-					g_player.pos.x = pos0.x + (vecLineRight.x * fRate) - sinf(pObject->rot.y) / D3DX_PI * 1.0f;
-					g_player.pos.z = pos0.z + (vecLineRight.z * fRate) - cosf(pObject->rot.y) / D3DX_PI * 1.0f;
+					g_player.pos.x = pos0.x + (vecLineRight.x * fRate) - sinf(pObject->rot.y) / D3DX_PI * PUSHING_BACK;
+					g_player.pos.z = pos0.z + (vecLineRight.z * fRate) - cosf(pObject->rot.y) / D3DX_PI * PUSHING_BACK;
 					PrintDebugProc("ごっつん\n");
 					break;
 				}
@@ -539,8 +539,8 @@ void CollisionObjPlayer(void)
 				if (fAreaALeft / fAreaBLeft >= 0.0f && fAreaALeft / fAreaBLeft <= 1.0f)
 				{//ごっつん
 					float fRate = fAreaALeft / fAreaBLeft;
-					g_player.pos.x = pos2.x + (vecLineLeft.x * fRate) + sinf(pObject->rot.y) / D3DX_PI * 1.0f;
-					g_player.pos.z = pos2.z + (vecLineLeft.z * fRate) + cosf(pObject->rot.y) / D3DX_PI * 1.0f;
+					g_player.pos.x = pos2.x + (vecLineLeft.x * fRate) + sinf(pObject->rot.y) / D3DX_PI * PUSHING_BACK;
+					g_player.pos.z = pos2.z + (vecLineLeft.z * fRate) + cosf(pObject->rot.y) / D3DX_PI * PUSHING_BACK;
 					PrintDebugProc("ごっつん\n");
 					break;
 				}
@@ -559,8 +559,8 @@ void CollisionObjPlayer(void)
 				if (fAreaAUp / fAreaBUp >= 0.0f && fAreaAUp / fAreaBUp <= 1.0f)
 				{//ごっつん
 					float fRate = fAreaAUp / fAreaBUp;
-					g_player.pos.x = pos1.x + (vecLineUp.x * fRate) + cosf(pObject->rot.y) / D3DX_PI * 1.0f;
-					g_player.pos.z = pos1.z + (vecLineUp.z * fRate) - sinf(pObject->rot.y) / D3DX_PI * 1.0f;
+					g_player.pos.x = pos1.x + (vecLineUp.x * fRate) + cosf(pObject->rot.y) / D3DX_PI * PUSHING_BACK;
+					g_player.pos.z = pos1.z + (vecLineUp.z * fRate) - sinf(pObject->rot.y) / D3DX_PI * PUSHING_BACK;
 					PrintDebugProc("ごっつん\n");
 					break;
 				}
@@ -570,8 +570,8 @@ void CollisionObjPlayer(void)
 				if (fAreaADown / fAreaBDown >= 0.0f && fAreaADown / fAreaBDown <= 1.0f)
 				{//ごっつん
 					float fRate = fAreaADown / fAreaBDown;
-					g_player.pos.x = pos3.x + (vecLineDown.x * fRate) - cosf(pObject->rot.y) / D3DX_PI * 1.0f;
-					g_player.pos.z = pos3.z + (vecLineDown.z * fRate) + sinf(pObject->rot.y) / D3DX_PI * 1.0f;
+					g_player.pos.x = pos3.x + (vecLineDown.x * fRate) - cosf(pObject->rot.y) / D3DX_PI * PUSHING_BACK;
+					g_player.pos.z = pos3.z + (vecLineDown.z * fRate) + sinf(pObject->rot.y) / D3DX_PI * PUSHING_BACK;
 					PrintDebugProc("ごっつん\n");
 					break;
 				}

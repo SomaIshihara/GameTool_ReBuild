@@ -231,9 +231,9 @@ void FixPosR(void)
 void FixRot(void)
 {
 	//ƒJƒƒ‰1ŽüŒvŽZ
-	g_camera.rot.x = (float)fmod(g_camera.rot.x + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-	g_camera.rot.y = (float)fmod(g_camera.rot.y + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-	g_camera.rot.z = (float)fmod(g_camera.rot.z + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
+	g_camera.rot.x = FIX_ROT(g_camera.rot.x);
+	g_camera.rot.y = FIX_ROT(g_camera.rot.y);
+	g_camera.rot.z = FIX_ROT(g_camera.rot.z);
 
 	//[ƒJƒƒ‰§ŒÀ]x‰ñ“]‚Ì§ŒÀ
 	if (g_camera.rot.x >= CAMERA_ROT_X_MAX * D3DX_PI)
