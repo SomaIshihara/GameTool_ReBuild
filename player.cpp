@@ -522,21 +522,21 @@ void CollisionObjPlayer(void)
 			fAreaBLeft = (vecLineLeft.z * vecMove.x) - (vecLineLeft.x * vecMove.z);
 
 			//ç∂ë§ANDîÕàÕì‡vecToPosOldOps
-			if ((vecLineRight.z * vecToPosRight.x) - (vecLineRight.x * vecToPosRight.z) <= 0.0f && (vecLineRight.z * vecToPosOldRight.x) - (vecLineRight.x * vecToPosOldRight.z) >= 0.0f)
+			if ((vecLineRight.z * vecToPosOldRight.x) - (vecLineRight.x * vecToPosOldRight.z) >= 0.0f && (vecLineRight.z * vecToPosRight.x) - (vecLineRight.x * vecToPosRight.z) < 0.0f)
 			{
 				if (fAreaARight / fAreaBRight >= 0.0f && fAreaARight / fAreaBRight <= 1.0f)
 				{//Ç≤Ç¡Ç¬ÇÒ
 					g_player.pos.x = pos0.x + (vecLineRight.x * (fAreaARight / fAreaBRight));
-					g_player.pos.z = pos0.z + (vecLineRight.z * (fAreaARight / fAreaBRight));
+					g_player.pos.z = pos0.z + 1.0f + (vecLineRight.z * (fAreaARight / fAreaBRight));
 					break;
 				}
 			}
-			else if ((vecLineLeft.z * vecToPosLeft.x) - (vecLineLeft.x * vecToPosLeft.z) <= 0.0f && (vecLineLeft.z * vecToPosOldLeft.x) - (vecLineLeft.x * vecToPosOldLeft.z) >= 0.0f)
+			else if ((vecLineLeft.z * vecToPosOldLeft.x) - (vecLineLeft.x * vecToPosOldLeft.z) >= 0.0f && (vecLineLeft.z * vecToPosLeft.x) - (vecLineLeft.x * vecToPosLeft.z) < 0.0f)
 			{
 				if (fAreaALeft / fAreaBLeft >= 0.0f && fAreaALeft / fAreaBLeft <= 1.0f)
 				{//Ç≤Ç¡Ç¬ÇÒ
 					g_player.pos.x = pos2.x + (vecLineLeft.x * (fAreaALeft / fAreaBLeft));
-					g_player.pos.z = pos2.z + (vecLineLeft.z * (fAreaALeft / fAreaBLeft));
+					g_player.pos.z = pos2.z - 1.0f + (vecLineLeft.z * (fAreaALeft / fAreaBLeft));
 					break;
 				}
 			}
@@ -549,20 +549,20 @@ void CollisionObjPlayer(void)
 			fAreaBDown = (vecLineDown.z * vecMove.x) - (vecLineDown.x * vecMove.z);
 
 			//ç∂ë§ANDîÕàÕì‡vecToPosOldOps
-			if ((vecLineUp.z * vecToPosUp.x) - (vecLineUp.x * vecToPosUp.z) <= 0.0f && (vecLineUp.z * vecToPosOldUp.x) - (vecLineUp.x * vecToPosOldUp.z) >= 0.0f)
+			if ((vecLineUp.z * vecToPosOldUp.x) - (vecLineUp.x * vecToPosOldUp.z) >= 0.0f && (vecLineUp.z * vecToPosUp.x) - (vecLineUp.x * vecToPosUp.z) < 0.0f)
 			{
 				if (fAreaAUp / fAreaBUp >= 0.0f && fAreaAUp / fAreaBUp <= 1.0f)
 				{//Ç≤Ç¡Ç¬ÇÒ
-					g_player.pos.x = pos1.x + (vecLineUp.x * (fAreaAUp / fAreaBUp));
+					g_player.pos.x = pos1.x - 1.0f + (vecLineUp.x * (fAreaAUp / fAreaBUp));
 					g_player.pos.z = pos1.z + (vecLineUp.z * (fAreaAUp / fAreaBUp));
 					break;
 				}
 			}
-			else if ((vecLineDown.z * vecToPosDown.x) - (vecLineDown.x * vecToPosDown.z) <= 0.0f && (vecLineDown.z * vecToPosOldDown.x) - (vecLineDown.x * vecToPosOldDown.z) >= 0.0f)
+			else if ((vecLineDown.z * vecToPosOldDown.x) - (vecLineDown.x * vecToPosOldDown.z) >= 0.0f && (vecLineDown.z * vecToPosDown.x) - (vecLineDown.x * vecToPosDown.z) < 0.0f)
 			{
 				if (fAreaADown / fAreaBDown >= 0.0f && fAreaADown / fAreaBDown <= 1.0f)
 				{//Ç≤Ç¡Ç¬ÇÒ
-					g_player.pos.x = pos3.x + (vecLineDown.x * (fAreaADown / fAreaBDown));
+					g_player.pos.x = pos3.x + 1.0f + (vecLineDown.x * (fAreaADown / fAreaBDown));
 					g_player.pos.z = pos3.z + (vecLineDown.z * (fAreaADown / fAreaBDown));
 					break;
 				}
