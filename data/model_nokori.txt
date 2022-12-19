@@ -1,10 +1,13 @@
-#---JOBI---
-MODELSET
-	TYPE = 0
-	POS = -300 0 -840
-	ROT = 0 180 0
-END_MODELSET
 
+
+
+
+#---SUBWAY---
+MODELSET
+	TYPE = 1
+	POS = 120 0 880
+	ROT = 0 90 0
+END_MODELSET
 
 #---------------------------------
 # ブロック1

@@ -432,7 +432,7 @@ void CollisionObjPlayer(void)
 			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
 			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
 																	//0 - 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
-			rot = (float)fmod(-fAngle + pObject->rot.y + (D3DX_PI * 3), D3DX_PI * 2) - D3DX_PI;
+			rot = (float)fmod(-fAngle - pObject->rot.y + (D3DX_PI * 3), D3DX_PI * 2) - D3DX_PI;
 
 			//角度に応じて頂点の位置をずらす
 			pos0.x = pObject->pos.x + sinf(rot) * fLength;
@@ -448,10 +448,10 @@ void CollisionObjPlayer(void)
 			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
 			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
 																	//0 + 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
-			rot = (float)fmod(fAngle + pObject->rot.y + (D3DX_PI * 3), D3DX_PI * 2) - D3DX_PI;
+			rot = (float)fmod(-fAngle - pObject->rot.y + (D3DX_PI * 3), D3DX_PI * 2) - D3DX_PI;
 
 			//角度に応じて頂点の位置をずらす
-			pos1.x = pObject->pos.x - sinf(rot) * fLength;
+			pos1.x = pObject->pos.x + sinf(rot) * fLength;
 			pos1.y = 0.0f;
 			pos1.z = pObject->pos.z - cosf(rot) * fLength;
 			//-pos1---------------------------------------------------------------------------------------------------------------------------
@@ -464,7 +464,7 @@ void CollisionObjPlayer(void)
 			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
 			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
 																	//PI - 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
-			rot = (float)fmod(D3DX_PI - fAngle + pObject->rot.y + (D3DX_PI * 3), D3DX_PI * 2) - D3DX_PI;
+			rot = (float)fmod(D3DX_PI - fAngle - pObject->rot.y + (D3DX_PI * 3), D3DX_PI * 2) - D3DX_PI;
 
 			//角度に応じて頂点の位置をずらす
 			pos2.x = pObject->pos.x - sinf(rot) * fLength;
@@ -480,10 +480,10 @@ void CollisionObjPlayer(void)
 			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
 			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
 																	//-PI + 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
-			rot = (float)fmod(-D3DX_PI + fAngle + pObject->rot.y + (D3DX_PI * 3), D3DX_PI * 2) - D3DX_PI;
+			rot = (float)fmod(-D3DX_PI - fAngle - pObject->rot.y + (D3DX_PI * 3), D3DX_PI * 2) - D3DX_PI;
 
 			//角度に応じて頂点の位置をずらす
-			pos3.x = pObject->pos.x + sinf(rot) * fLength;
+			pos3.x = pObject->pos.x - sinf(rot) * fLength;
 			pos3.y = 0.0f;
 			pos3.z = pObject->pos.z + cosf(rot) * fLength;
 			//-pos3---------------------------------------------------------------------------------------------------------------------------
@@ -526,7 +526,8 @@ void CollisionObjPlayer(void)
 			{
 				if (fAreaARight / fAreaBRight >= 0.0f && fAreaARight / fAreaBRight <= 1.0f)
 				{//ごっつん
-					//assert(false);
+					g_player.pos.x = pos0.x + (vecLineRight.x * (fAreaARight / fAreaBRight));
+					g_player.pos.z = pos0.z + (vecLineRight.z * (fAreaARight / fAreaBRight));
 					break;
 				}
 			}
@@ -534,7 +535,8 @@ void CollisionObjPlayer(void)
 			{
 				if (fAreaALeft / fAreaBLeft >= 0.0f && fAreaALeft / fAreaBLeft <= 1.0f)
 				{//ごっつん
-					//assert(false);
+					g_player.pos.x = pos2.x + (vecLineLeft.x * (fAreaALeft / fAreaBLeft));
+					g_player.pos.z = pos2.z + (vecLineLeft.z * (fAreaALeft / fAreaBLeft));
 					break;
 				}
 			}
@@ -551,7 +553,8 @@ void CollisionObjPlayer(void)
 			{
 				if (fAreaAUp / fAreaBUp >= 0.0f && fAreaAUp / fAreaBUp <= 1.0f)
 				{//ごっつん
-					//assert(false);
+					g_player.pos.x = pos1.x + (vecLineUp.x * (fAreaAUp / fAreaBUp));
+					g_player.pos.z = pos1.z + (vecLineUp.z * (fAreaAUp / fAreaBUp));
 					break;
 				}
 			}
@@ -559,7 +562,8 @@ void CollisionObjPlayer(void)
 			{
 				if (fAreaADown / fAreaBDown >= 0.0f && fAreaADown / fAreaBDown <= 1.0f)
 				{//ごっつん
-					//assert(false);
+					g_player.pos.x = pos3.x + (vecLineDown.x * (fAreaADown / fAreaBDown));
+					g_player.pos.z = pos3.z + (vecLineDown.z * (fAreaADown / fAreaBDown));
 					break;
 				}
 			}
