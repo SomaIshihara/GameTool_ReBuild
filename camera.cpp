@@ -16,7 +16,7 @@
 #define CAMERA_MOU_ROT_SPEED	(0.003f)	//マウス移動での回転速度
 #define CAMERA_LENGTH			(5200.0f)	//カメラが見える最大距離
 #define CAMERA_ROT_X_MIN		(-0.5f)		//カメラのX角度の最低値[rad]
-#define CAMERA_ROT_X_MAX		(-0.05f)	//カメラのX角度の最低値[rad]
+#define CAMERA_ROT_X_MAX		(0.035f)	//カメラのX角度の最低値[rad]
 
 //プロト
 void FixPosV(void);
@@ -250,7 +250,7 @@ void ResetCamera(float fLength, D3DXVECTOR2 posV, D3DXVECTOR3 posR, D3DXVECTOR3 
 {
 	g_camera.fLength = fLength;
 	g_camera.posV = D3DXVECTOR3(posV.x, posV.y, -g_camera.fLength);
-	g_camera.posR = posR;
+	g_camera.posR = D3DXVECTOR3(posR.x, posR.y, posR.z);
 	g_camera.rot = rot;
 
 	g_camera.posVDest = g_camera.posV;

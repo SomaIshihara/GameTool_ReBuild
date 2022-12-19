@@ -122,7 +122,7 @@ void DrawWall(void)
 	pDevice->SetFVF(FVF_VERTEX_3D);
 
 	for (nCntWall = 0; nCntWall < MAX_WALL; nCntWall++)
-	{
+	{// && g_wall[nCntWall].bAdult == false
 		if (g_wall[nCntWall].bUse == true)
 		{
 			//ワールドマトリックス初期化
@@ -150,7 +150,7 @@ void DrawWall(void)
 //========================
 //配置処理
 //========================
-void SetWall(D3DXVECTOR3 pos, D3DXVECTOR3 rot, float fWidth, float fHeight)
+void SetWall(D3DXVECTOR3 pos, D3DXVECTOR3 rot, float fWidth, float fHeight, bool bAdult)
 {
 	VERTEX_3D *pVtx;
 
@@ -162,41 +162,45 @@ void SetWall(D3DXVECTOR3 pos, D3DXVECTOR3 rot, float fWidth, float fHeight)
 			g_wall[nCount].rot = rot;
 			g_wall[nCount].fWidth = fWidth;
 			g_wall[nCount].fHeight = fHeight;
+			g_wall[nCount].bAdult = bAdult;
 			g_wall[nCount].bUse = true;
 
-			//頂点情報設定
-			//頂点バッファのロックと頂点情報へのポインタを取得
-			g_pVtxbuffWall->Lock(0, 0, (void **)&pVtx, 0);
+			if (g_wall[nCount].bAdult == false || true)
+			{
+				//頂点情報設定
+				//頂点バッファのロックと頂点情報へのポインタを取得
+				g_pVtxbuffWall->Lock(0, 0, (void **)&pVtx, 0);
 
-			//ポインタずらす
-			pVtx += 4 * nCount;
+				//ポインタずらす
+				pVtx += 4 * nCount;
 
-			//頂点座標（相対座標）（地面中心）
-			pVtx[0].pos = D3DXVECTOR3(-g_wall[nCount].fWidth / 2, g_wall[nCount].fHeight, 0.0f);
-			pVtx[1].pos = D3DXVECTOR3(g_wall[nCount].fWidth / 2, g_wall[nCount].fHeight, 0.0f);
-			pVtx[2].pos = D3DXVECTOR3(-g_wall[nCount].fWidth / 2, 0.0f, 0.0f);
-			pVtx[3].pos = D3DXVECTOR3(g_wall[nCount].fWidth / 2, 0.0f, 0.0f);
+				//頂点座標（相対座標）（地面中心）
+				pVtx[0].pos = D3DXVECTOR3(-g_wall[nCount].fWidth / 2, g_wall[nCount].fHeight, 0.0f);
+				pVtx[1].pos = D3DXVECTOR3(g_wall[nCount].fWidth / 2, g_wall[nCount].fHeight, 0.0f);
+				pVtx[2].pos = D3DXVECTOR3(-g_wall[nCount].fWidth / 2, 0.0f, 0.0f);
+				pVtx[3].pos = D3DXVECTOR3(g_wall[nCount].fWidth / 2, 0.0f, 0.0f);
 
-			//法線ベクトル
-			pVtx[0].nor = D3DXVECTOR3(sinf(g_wall[nCount].rot.y), 0.0f, -cosf(g_wall[nCount].rot.y));
-			pVtx[1].nor = D3DXVECTOR3(sinf(g_wall[nCount].rot.y), 0.0f, -cosf(g_wall[nCount].rot.y));
-			pVtx[2].nor = D3DXVECTOR3(sinf(g_wall[nCount].rot.y), 0.0f, -cosf(g_wall[nCount].rot.y));
-			pVtx[3].nor = D3DXVECTOR3(sinf(g_wall[nCount].rot.y), 0.0f, -cosf(g_wall[nCount].rot.y));
+				//法線ベクトル
+				pVtx[0].nor = D3DXVECTOR3(sinf(g_wall[nCount].rot.y), 0.0f, -cosf(g_wall[nCount].rot.y));
+				pVtx[1].nor = D3DXVECTOR3(sinf(g_wall[nCount].rot.y), 0.0f, -cosf(g_wall[nCount].rot.y));
+				pVtx[2].nor = D3DXVECTOR3(sinf(g_wall[nCount].rot.y), 0.0f, -cosf(g_wall[nCount].rot.y));
+				pVtx[3].nor = D3DXVECTOR3(sinf(g_wall[nCount].rot.y), 0.0f, -cosf(g_wall[nCount].rot.y));
 
-			//カラー
-			pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-			pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-			pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-			pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+				//カラー
+				pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+				pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+				pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+				pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 
-			//テクスチャ座標
-			pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
-			pVtx[1].tex = D3DXVECTOR2(g_wall[nCount].fWidth / 50.0f, 0.0f);
-			pVtx[2].tex = D3DXVECTOR2(0.0f, g_wall[nCount].fHeight / 50.0f);
-			pVtx[3].tex = D3DXVECTOR2(g_wall[nCount].fWidth / 50.0f, g_wall[nCount].fHeight / 50.0f);
+				//テクスチャ座標
+				pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
+				pVtx[1].tex = D3DXVECTOR2(g_wall[nCount].fWidth / 50.0f, 0.0f);
+				pVtx[2].tex = D3DXVECTOR2(0.0f, g_wall[nCount].fHeight / 50.0f);
+				pVtx[3].tex = D3DXVECTOR2(g_wall[nCount].fWidth / 50.0f, g_wall[nCount].fHeight / 50.0f);
 
-			//頂点バッファをアンロック
-			g_pVtxbuffWall->Unlock();
+				//頂点バッファをアンロック
+				g_pVtxbuffWall->Unlock();
+			}
 
 			//抜ける
 			break;

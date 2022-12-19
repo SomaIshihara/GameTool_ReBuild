@@ -101,7 +101,7 @@ void UpdateTitle(void)
 	if (GetMouseClickTrigger(MOUSE_CLICK_LEFT) == true)
 	{
 		SetMode(MODE_GAME);
-		ResetCamera(200.0f, D3DXVECTOR2(0.0f, 100.0f), D3DXVECTOR3(0.0f, 30.0f, 0.0f), D3DXVECTOR3(-0.5f, 0.0f, 0.0f));
+		ResetCamera(200.0f, D3DXVECTOR2(0.0f, 100.0f), D3DXVECTOR3(0.0f + PLAYER_POS.x, 30.0f + PLAYER_POS.y, 0.0f + PLAYER_POS.z), D3DXVECTOR3(-0.5f, 0.0f, 0.0f));
 	}
 }
 

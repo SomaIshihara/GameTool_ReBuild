@@ -66,10 +66,11 @@ const char *c_pFileNamePlayer[] =
 void InitPlayer(void)
 {
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();	//デバイスの取得
+	Camera *pCamera = GetCamera();
 
 	//変数初期化
-	g_player.pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	g_player.posOld = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	g_player.pos = PLAYER_POS;
+	g_player.posOld = g_player.pos;
 
 	g_player.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	g_player.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -382,22 +383,49 @@ void DrawPlayer(void)
 //========================
 void CollisionWallPlayer(int nNumber)
 {
-	if (g_player.pos.x + PLAYER_WIDTH / 2 > MESHFIELD_WIDTH * MESHFIELD_LENGTH / 2)
-	{
-		g_player.pos.x = MESHFIELD_WIDTH * MESHFIELD_LENGTH / 2 - PLAYER_WIDTH / 2;
-	}
-	else if (g_player.pos.x - PLAYER_WIDTH / 2 < -MESHFIELD_WIDTH * MESHFIELD_LENGTH / 2)
-	{
-		g_player.pos.x = -MESHFIELD_WIDTH * MESHFIELD_LENGTH / 2 + PLAYER_WIDTH / 2;
-	}
+	Wall *wall = GetWall();
+	D3DXVECTOR3 pos0, pos1;
+	D3DXVECTOR3 vecMove, vecLine;
+	D3DXVECTOR3 vecToPos, vecToPosOld;
+	float fAreaA, fAreaB;
 
-	if (g_player.pos.z + PLAYER_DEPTH / 2 > MESHFIELD_HEIGHT * MESHFIELD_LENGTH / 2)
+	for (int nCntWall = 0; nCntWall < MAX_WALL; nCntWall++, wall++)
 	{
-		g_player.pos.z = MESHFIELD_HEIGHT * MESHFIELD_LENGTH / 2 - PLAYER_DEPTH / 2;
-	}
-	else if (g_player.pos.z - PLAYER_DEPTH / 2 < -MESHFIELD_HEIGHT * MESHFIELD_LENGTH / 2)
-	{
-		g_player.pos.z = -MESHFIELD_HEIGHT * MESHFIELD_LENGTH / 2 + PLAYER_DEPTH / 2;
+		//使っているときだけ処理
+		if (wall->bUse == true)
+		{
+			//移動ベクトル
+			vecMove = g_player.pos - g_player.posOld;
+
+			//位置計算
+			pos0.x = wall->pos.x - (wall->fWidth / 2) * cosf(wall->rot.y);
+			pos0.y = 0.0f;
+			pos0.z = wall->pos.z + (wall->fWidth / 2) * sinf(wall->rot.y);
+
+			pos1.x = wall->pos.x + (wall->fWidth / 2) * cosf(wall->rot.y);
+			pos1.y = 0.0f;
+			pos1.z = wall->pos.z - (wall->fWidth / 2) * sinf(wall->rot.y);
+
+			vecLine = pos1 - pos0;	//境界線ベクトル
+			vecToPos = g_player.pos - pos0;
+			vecToPosOld = g_player.posOld - pos0;
+
+			//面積求める
+			fAreaA = (vecToPos.z * vecMove.x) - (vecToPos.x * vecMove.z);
+			fAreaB = (vecLine.z * vecMove.x) - (vecLine.x * vecMove.z);
+
+			if ((vecLine.z * vecToPosOld.x) - (vecLine.x * vecToPosOld.z) >= 0.0f && (vecLine.z * vecToPos.x) - (vecLine.x * vecToPos.z) < 0.0f)
+			{
+				if (fAreaA / fAreaB >= 0.0f && fAreaA / fAreaB <= 1.0f)
+				{//ごっつん
+					float fRate = fAreaA / fAreaB;
+					g_player.pos.x = pos0.x + (vecLine.x * fRate) - sinf(wall->rot.y) / D3DX_PI * PUSHING_BACK;
+					g_player.pos.z = pos0.z + (vecLine.z * fRate) - cosf(wall->rot.y) / D3DX_PI * PUSHING_BACK;
+					PrintDebugProc("ごっつん\n");
+					break;
+				}
+			}
+		}
 	}
 }
 

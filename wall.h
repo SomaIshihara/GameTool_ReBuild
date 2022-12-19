@@ -8,7 +8,7 @@
 #define _WALL_H_
 
 //マクロ
-#define MAX_WALL		(16)	//壁最大数
+#define MAX_WALL		(256)	//壁最大数
 #define WALL_WIDTH		(1200)
 #define WALL_DEPTH		(1600)
 
@@ -20,6 +20,7 @@ typedef struct
 	float fWidth;						//幅
 	float fHeight;						//高さ
 	D3DXMATRIX mtxWorld;				//ワールドマトリックス
+	bool bAdult;						//大人の壁か（意訳：当たり判定のみ使うか）
 	bool bUse;
 } Wall;
 
@@ -28,7 +29,7 @@ void InitWall(void);
 void UninitWall(void);
 void UpdateWall(void);
 void DrawWall(void);
-void SetWall(D3DXVECTOR3 pos, D3DXVECTOR3 rot, float fWidth, float fHeight);
+void SetWall(D3DXVECTOR3 pos, D3DXVECTOR3 rot, float fWidth, float fHeight, bool bAdult);
 Wall *GetWall(void);
 
 #endif // !_WALL_H_

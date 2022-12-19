@@ -278,14 +278,19 @@ void CollisionWallBullet(int nCount)
 {
 	Wall *wall = GetWall();
 	D3DXVECTOR3 pos0, pos1;
+	D3DXVECTOR3 vecMove;
 	D3DXVECTOR3 vecLine;
-	D3DXVECTOR3 vecToPos;
+	D3DXVECTOR3 vecToPos, vecToPosOld;
+	float fAreaA, fAreaB;
 
 	for (int nCntWall = 0; nCntWall < MAX_WALL; nCntWall++, wall++)
 	{
 		//使っているときだけ処理
 		if (wall->bUse == true)
 		{
+			//移動ベクトル
+			vecMove = g_aBullet[nCount].pos - g_aBullet[nCount].posOld;
+
 			//位置計算
 			pos0.x = wall->pos.x - (wall->fWidth / 2) * cosf(wall->rot.y);
 			pos0.y = 0.0f;
@@ -297,11 +302,20 @@ void CollisionWallBullet(int nCount)
 
 			vecLine = pos1 - pos0;	//境界線ベクトル
 			vecToPos = g_aBullet[nCount].pos - pos0;
+			vecToPosOld = g_aBullet[nCount].posOld - pos0;
 
-			if ((vecLine.z * vecToPos.x) - (vecLine.x * vecToPos.z) <= 0)
+			//面積求める
+			fAreaA = (vecToPos.z * vecMove.x) - (vecToPos.x * vecMove.z);
+			fAreaB = (vecLine.z * vecMove.x) - (vecLine.x * vecMove.z);
+
+			if ((vecLine.z * vecToPosOld.x) - (vecLine.x * vecToPosOld.z) >= 0.0f && (vecLine.z * vecToPos.x) - (vecLine.x * vecToPos.z) < 0.0f)
 			{
-				g_aBullet[nCount].bUse = false;
-				ReleaseIdxShadow(g_aBullet[nCount].nIdxShadow);
+				if (fAreaA / fAreaB >= 0.0f && fAreaA / fAreaB <= 1.0f)
+				{//ごっつん
+					g_aBullet[nCount].bUse = false;
+					ReleaseIdxShadow(g_aBullet[nCount].nIdxShadow);
+					break;
+				}
 			}
 		}
 	}
