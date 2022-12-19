@@ -20,6 +20,7 @@
 #define PLAYER_MOVE_SPEED	(7.0f)	//プレイヤー移動速度
 #define DUMP_COEF			(0.4f)	//減衰係数
 #define BULLET_SPEED		(15.0f)	//弾の速さ
+#define PUSHING_BACK		(1.0f)	//オブジェクトに当たった時の押し戻し
 
 //仮
 #define PLAYER_WIDTH		(20.0f)
@@ -526,8 +527,10 @@ void CollisionObjPlayer(void)
 			{
 				if (fAreaARight / fAreaBRight >= 0.0f && fAreaARight / fAreaBRight <= 1.0f)
 				{//ごっつん
-					g_player.pos.x = pos0.x + (vecLineRight.x * (fAreaARight / fAreaBRight));
-					g_player.pos.z = pos0.z + 1.0f + (vecLineRight.z * (fAreaARight / fAreaBRight));
+					float fRate = fAreaARight / fAreaBRight;
+					g_player.pos.x = pos0.x + (vecLineRight.x * fRate) - sinf(pObject->rot.y) / D3DX_PI * 1.0f;
+					g_player.pos.z = pos0.z + (vecLineRight.z * fRate) - cosf(pObject->rot.y) / D3DX_PI * 1.0f;
+					PrintDebugProc("ごっつん\n");
 					break;
 				}
 			}
@@ -535,8 +538,10 @@ void CollisionObjPlayer(void)
 			{
 				if (fAreaALeft / fAreaBLeft >= 0.0f && fAreaALeft / fAreaBLeft <= 1.0f)
 				{//ごっつん
-					g_player.pos.x = pos2.x + (vecLineLeft.x * (fAreaALeft / fAreaBLeft));
-					g_player.pos.z = pos2.z - 1.0f + (vecLineLeft.z * (fAreaALeft / fAreaBLeft));
+					float fRate = fAreaALeft / fAreaBLeft;
+					g_player.pos.x = pos2.x + (vecLineLeft.x * fRate) + sinf(pObject->rot.y) / D3DX_PI * 1.0f;
+					g_player.pos.z = pos2.z + (vecLineLeft.z * fRate) + cosf(pObject->rot.y) / D3DX_PI * 1.0f;
+					PrintDebugProc("ごっつん\n");
 					break;
 				}
 			}
@@ -553,8 +558,10 @@ void CollisionObjPlayer(void)
 			{
 				if (fAreaAUp / fAreaBUp >= 0.0f && fAreaAUp / fAreaBUp <= 1.0f)
 				{//ごっつん
-					g_player.pos.x = pos1.x - 1.0f + (vecLineUp.x * (fAreaAUp / fAreaBUp));
-					g_player.pos.z = pos1.z + (vecLineUp.z * (fAreaAUp / fAreaBUp));
+					float fRate = fAreaAUp / fAreaBUp;
+					g_player.pos.x = pos1.x + (vecLineUp.x * fRate) + cosf(pObject->rot.y) / D3DX_PI * 1.0f;
+					g_player.pos.z = pos1.z + (vecLineUp.z * fRate) - sinf(pObject->rot.y) / D3DX_PI * 1.0f;
+					PrintDebugProc("ごっつん\n");
 					break;
 				}
 			}
@@ -562,8 +569,10 @@ void CollisionObjPlayer(void)
 			{
 				if (fAreaADown / fAreaBDown >= 0.0f && fAreaADown / fAreaBDown <= 1.0f)
 				{//ごっつん
-					g_player.pos.x = pos3.x + 1.0f + (vecLineDown.x * (fAreaADown / fAreaBDown));
-					g_player.pos.z = pos3.z + (vecLineDown.z * (fAreaADown / fAreaBDown));
+					float fRate = fAreaADown / fAreaBDown;
+					g_player.pos.x = pos3.x + (vecLineDown.x * fRate) - cosf(pObject->rot.y) / D3DX_PI * 1.0f;
+					g_player.pos.z = pos3.z + (vecLineDown.z * fRate) + sinf(pObject->rot.y) / D3DX_PI * 1.0f;
+					PrintDebugProc("ごっつん\n");
 					break;
 				}
 			}
