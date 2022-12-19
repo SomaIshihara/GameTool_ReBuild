@@ -5,6 +5,7 @@
 //
 //==========================================
 #include "main.h"
+#include "game.h"
 #include "player.h"
 #include "input.h"
 #include "shadow.h"
@@ -72,6 +73,7 @@ void InitPlayer(void)
 
 	g_player.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	g_player.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	g_player.bIntoSafeArea = false;
 	g_nIdxShadow = -1;
 
 	for (int nCntInitModel = 0; nCntInitModel < EXITHUMAN_MODEL_NUM; nCntInitModel++)
@@ -259,7 +261,7 @@ void UpdatePlayer(void)
 	g_player.pos.z += g_player.move.z;
 
 	//壁当たり判定
-	//CollisionWallPlayer(0);
+	CollisionWallPlayer(0);
 
 	//オブジェクト当たり判定
 	CollisionObjPlayer();
@@ -272,6 +274,17 @@ void UpdatePlayer(void)
 	//移動量減衰
 	g_player.move.x += (0 - g_player.move.x) * DUMP_COEF;
 	g_player.move.z += (0 - g_player.move.z) * DUMP_COEF;
+
+	//セーフゾーン判定
+	if (g_player.pos.x >= SAFEAREA_MIN_X && g_player.pos.x <= SAFEAREA_MAX_X && g_player.pos.z >= SAFEAREA_MIN_Z && g_player.pos.z <= SAFEAREA_MAX_Z)
+	{
+		g_player.bIntoSafeArea = true;
+	}
+	else
+	{
+		g_player.bIntoSafeArea = false;
+	}
+
 	//GetMouseClickTrigger
 	if (GetMouseClickPress(MOUSE_CLICK_LEFT) == true)
 	{

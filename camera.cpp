@@ -11,12 +11,12 @@
 #include "debugproc.h"
 
 //マクロ
-#define CAMERA_MOVE_SPEED	(1.0f)	//カメラ移動速度
+#define CAMERA_MOVE_SPEED		(1.0f)		//カメラ移動速度
 #define CAMERA_KEY_ROT_SPEED	(0.005f)	//キーボード入力での回転速度
 #define CAMERA_MOU_ROT_SPEED	(0.003f)	//マウス移動での回転速度
-#define CAMERA_LENGTH		(5200.0f)		//カメラが見える最大距離
-#define CAMERA_ROT_X_MIN	(-0.5f)			//カメラのX角度の最低値[rad]
-#define CAMERA_ROT_X_MAX	(-0.05f)			//カメラのX角度の最低値[rad]
+#define CAMERA_LENGTH			(5200.0f)	//カメラが見える最大距離
+#define CAMERA_ROT_X_MIN		(-0.5f)		//カメラのX角度の最低値[rad]
+#define CAMERA_ROT_X_MAX		(-0.05f)	//カメラのX角度の最低値[rad]
 
 //プロト
 void FixPosV(void);
@@ -40,18 +40,7 @@ void InitCamera(void)
 		SHIFTJIS_CHARSET, OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH,
 		"Terminal", &g_pFontCamera);
 
-	g_camera.fLength = 200.0f;
-	g_camera.posV = D3DXVECTOR3(0.0f, 50.0f, -g_camera.fLength);
-	g_camera.posVDest = D3DXVECTOR3(0.0f, 50.0f, -g_camera.fLength);
-	g_camera.posR = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	g_camera.posRDest = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	g_camera.rot = D3DXVECTOR3(-0.5f, 0.0f, 0.0f);
-	g_camera.rotDest = D3DXVECTOR3(-0.5f, 0.0f, 0.0f);
-	g_camera.vecU.x = sinf(g_camera.rot.x) * sinf(g_camera.rot.y);
-	g_camera.vecU.y = cosf(g_camera.rot.x);
-	g_camera.vecU.z = sinf(g_camera.rot.x) * cosf(g_camera.rot.y) * -1;
-	D3DXVec3Normalize(&g_camera.vecU, &g_camera.vecU);
-	FixPosV();
+	ResetCamera(200.0f, D3DXVECTOR2(0.0f, 100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-0.5f, 0.0f, 0.0f));
 
 	//カメラ操作可能
 	g_bDebugCamera = true;
@@ -257,15 +246,16 @@ Camera *GetCamera(void)
 //========================
 //カメラ位置向きを元に戻す
 //========================
-void ResetCamera(void)
+void ResetCamera(float fLength, D3DXVECTOR2 posV, D3DXVECTOR3 posR, D3DXVECTOR3 rot)
 {
-	g_camera.fLength = 200.0f;
-	g_camera.posV = D3DXVECTOR3(0.0f, 50.0f, -g_camera.fLength);
-	g_camera.posVDest = D3DXVECTOR3(0.0f, 50.0f, -g_camera.fLength);
-	g_camera.posR = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	g_camera.posRDest = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	g_camera.rot = D3DXVECTOR3(-0.5f, 0.0f, 0.0f);
-	g_camera.rotDest = D3DXVECTOR3(-0.5f, 0.0f, 0.0f);
+	g_camera.fLength = fLength;
+	g_camera.posV = D3DXVECTOR3(posV.x, posV.y, -g_camera.fLength);
+	g_camera.posR = posR;
+	g_camera.rot = rot;
+
+	g_camera.posVDest = g_camera.posV;
+	g_camera.posRDest = g_camera.posR;
+	g_camera.rotDest = g_camera.rot;
 	g_camera.vecU.x = sinf(g_camera.rot.x) * sinf(g_camera.rot.y);
 	g_camera.vecU.y = cosf(g_camera.rot.x);
 	g_camera.vecU.z = sinf(g_camera.rot.x) * cosf(g_camera.rot.y) * -1;

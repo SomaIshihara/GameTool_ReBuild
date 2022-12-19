@@ -18,11 +18,20 @@
 #include "input.h"
 #include "camera.h"
 
+//マクロ
+#define GAME_CLEAR_TIME	(0 * 60)	//ゲームクリアにするまでかかる滞在時間
+
+//グローバル
+int g_nCnterSafeAreaTime;
+
 //========================
 //初期化処理
 //========================
 void InitGame(void)
 {
+	//変数初期化
+	g_nCnterSafeAreaTime = 0;
+
 	//オブジェクト初期化
 	InitSky();
 	InitMeshfield();
@@ -62,6 +71,7 @@ void UninitGame(void)
 //========================
 void UpdateGame(void)
 {
+	Player *pPlayer = GetPlayer();
 	//影
 	UpdateShadow();
 
@@ -83,19 +93,34 @@ void UpdateGame(void)
 	//オブジェクト
 	UpdateObject();
 
+	//セーフエリアに入っているか確認
+	if (pPlayer->bIntoSafeArea == true)
+	{
+		g_nCnterSafeAreaTime++;
+		if (g_nCnterSafeAreaTime >= GAME_CLEAR_TIME)
+		{
+			SetResult(RESULT_CLEAR);
+			SetMode(MODE_RESULT);
+			ResetCamera(200.0f, D3DXVECTOR2(0.0f, 100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-0.5f, 0.0f, 0.0f));
+		}
+	}
+	else
+	{
+		g_nCnterSafeAreaTime = 0;
+	}
 
 	//リザルト移行
 	if (GetKeyboardTrigger(DIK_F2) == true)
 	{
 		SetResult(RESULT_CLEAR);
 		SetMode(MODE_RESULT);
-		ResetCamera();
+		ResetCamera(200.0f, D3DXVECTOR2(0.0f, 100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-0.5f, 0.0f, 0.0f));
 	}
 	else if (GetKeyboardTrigger(DIK_F3) == true)
 	{
 		SetResult(RESULT_OVER);
 		SetMode(MODE_RESULT);
-		ResetCamera();
+		ResetCamera(200.0f, D3DXVECTOR2(0.0f, 100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-0.5f, 0.0f, 0.0f));
 	}
 }
 
@@ -115,8 +140,6 @@ void DrawGame(void)
 
 	//影
 	DrawShadow();
-
-	
 
 	//プレイヤー
 	DrawPlayer();

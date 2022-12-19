@@ -28,6 +28,6 @@ void UninitCamera(void);
 void UpdateCamera(void);
 void SetCamera(void);
 Camera *GetCamera(void);
-void ResetCamera(void);
+void ResetCamera(float fLength, D3DXVECTOR2 posV, D3DXVECTOR3 posR, D3DXVECTOR3 rot);
 
 #endif // !_CAMERA_H_

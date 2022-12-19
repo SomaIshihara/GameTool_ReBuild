@@ -22,6 +22,7 @@ typedef struct
 	Model aModel[EXITHUMAN_MODEL_NUM];		//（仮
 	int nNumModel;			//パーツ総数
 	D3DXMATRIX mtxWorld;	//ワールドマトリ
+	bool bIntoSafeArea;		//セーフエリアに入っているか
 } Player;
 
 //プロトタイプ宣言
