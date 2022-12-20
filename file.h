@@ -10,18 +10,24 @@
 #include "main.h"
 
 //マクロ
-
+//なし
 
 //コード名
-//自作用
+//共通
 //読み込み開始・終了
-#define CODE_START				"Start"				//スクリプト開始
-#define CODE_END				"End"				//スクリプト終了
+#define CODE_MV_SCRIPT			"SCRIPT"			//スクリプト開始（MV専用）
+#define CODE_MV_END_SCRIPT		"END_SCRIPT"		//スクリプト終了（MV専用）
+
+//オリジナル
+//敵配置
+#define CODE_SETENEMY			"SETENEMY"			//敵配置(使用パラメータ:pos,rot,nameIdx,life)
+#define CODE_END_SETENEMY		"END_SETENEMY"		//敵配置終了
+
+//パラメータ
+#define CODE_NAMEIDX			"NAMEIDX"			//名前の番号
+#define CODE_LIFE				"LIFE"				//体力
 
 //モデルビューワー・モーションビューワー用
-//読み込み開始・終了
-#define CODE_SCRIPT				"SCRIPT"			//スクリプト開始（MV専用）
-#define CODE_END_SCRIPT			"END_SCRIPT"		//スクリプト終了（MV専用）
 //テクスチャ数
 #define CODE_NUM_TEXTURE		"NUM_TEXTURE"		//テクスチャ数読み取り
 //テクスチャファイル名
@@ -57,7 +63,8 @@
 //プレイヤー情報
 #define CODE_PLAYERSET			"PLAYERSET"			//プレイヤー配置開始
 #define CODE_END_PLAYERSET		"END_PLAYERSET"		//プレイヤー配置終了
-//パラメータ類
+
+//パラメータ類（オリジナル・MV共通部分あり）
 #define CODE_POS				"POS"				//位置
 #define CODE_REF				"REF"				//注視点
 #define CODE_DIRECTION			"DIRECTION"			//方向

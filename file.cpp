@@ -7,12 +7,14 @@
 #include "main.h"
 #include "file.h"
 #include "object.h"
+#include "enemy.h"
 #include <stdio.h>
 #include <assert.h>
 
 //マクロ
 //マップ
 #define MODELVIEWERDATA_PATH	"data\\model.txt"	//モデルビューワーのデータのパス
+#define SETDATA_PATH			"data\\setdata.txt"	//配置情報などのデータのパス
 
 //セーブデータ
 //ほげほげ
@@ -33,6 +35,7 @@ typedef enum
 	READSTAT_MODELSET,
 	READSTAT_BILLBOARDSET,
 	READSTAT_PLAYERSET,
+	READSTAT_SETENEMY,
 	READSTAT_MAX
 } READSTAT;
 
@@ -46,6 +49,8 @@ D3DXVECTOR3 g_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 int g_nState = 0;
 bool g_bUseCollision = true;	//デフォルトはtrue
 bool g_bUseShadow = true;		//デフォルトはtrue
+int g_nLife = 0;
+MODELNAME g_name = MODELNAME_EXITHUMAN;
 
 //========================
 //ファイル初期化処理
@@ -60,6 +65,8 @@ void InitFile()
 	g_nState = 0;
 	g_bUseCollision = true;		//デフォルトはtrue
 	g_bUseShadow = true;		//デフォルトはtrue
+	g_nLife = 0;
+	g_name = MODELNAME_EXITHUMAN;
 }
 
 //========================
@@ -79,7 +86,7 @@ void UpdateFile(void)
 }
 
 //========================
-//マップ・敵読み込み処理（CSV）
+//マップ・敵読み込み処理
 //========================
 void LoadMapFile(void)
 {
@@ -115,11 +122,11 @@ void LoadMapFile(void)
 			}
 
 			//文字列チェック
-			if (strncmp(&aCode[0], CODE_SCRIPT, sizeof CODE_SCRIPT / sizeof(char) - 1) == 0)
+			if (strncmp(&aCode[0], CODE_MV_SCRIPT, sizeof CODE_MV_SCRIPT / sizeof(char) - 1) == 0)
 			{//読み取り開始
 				bRead = true;
 			}
-			else if (strncmp(&aCode[0], CODE_END_SCRIPT, sizeof CODE_END_SCRIPT / sizeof(char) - 1) == 0)
+			else if (strncmp(&aCode[0], CODE_MV_END_SCRIPT, sizeof CODE_MV_END_SCRIPT / sizeof(char) - 1) == 0)
 			{//読み取り終了
 				bRead = false;
 				break;
@@ -389,6 +396,123 @@ void LoadMapFile(void)
 			}
 		}
 		
+		//ファイル閉じる
+		fclose(pFile);
+	}
+	else
+	{
+		assert(pFile != NULL);
+	}
+
+	//配置情報
+	//読み込みファイル設定
+	pFile = fopen(SETDATA_PATH, "r");
+
+	//敵配置情報を取得
+	if (pFile != NULL)
+	{
+		while (1)
+		{
+			fgets(&aCode[0], CODE_LENGTH, pFile);
+
+			//コメントアウトチェック
+			char *pCharPos = strchr(&aCode[0], '#');
+			if (pCharPos != nullptr)
+			{//strchrの返り値がぬるぽではない
+				*pCharPos = '\0';
+			}
+
+			//タブ消去
+			while (aCode[0] == '\t')
+			{
+				char aCodeBackup[CODE_LENGTH];
+				strcpy(&aCodeBackup[0], &aCode[0]);
+				strcpy(&aCode[0], &aCodeBackup[1]);
+			}
+
+			//文字列チェック
+			if (strncmp(&aCode[0], CODE_MV_SCRIPT, sizeof CODE_MV_SCRIPT / sizeof(char) - 1) == 0)
+			{//読み取り開始
+				bRead = true;
+			}
+			else if (strncmp(&aCode[0], CODE_MV_END_SCRIPT, sizeof CODE_MV_END_SCRIPT / sizeof(char) - 1) == 0)
+			{//読み取り終了
+				bRead = false;
+				break;
+			}
+			else if (aCode[0] == EOF)
+			{//EOFかもしれない
+				if (feof(pFile))
+				{//いや、これはEOFだ
+					bRead = false;
+					break;
+				}
+			}
+			else if (bRead == true)
+			{//読み取り
+				switch (g_readStat)
+				{
+				case READSTAT_NONE:	//処理取得
+					if (strncmp(&aCode[0], CODE_SETENEMY, sizeof CODE_SETENEMY / sizeof(char) - 1) == 0)
+					{
+						g_readStat = READSTAT_SETENEMY;
+					}
+					break;
+				case READSTAT_SETENEMY:		//モデル情報取得
+					if (strncmp(&aCode[0], CODE_END_MODELSET, sizeof CODE_END_MODELSET / sizeof(char) - 1) == 0)
+					{
+						SetEnemy(g_pos, g_rot, g_name, g_nLife);
+						g_readStat = READSTAT_NONE;
+					}
+					else if (strncmp(&aCode[0], CODE_POS, sizeof CODE_POS / sizeof(char) - 1) == 0)
+					{
+						pSprit = strtok(&aCode[0], " =\n");	//処理内容の部分消す
+
+						//X座標読み取り
+						pSprit = strtok(NULL, " =\n");
+						g_pos.x = atof(pSprit);
+
+						//Y座標読み取り
+						pSprit = strtok(NULL, " =\n");
+						g_pos.y = atof(pSprit);
+
+						//Z座標読み取り
+						pSprit = strtok(NULL, " =\n");
+						g_pos.z = atof(pSprit);
+					}
+					else if (strncmp(&aCode[0], CODE_ROT, sizeof CODE_ROT / sizeof(char) - 1) == 0)
+					{
+						pSprit = strtok(&aCode[0], " =\n");	//処理内容の部分消す
+
+															//X座標読み取り
+						pSprit = strtok(NULL, " =\n");
+						g_rot.x = (atof(pSprit) / 180) * D3DX_PI;
+
+						//Y座標読み取り
+						pSprit = strtok(NULL, " =\n");
+						g_rot.y = (atof(pSprit) / 180) * D3DX_PI;
+
+						//Z座標読み取り
+						pSprit = strtok(NULL, " =\n");
+						g_rot.z = (atof(pSprit) / 180) * D3DX_PI;
+					}
+					else if (strncmp(&aCode[0], CODE_NAMEIDX, sizeof CODE_NAMEIDX / sizeof(char) - 1) == 0)
+					{//モデル番号設定
+						 //読み取り
+						pSprit = strtok(NULL, " =\n");
+						g_name = (MODELNAME)atoi(pSprit);
+					}
+					else if (strncmp(&aCode[0], CODE_LIFE, sizeof CODE_LIFE / sizeof(char) - 1) == 0)
+					{//体力設定
+					 //読み取り
+						pSprit = strtok(NULL, " =\n");
+						g_nLife = atoi(pSprit);
+					}
+					break;
+				}
+			}
+		}
+
 		//ファイル閉じる
 		fclose(pFile);
 	}
