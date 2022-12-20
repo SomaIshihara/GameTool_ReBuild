@@ -9,11 +9,13 @@
 #include "result.h"
 #include "wall.h"
 #include "player.h"
+#include "enemy.h"
 #include "shadow.h"
 #include "bullet.h"
 #include "meshfield.h"
 #include "sky.h"
 #include "object.h"
+#include "model.h"
 #include "file.h"
 #include "input.h"
 #include "camera.h"
@@ -38,7 +40,9 @@ void InitGame(void)
 	InitWall();
 	InitBullet();
 	InitShadow();
+	InitModel();
 	InitPlayer();
+	InitEnemy();
 	InitObject();
 
 	//壁生成（デジャブ）
@@ -107,7 +111,9 @@ void UninitGame(void)
 {
 	//終了処理
 	UninitObject();
+	UninitEnemy();
 	UninitPlayer();
+	UninitModel();
 	UninitShadow();
 	UninitBullet();
 	UninitWall();
@@ -136,8 +142,14 @@ void UpdateGame(void)
 	//弾
 	UpdateBullet();
 
+	//モデル
+	UpdateModel();
+
 	//プレイヤー
 	UpdatePlayer();
+
+	//敵
+	//UpdateEnemy();
 
 	//オブジェクト
 	UpdateObject();
@@ -193,9 +205,11 @@ void DrawGame(void)
 	//壁
 	DrawWall();
 
-
 	//プレイヤー
 	DrawPlayer();
+
+	//敵
+	DrawEnemy();
 
 	//オブジェクト
 	DrawObject();

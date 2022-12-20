@@ -19,7 +19,7 @@ typedef struct
 	float fAngle;
 	D3DXVECTOR3 move;		//移動量
 	D3DXVECTOR3 rot;		//向き
-	Model aModel[EXITHUMAN_MODEL_NUM];		//（仮
+	Model aModel[EXITHUMAN_MODEL_NUM];		//モデル
 	int nNumModel;			//パーツ総数
 	D3DXMATRIX mtxWorld;	//ワールドマトリ
 	bool bIntoSafeArea;		//セーフエリアに入っているか

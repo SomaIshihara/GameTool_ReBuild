@@ -9,6 +9,7 @@
 
 //マクロ
 #define EXITHUMAN_MODEL_NUM	(10)	//非常口の人に使われているモデル数
+#define PUSHING_BACK		(1.0f)	//オブジェクトに当たった時の押し戻し
 
 //モデル名列挙
 typedef enum
@@ -27,7 +28,6 @@ typedef struct
 	D3DXVECTOR3 rot;		//向き
 	D3DXMATRIX mtxWorld;	//ワールドマトリ
 	LPDIRECT3DTEXTURE9 apTexture[16];	//テクスチャポインタ
-	int nPartsNum;			//パーツ総数
 	int nIdxModelParent;	//親モデルインデックス
 } Model;
 

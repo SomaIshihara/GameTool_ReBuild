@@ -155,6 +155,15 @@ END_MODELSET
 #----------------------------------------------
 # 障害物
 #----------------------------------------------
+#---------------------------------
+# ブロック1
+#---------------------------------
+MODELSET
+	TYPE = 2
+	POS = -960 0 880
+	ROT = 0 0 0
+END_MODELSET
+
 MODELSET
 	TYPE = 2
 	POS = -480 0 880
@@ -163,7 +172,244 @@ END_MODELSET
 
 MODELSET
 	TYPE = 2
-	POS = -960 0 880
+	POS = 480 0 880
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 960 0 880
+	ROT = 0 0 0
+END_MODELSET
+
+#---------------------------------
+# ブロック2
+#---------------------------------
+MODELSET
+	TYPE = 2
+	POS = -1120 0 720
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = -320 0 720
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = -160 0 720
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 160 0 720
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 320 0 720
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 1120 0 720
+	ROT = 0 0 0
+END_MODELSET
+
+#---------------------------------
+# ブロック3
+#---------------------------------
+MODELSET
+	TYPE = 2
+	POS = -1120 0 240
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = -800 0 240
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = -640 0 240
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = -320 0 240
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = -160 0 240
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 640 0 240
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 800 0 240
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 1120 0 240
+	ROT = 0 0 0
+END_MODELSET
+
+#---------------------------------
+# ブロック4
+#---------------------------------
+MODELSET
+	TYPE = 2
+	POS = 0 0 80
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 0 0 -80
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 480 0 80
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 480 0 -80
+	ROT = 0 0 0
+END_MODELSET
+
+#---------------------------------
+# ブロック5
+#---------------------------------
+MODELSET
+	TYPE = 2
+	POS = -1120 0 -240
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = -800 0 -240
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = -640 0 -240
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 640 0 -240
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 800 0 -240
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 1120 0 -240
+	ROT = 0 0 0
+END_MODELSET
+
+#---------------------------------
+# ブロック6
+#---------------------------------
+MODELSET
+	TYPE = 2
+	POS = -480 0 -400
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = -480 0 -560
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 0 0 -400
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 0 0 -560
+	ROT = 0 0 0
+END_MODELSET
+
+#---------------------------------
+# ブロック7
+#---------------------------------
+MODELSET
+	TYPE = 2
+	POS = -1120 0 -720
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 160 0 -720
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 320 0 -720
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 1120 0 -720
+	ROT = 0 0 0
+END_MODELSET
+
+#---------------------------------
+# ブロック8
+#---------------------------------
+MODELSET
+	TYPE = 2
+	POS = -960 0 -880
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 480 0 -880
+	ROT = 0 0 0
+END_MODELSET
+
+MODELSET
+	TYPE = 2
+	POS = 960 0 -880
 	ROT = 0 0 0
 END_MODELSET
 

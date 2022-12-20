@@ -130,17 +130,17 @@ void UninitModel(void)
 	for (int nCntModel = 0; nCntModel < EXITHUMAN_MODEL_NUM; nCntModel++)
 	{
 		//メッシュの破棄
-		if (g_aModel[nCntModel][nCntModel].pMesh != NULL)
+		if (g_aModel[0][nCntModel].pMesh != NULL)
 		{
-			g_aModel[nCntModel][nCntModel].pMesh->Release();
-			g_aModel[nCntModel][nCntModel].pMesh = NULL;
+			g_aModel[0][nCntModel].pMesh->Release();
+			g_aModel[0][nCntModel].pMesh = NULL;
 		}
 
 		//マテリアルの破棄
-		if (g_aModel[nCntModel][nCntModel].pBuffMat != NULL)
+		if (g_aModel[0][nCntModel].pBuffMat != NULL)
 		{
-			g_aModel[nCntModel][nCntModel].pBuffMat->Release();
-			g_aModel[nCntModel][nCntModel].pBuffMat = NULL;
+			g_aModel[0][nCntModel].pBuffMat->Release();
+			g_aModel[0][nCntModel].pBuffMat = NULL;
 		}
 	}
 }

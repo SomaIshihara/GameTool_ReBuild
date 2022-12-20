@@ -35,10 +35,10 @@
 
 //プロト
 void CollisionWallEnemy(int nNumber);
-void CollisionObjEnemy(void);
+void CollisionObjEnemy(int nNumber);
 
 //グローバル変数
-Enemy g_enemy[MAX_ENEMY];
+Enemy g_aEnemy[MAX_ENEMY];
 
 //ファイル名
 const char *c_pFileNameEnemy[] =
@@ -66,21 +66,25 @@ void InitEnemy(void)
 	for (int nCntEnemy = 0; nCntEnemy < MAX_ENEMY; nCntEnemy++)
 	{
 		//変数初期化
-		g_enemy[nCntEnemy].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		g_enemy[nCntEnemy].posOld = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		g_aEnemy[nCntEnemy].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		g_aEnemy[nCntEnemy].posOld = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		g_aEnemy[nCntEnemy].move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		g_aEnemy[nCntEnemy].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		g_aEnemy[nCntEnemy].nIdxShadow = -1;
+		g_aEnemy[nCntEnemy].bUse = false;
 
-		g_enemy[nCntEnemy].move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		g_enemy[nCntEnemy].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
-		//使用モデル取得
-		g_enemy[nCntEnemy].pModel = GetModel(MODELNAME_EXITHUMAN);
+		for (int nCntParts = 0; nCntParts < EXITHUMAN_MODEL_NUM; nCntParts++)
+		{
+			//モデル初期化
+			g_aEnemy[nCntEnemy].aModel[nCntParts] = {};
+		}
 
 		//対角線の長さ・角度
-		g_enemy[nCntEnemy].fLength = sqrtf(ENEMY_WIDTH * ENEMY_WIDTH + ENEMY_DEPTH * ENEMY_DEPTH) * 0.5f;
-		g_enemy[nCntEnemy].fAngle = atan2f(ENEMY_WIDTH, ENEMY_DEPTH);
+		g_aEnemy[nCntEnemy].fLength = sqrtf(ENEMY_WIDTH * ENEMY_WIDTH + ENEMY_DEPTH * ENEMY_DEPTH) * 0.5f;
+		g_aEnemy[nCntEnemy].fAngle = atan2f(ENEMY_WIDTH, ENEMY_DEPTH);
 
 		//影設定
-		g_enemy[nCntEnemy].nIdxShadow = SetShadow();
+		g_aEnemy[nCntEnemy].nIdxShadow = -1;
 	}
 }
 
@@ -89,20 +93,28 @@ void InitEnemy(void)
 //========================
 void UninitEnemy(void)
 {
-	for (int nCntModel = 0; nCntModel < EXITHUMAN_MODEL_NUM; nCntModel++)
+	for (int nCntModel = 0; nCntModel < MAX_ENEMY; nCntModel++)
 	{
-		//メッシュの破棄
-		if (g_enemy[].aModel[nCntModel].pMesh != NULL)
+		for (int nCntParts = 0; nCntParts < EXITHUMAN_MODEL_NUM; nCntParts++)
 		{
-			g_enemy[].aModel[nCntModel].pMesh->Release();
-			g_enemy[].aModel[nCntModel].pMesh = NULL;
-		}
+			//model.cppの方でReleaseするからこっちはNULL入れるだけでいいよ
+			g_aEnemy[nCntModel].aModel[nCntParts].pMesh = NULL;
+			g_aEnemy[nCntModel].aModel[nCntParts].pBuffMat = NULL;
+#if 0
+			//メッシュの破棄
+			if (g_aEnemy[nCntModel].aModel[nCntParts].pMesh != NULL)
+			{
+				g_aEnemy[nCntModel].aModel[nCntParts].pMesh->Release();
+				g_aEnemy[nCntModel].aModel[nCntParts].pMesh = NULL;
+			}
 
-		//マテリアルの破棄
-		if (g_enemy[].aModel[nCntModel].pBuffMat != NULL)
-		{
-			g_enemy[].aModel[nCntModel].pBuffMat->Release();
-			g_enemy[].aModel[nCntModel].pBuffMat = NULL;
+			//マテリアルの破棄
+			if (g_aEnemy[nCntModel].aModel[nCntParts].pBuffMat != NULL)
+			{
+				g_aEnemy[nCntModel].aModel[nCntParts].pBuffMat->Release();
+				g_aEnemy[nCntModel].aModel[nCntParts].pBuffMat = NULL;
+			}
+#endif
 		}
 	}
 }
@@ -112,97 +124,93 @@ void UninitEnemy(void)
 //========================
 void UpdateEnemy(void)
 {
-	//現在の位置を前回の位置にする
-	g_enemy[].posOld = g_enemy[].pos;
-
-	//カメラ向きに応じてプレイヤーの向き旋回
-	if (GetMouseClickPress(MOUSE_CLICK_LEFT) == true)
+	for (int nCntEnemy = 0; nCntEnemy < MAX_ENEMY; nCntEnemy++)
 	{
-		g_enemy[].rot.y = -(float)fmod(GetCamera()->rot.y + 1.0f * D3DX_PI + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-	}
+		//現在の位置を前回の位置にする
+		g_aEnemy[nCntEnemy].posOld = g_aEnemy[nCntEnemy].pos;
 
-	//モデル移動
-	if (GetKeyboardPress(DIK_W) == true)
-	{
-		if (GetKeyboardPress(DIK_A) == true)
+		//メモ。今はやらないで暇なときやって
+#if 0
+		//カメラ向きに応じてプレイヤーの向き旋回
+		if (GetMouseClickPress(MOUSE_CLICK_LEFT) == true)
 		{
-			g_enemy[].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_WA + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-			g_enemy[].move.x = sinf((float)fmod((g_enemy[].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
-			g_enemy[].move.z = cosf((float)fmod((g_enemy[].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+			g_aEnemy[nCntEnemy].rot.y = -(float)fmod(GetCamera()->rot.y + 1.0f * D3DX_PI + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
 		}
-		else if (GetKeyboardPress(DIK_D) == true)
+
+		//モデル移動
+		//カメラからみて
+		if (GetKeyboardPress(DIK_W) == true)
 		{
-			g_enemy[].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_WD + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-			g_enemy[].move.x = sinf((float)fmod((g_enemy[].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
-			g_enemy[].move.z = cosf((float)fmod((g_enemy[].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+			if (false)
+			{//左前
+				g_aEnemy[nCntEnemy].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_WA + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
+				g_aEnemy[nCntEnemy].move.x = sinf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+				g_aEnemy[nCntEnemy].move.z = cosf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+			}
+			else if (false)
+			{//右前
+				g_aEnemy[nCntEnemy].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_WD + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
+				g_aEnemy[nCntEnemy].move.x = sinf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+				g_aEnemy[nCntEnemy].move.z = cosf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+			}
+			else
+			{//前
+				g_aEnemy[nCntEnemy].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_W + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
+				g_aEnemy[nCntEnemy].move.x = sinf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+				g_aEnemy[nCntEnemy].move.z = cosf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+			}
 		}
-		else
+		else if (GetKeyboardPress(DIK_S) == true)
 		{
-			g_enemy[].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_W + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-			g_enemy[].move.x = sinf((float)fmod((g_enemy[].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
-			g_enemy[].move.z = cosf((float)fmod((g_enemy[].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+			if (false)
+			{//左後
+				g_aEnemy[nCntEnemy].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_SA + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
+				g_aEnemy[nCntEnemy].move.x = sinf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+				g_aEnemy[nCntEnemy].move.z = cosf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+			}
+			else if (false)
+			{//右後
+				g_aEnemy[nCntEnemy].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_SD + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
+				g_aEnemy[nCntEnemy].move.x = sinf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+				g_aEnemy[nCntEnemy].move.z = cosf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+			}
+			else
+			{//後ろ
+				g_aEnemy[nCntEnemy].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_S + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
+				g_aEnemy[nCntEnemy].move.x = sinf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+				g_aEnemy[nCntEnemy].move.z = cosf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+			}
 		}
-	}
-	else if (GetKeyboardPress(DIK_S) == true)
-	{
-		if (GetKeyboardPress(DIK_A) == true)
-		{
-			g_enemy[].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_SA + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-			g_enemy[].move.x = sinf((float)fmod((g_enemy[].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
-			g_enemy[].move.z = cosf((float)fmod((g_enemy[].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+		else if (false)
+		{//左
+			g_aEnemy[nCntEnemy].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_A + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
+			g_aEnemy[nCntEnemy].move.x = sinf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+			g_aEnemy[nCntEnemy].move.z = cosf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
 		}
-		else if (GetKeyboardPress(DIK_D) == true)
-		{
-			g_enemy[].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_SD + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-			g_enemy[].move.x = sinf((float)fmod((g_enemy[].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
-			g_enemy[].move.z = cosf((float)fmod((g_enemy[].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+		else if (false)
+		{//右
+			g_aEnemy[nCntEnemy].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_D + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
+			g_aEnemy[nCntEnemy].move.x = sinf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+			g_aEnemy[nCntEnemy].move.z = cosf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
 		}
-		else
-		{
-			g_enemy[].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_S + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-			g_enemy[].move.x = sinf((float)fmod((g_enemy[].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
-			g_enemy[].move.z = cosf((float)fmod((g_enemy[].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
-		}
+
+		//ボタン操作に応じてプレイヤー移動
+		g_aEnemy[nCntEnemy].pos.x += g_aEnemy[nCntEnemy].move.x;
+		g_aEnemy[nCntEnemy].pos.z += g_aEnemy[nCntEnemy].move.z;
+
+		//壁当たり判定
+		CollisionWallEnemy(nCntEnemy);
+
+		//オブジェクト当たり判定
+		CollisionObjEnemy(nCntEnemy);
+
+		//移動量減衰
+		g_aEnemy[nCntEnemy].move.x += (0 - g_aEnemy[nCntEnemy].move.x) * DUMP_COEF;
+		g_aEnemy[nCntEnemy].move.z += (0 - g_aEnemy[nCntEnemy].move.z) * DUMP_COEF;
+#endif
+		//影位置設定
+		SetPositionShadow(g_aEnemy[nCntEnemy].nIdxShadow, g_aEnemy[nCntEnemy].pos);
 	}
-	else if (GetKeyboardPress(DIK_A) == true)
-	{
-		g_enemy[].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_A + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-		g_enemy[].move.x = sinf((float)fmod((g_enemy[].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
-		g_enemy[].move.z = cosf((float)fmod((g_enemy[].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
-	}
-	else if (GetKeyboardPress(DIK_D) == true)
-	{
-		g_enemy[].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_D + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-		g_enemy[].move.x = sinf((float)fmod((g_enemy[].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
-		g_enemy[].move.z = cosf((float)fmod((g_enemy[].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
-	}
-
-	//ボタン操作に応じてプレイヤー・カメラ視点・注視点移動
-	g_enemy[].pos.x += g_enemy[].move.x;
-	g_enemy[].pos.z += g_enemy[].move.z;
-
-	//壁当たり判定
-	//CollisionWallEnemy(0);
-
-	//オブジェクト当たり判定
-	CollisionObjEnemy();
-
-	GetCamera()->posV.x += g_enemy[].pos.x - g_enemy[].posOld.x;
-	GetCamera()->posV.z += g_enemy[].pos.z - g_enemy[].posOld.z;
-	GetCamera()->posR.x += g_enemy[].pos.x - g_enemy[].posOld.x;
-	GetCamera()->posR.z += g_enemy[].pos.z - g_enemy[].posOld.z;
-
-	//移動量減衰
-	g_enemy[].move.x += (0 - g_enemy[].move.x) * DUMP_COEF;
-	g_enemy[].move.z += (0 - g_enemy[].move.z) * DUMP_COEF;
-
-	if (GetMouseClickTrigger(MOUSE_CLICK_LEFT) == true)
-	{
-		SetBullet(g_enemy[].pos + D3DXVECTOR3(0.0f, 40.0f, 0.0f) , 5.0f, g_enemy[].rot.y, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-	}
-
-	//影位置設定
-	SetPositionShadow(g_nIdxShadow, g_enemy[].pos);
 }
 
 //========================
@@ -215,68 +223,74 @@ void DrawEnemy(void)
 	D3DMATERIAL9 matDef;			//現在のマテリアル保存用
 	D3DXMATERIAL *pMat;				//マテリアルデータへのポインタ
 
-	//"プレイヤーの"ワールドマトリックス初期化
-	D3DXMatrixIdentity(&g_enemy[].mtxWorld);
-
-	//向きを反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, g_enemy[].rot.y, g_enemy[].rot.x, g_enemy[].rot.z);
-	D3DXMatrixMultiply(&g_enemy[].mtxWorld, &g_enemy[].mtxWorld, &mtxRot);
-
-	//位置反映
-	D3DXMatrixTranslation(&mtxTrans, g_enemy[].pos.x, g_enemy[].pos.y, g_enemy[].pos.z);
-	D3DXMatrixMultiply(&g_enemy[].mtxWorld, &g_enemy[].mtxWorld, &mtxTrans);
-
-	//"プレイヤーの"ワールドマトリックス設定
-	pDevice->SetTransform(D3DTS_WORLD, &g_enemy[].mtxWorld);
-
 	//現在のマテリアル取得
 	pDevice->GetMaterial(&matDef);
 
-	for (int nCntModel = 0; nCntModel < EXITHUMAN_MODEL_NUM; nCntModel++)
+	for (int nCntEnemy = 0; nCntEnemy < MAX_ENEMY; nCntEnemy++)
 	{
-		D3DXMATRIX mtxRotModel, mtxTransModel;	//計算用
-		D3DXMATRIX mtxParent;					//親のマトリ
-
-		//"モデルの"ワールドマトリックス初期化
-		D3DXMatrixIdentity(&g_enemy[].aModel[nCntModel].mtxWorld);
-
-		//向きを反映
-		D3DXMatrixRotationYawPitchRoll(&mtxRotModel, g_enemy[].aModel[nCntModel].rot.y, g_enemy[].aModel[nCntModel].rot.x, g_enemy[].aModel[nCntModel].rot.z);
-		D3DXMatrixMultiply(&g_enemy[].aModel[nCntModel].mtxWorld, &g_enemy[].aModel[nCntModel].mtxWorld, &mtxRotModel);
-
-		//位置反映
-		D3DXMatrixTranslation(&mtxTransModel, g_enemy[].aModel[nCntModel].pos.x, g_enemy[].aModel[nCntModel].pos.y, g_enemy[].aModel[nCntModel].pos.z);
-		D3DXMatrixMultiply(&g_enemy[].aModel[nCntModel].mtxWorld, &g_enemy[].aModel[nCntModel].mtxWorld, &mtxTransModel);
-
-		//パーツの親マトリ設定
-		if (g_enemy[].aModel[nCntModel].nIdxModelParent != -1)
+		if (g_aEnemy[nCntEnemy].bUse == true)
 		{
-			mtxParent = g_enemy[].aModel[g_enemy[].aModel[nCntModel].nIdxModelParent].mtxWorld;
-		}
-		else
-		{
-			mtxParent = g_enemy[].mtxWorld;
-		}
+			//"プレイヤーの"ワールドマトリックス初期化
+			D3DXMatrixIdentity(&g_aEnemy[nCntEnemy].mtxWorld);
 
-		//パーツのマトリと親マトリをかけ合わせる
-		D3DXMatrixMultiply(&g_enemy[].aModel[nCntModel].mtxWorld, &g_enemy[].aModel[nCntModel].mtxWorld, &mtxParent);
+			//向きを反映
+			D3DXMatrixRotationYawPitchRoll(&mtxRot, g_aEnemy[nCntEnemy].rot.y, g_aEnemy[nCntEnemy].rot.x, g_aEnemy[nCntEnemy].rot.z);
+			D3DXMatrixMultiply(&g_aEnemy[nCntEnemy].mtxWorld, &g_aEnemy[nCntEnemy].mtxWorld, &mtxRot);
 
-		//"プレイヤーの"ワールドマトリックス設定
-		pDevice->SetTransform(D3DTS_WORLD, &g_enemy[].aModel[nCntModel].mtxWorld);
+			//位置反映
+			D3DXMatrixTranslation(&mtxTrans, g_aEnemy[nCntEnemy].pos.x, g_aEnemy[nCntEnemy].pos.y, g_aEnemy[nCntEnemy].pos.z);
+			D3DXMatrixMultiply(&g_aEnemy[nCntEnemy].mtxWorld, &g_aEnemy[nCntEnemy].mtxWorld, &mtxTrans);
 
-		//マテリアルデータへのポインタ取得
-		pMat = (D3DXMATERIAL*)g_enemy[].aModel[nCntModel].pBuffMat->GetBufferPointer();
+			//"プレイヤーの"ワールドマトリックス設定
+			pDevice->SetTransform(D3DTS_WORLD, &g_aEnemy[nCntEnemy].mtxWorld);
 
-		for (int nCntMat = 0; nCntMat < (int)g_enemy[].aModel[nCntModel].dwNumMatModel; nCntMat++)
-		{
-			//マテリアル設定
-			pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+			for (int nCntModel = 0; nCntModel < EXITHUMAN_MODEL_NUM; nCntModel++)
+			{
+				D3DXMATRIX mtxRotModel, mtxTransModel;	//計算用
+				D3DXMATRIX mtxParent;					//親のマトリ
 
-			//テクスチャ設定
-			pDevice->SetTexture(0, g_enemy[].aModel[nCntModel].apTexture[nCntMat]);
+														//"モデルの"ワールドマトリックス初期化
+				D3DXMatrixIdentity(&g_aEnemy[nCntEnemy].aModel[nCntModel].mtxWorld);
 
-			//モデル描画
-			g_enemy[].aModel[nCntModel].pMesh->DrawSubset(nCntMat);
+				//向きを反映
+				D3DXMatrixRotationYawPitchRoll(&mtxRotModel, g_aEnemy[nCntEnemy].aModel[nCntModel].rot.y, g_aEnemy[nCntEnemy].aModel[nCntModel].rot.x, g_aEnemy[nCntEnemy].aModel[nCntModel].rot.z);
+				D3DXMatrixMultiply(&g_aEnemy[nCntEnemy].aModel[nCntModel].mtxWorld, &g_aEnemy[nCntEnemy].aModel[nCntModel].mtxWorld, &mtxRotModel);
+
+				//位置反映
+				D3DXMatrixTranslation(&mtxTransModel, g_aEnemy[nCntEnemy].aModel[nCntModel].pos.x, g_aEnemy[nCntEnemy].aModel[nCntModel].pos.y, g_aEnemy[nCntEnemy].aModel[nCntModel].pos.z);
+				D3DXMatrixMultiply(&g_aEnemy[nCntEnemy].aModel[nCntModel].mtxWorld, &g_aEnemy[nCntEnemy].aModel[nCntModel].mtxWorld, &mtxTransModel);
+
+				//パーツの親マトリ設定
+				if (g_aEnemy[nCntEnemy].aModel[nCntModel].nIdxModelParent != -1)
+				{
+					mtxParent = g_aEnemy[nCntEnemy].aModel[g_aEnemy[nCntEnemy].aModel[nCntModel].nIdxModelParent].mtxWorld;
+				}
+				else
+				{
+					mtxParent = g_aEnemy[nCntEnemy].mtxWorld;
+				}
+
+				//パーツのマトリと親マトリをかけ合わせる
+				D3DXMatrixMultiply(&g_aEnemy[nCntEnemy].aModel[nCntModel].mtxWorld, &g_aEnemy[nCntEnemy].aModel[nCntModel].mtxWorld, &mtxParent);
+
+				//"プレイヤーの"ワールドマトリックス設定
+				pDevice->SetTransform(D3DTS_WORLD, &g_aEnemy[nCntEnemy].aModel[nCntModel].mtxWorld);
+
+				//マテリアルデータへのポインタ取得
+				pMat = (D3DXMATERIAL*)g_aEnemy[nCntEnemy].aModel[nCntModel].pBuffMat->GetBufferPointer();
+
+				for (int nCntMat = 0; nCntMat < (int)g_aEnemy[nCntEnemy].aModel[nCntModel].dwNumMatModel; nCntMat++)
+				{
+					//マテリアル設定
+					pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+
+					//テクスチャ設定
+					pDevice->SetTexture(0, g_aEnemy[nCntEnemy].aModel[nCntModel].apTexture[nCntMat]);
+
+					//モデル描画
+					g_aEnemy[nCntEnemy].aModel[nCntModel].pMesh->DrawSubset(nCntMat);
+				}
+			}
 		}
 	}
 
@@ -285,62 +299,264 @@ void DrawEnemy(void)
 }
 
 //========================
+//設定処理
+//========================
+void SetEnemy(D3DXVECTOR3 pos, D3DXVECTOR3 rot, MODELNAME name, int nLife)
+{
+	for (int nCntEnemy = 0; nCntEnemy < MAX_ENEMY; nCntEnemy++)
+	{
+		if (g_aEnemy[nCntEnemy].bUse == false)
+		{
+			Model *pModel = GetModel(name);
+			g_aEnemy[nCntEnemy].pos = pos;
+			g_aEnemy[nCntEnemy].rot = rot;
+			for (int nCntParts = 0; nCntParts < EXITHUMAN_MODEL_NUM; nCntParts++)
+			{
+				g_aEnemy[nCntEnemy].aModel[nCntParts] = *(pModel + nCntParts);
+			}
+
+			//自動設定
+			g_aEnemy[nCntEnemy].posOld = g_aEnemy[nCntEnemy].pos;
+			g_aEnemy[nCntEnemy].move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+			g_aEnemy[nCntEnemy].nIdxShadow = SetShadow();
+			
+			break;
+		}
+	}
+}
+
+//========================
 //壁当たり判定処理
 //========================
 void CollisionWallEnemy(int nNumber)
 {
-	if (g_enemy[].pos.x + ENEMY_WIDTH / 2 > WALL_WIDTH / 2)
-	{
-		g_enemy[].pos.x = WALL_WIDTH / 2 - ENEMY_WIDTH / 2;
-	}
-	else if (g_enemy[].pos.x - ENEMY_WIDTH / 2 < -WALL_WIDTH / 2)
-	{
-		g_enemy[].pos.x = -WALL_WIDTH / 2 + ENEMY_WIDTH / 2;
-	}
+	Wall *wall = GetWall();
+	D3DXVECTOR3 pos0, pos1;
+	D3DXVECTOR3 vecMove, vecLine;
+	D3DXVECTOR3 vecToPos, vecToPosOld;
+	float fAreaA, fAreaB;
 
-	if (g_enemy[].pos.z + ENEMY_DEPTH / 2 > WALL_DEPTH / 2)
+	for (int nCntWall = 0; nCntWall < MAX_WALL; nCntWall++, wall++)
 	{
-		g_enemy[].pos.z = WALL_DEPTH / 2 - ENEMY_DEPTH / 2;
-	}
-	else if (g_enemy[].pos.z - ENEMY_DEPTH / 2 < -WALL_DEPTH / 2)
-	{
-		g_enemy[].pos.z = -WALL_DEPTH / 2 + ENEMY_DEPTH / 2;
+		//使っているときだけ処理
+		if (wall->bUse == true)
+		{
+			//移動ベクトル
+			vecMove = g_aEnemy[nNumber].pos - g_aEnemy[nNumber].posOld;
+
+			//位置計算
+			pos0.x = wall->pos.x - (wall->fWidth / 2) * cosf(wall->rot.y);
+			pos0.y = 0.0f;
+			pos0.z = wall->pos.z + (wall->fWidth / 2) * sinf(wall->rot.y);
+
+			pos1.x = wall->pos.x + (wall->fWidth / 2) * cosf(wall->rot.y);
+			pos1.y = 0.0f;
+			pos1.z = wall->pos.z - (wall->fWidth / 2) * sinf(wall->rot.y);
+
+			vecLine = pos1 - pos0;	//境界線ベクトル
+			vecToPos = g_aEnemy[nNumber].pos - pos0;
+			vecToPosOld = g_aEnemy[nNumber].posOld - pos0;
+
+			//面積求める
+			fAreaA = (vecToPos.z * vecMove.x) - (vecToPos.x * vecMove.z);
+			fAreaB = (vecLine.z * vecMove.x) - (vecLine.x * vecMove.z);
+
+			if ((vecLine.z * vecToPosOld.x) - (vecLine.x * vecToPosOld.z) >= 0.0f && (vecLine.z * vecToPos.x) - (vecLine.x * vecToPos.z) < 0.0f)
+			{
+				if (fAreaA / fAreaB >= 0.0f && fAreaA / fAreaB <= 1.0f)
+				{//ごっつん
+					float fRate = fAreaA / fAreaB;
+					g_aEnemy[nNumber].pos.x = pos0.x + (vecLine.x * fRate) - sinf(wall->rot.y) / D3DX_PI * PUSHING_BACK;
+					g_aEnemy[nNumber].pos.z = pos0.z + (vecLine.z * fRate) - cosf(wall->rot.y) / D3DX_PI * PUSHING_BACK;
+					break;
+				}
+			}
+		}
 	}
 }
 
 //========================
 //オブジェクト当たり判定処理
 //========================
-void CollisionObjEnemy(void)
+void CollisionObjEnemy(int nNumber)
 {
-	Object *obj = GetObj();
-	BluePrint *pBPrint = GetBluePrint();
+	//=pos0~pos3の説明==================
+	// pos3		pos2
+	//	・<-----・		矢印:vecLine
+	//	｜		↑
+	//	｜		｜
+	//	↓		｜
+	//	・----->・
+	// pos0		pos1
+	//==================================
 
-	for (int nCntObj = 0; nCntObj < MAX_BLUEPRINT; nCntObj++, obj++)
+	BluePrint *pbprint = GetBluePrint();
+	Object *pObject = GetObj();
+	D3DXVECTOR3 pos0, pos1, pos2, pos3;
+	D3DXVECTOR3 vecLineRight, vecToPosRight, vecToPosOldRight;
+	D3DXVECTOR3 vecLineLeft, vecToPosLeft, vecToPosOldLeft;
+	D3DXVECTOR3 vecLineUp, vecToPosUp, vecToPosOldUp;
+	D3DXVECTOR3 vecLineDown, vecToPosDown, vecToPosOldDown;
+	D3DXVECTOR3 vecMove;
+	float fAreaARight, fAreaALeft, fAreaBRight, fAreaBLeft;
+	float fAreaAUp, fAreaADown, fAreaBUp, fAreaBDown;
+
+
+	for (int nCntObj = 0; nCntObj < MAX_OBJECT; nCntObj++, pObject++)
 	{
-		if (obj->bUse == true)
+		if (pObject->bUse == true)
 		{
-			if (g_enemy[].pos.z >= obj->pos.z + pBPrint->vtxMin.z && g_enemy[].pos.z <= obj->pos.z + pBPrint->vtxMax.z)
+			//各頂点求める
+			float fLengthX, fLengthZ;
+			float fLength;
+			float fAngle;
+			float rot;
+
+			//-pos0---------------------------------------------------------------------------------------------------------------------------
+			//頂点と中心の距離をXとZ別々で計算する
+			fLengthX = pObject->pos.x - (pObject->pos.x + (pbprint + pObject->bpidx)->vtxMin.x);
+			fLengthZ = pObject->pos.z - (pObject->pos.z + (pbprint + pObject->bpidx)->vtxMin.z);
+
+			fLength = sqrtf(powf(fLengthX, 2) + powf(fLengthZ, 2));	//頂点と中心の距離を求める
+			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
+																	//0 - 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
+			rot = FIX_ROT(-fAngle - pObject->rot.y);
+
+			//角度に応じて頂点の位置をずらす
+			pos0.x = pObject->pos.x + sinf(rot) * fLength;
+			pos0.y = 0.0f;
+			pos0.z = pObject->pos.z - cosf(rot) * fLength;
+			//-pos0---------------------------------------------------------------------------------------------------------------------------
+
+			//-pos1---------------------------------------------------------------------------------------------------------------------------
+			//頂点と中心の距離をXとZ別々で計算する
+			fLengthX = pObject->pos.x - (pObject->pos.x + (pbprint + pObject->bpidx)->vtxMax.x);
+			fLengthZ = pObject->pos.z - (pObject->pos.z + (pbprint + pObject->bpidx)->vtxMin.z);
+
+			fLength = sqrtf(powf(fLengthX, 2) + powf(fLengthZ, 2));	//頂点と中心の距離を求める
+			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
+																	//0 + 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
+			rot = FIX_ROT(-fAngle - pObject->rot.y);
+
+			//角度に応じて頂点の位置をずらす
+			pos1.x = pObject->pos.x + sinf(rot) * fLength;
+			pos1.y = 0.0f;
+			pos1.z = pObject->pos.z - cosf(rot) * fLength;
+			//-pos1---------------------------------------------------------------------------------------------------------------------------
+
+			//-pos2---------------------------------------------------------------------------------------------------------------------------
+			//頂点と中心の距離をXとZ別々で計算する
+			fLengthX = pObject->pos.x - (pObject->pos.x + (pbprint + pObject->bpidx)->vtxMax.x);
+			fLengthZ = pObject->pos.z - (pObject->pos.z + (pbprint + pObject->bpidx)->vtxMax.z);
+
+			fLength = sqrtf(powf(fLengthX, 2) + powf(fLengthZ, 2));	//頂点と中心の距離を求める
+			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
+																	//PI - 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
+			rot = FIX_ROT(D3DX_PI - fAngle - pObject->rot.y);
+
+			//角度に応じて頂点の位置をずらす
+			pos2.x = pObject->pos.x - sinf(rot) * fLength;
+			pos2.y = 0.0f;
+			pos2.z = pObject->pos.z + cosf(rot) * fLength;
+			//-pos2---------------------------------------------------------------------------------------------------------------------------
+
+			//-pos3---------------------------------------------------------------------------------------------------------------------------
+			//頂点と中心の距離をXとZ別々で計算する
+			fLengthX = pObject->pos.x - (pObject->pos.x + (pbprint + pObject->bpidx)->vtxMin.x);
+			fLengthZ = pObject->pos.z - (pObject->pos.z + (pbprint + pObject->bpidx)->vtxMax.z);
+
+			fLength = sqrtf(powf(fLengthX, 2) + powf(fLengthZ, 2));	//頂点と中心の距離を求める
+			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
+																	//-PI + 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
+			rot = FIX_ROT(-D3DX_PI - fAngle - pObject->rot.y);
+
+			//角度に応じて頂点の位置をずらす
+			pos3.x = pObject->pos.x - sinf(rot) * fLength;
+			pos3.y = 0.0f;
+			pos3.z = pObject->pos.z + cosf(rot) * fLength;
+			//-pos3---------------------------------------------------------------------------------------------------------------------------
+
+			//ベクトル求める
+			//move
+			vecMove = g_aEnemy[nNumber].pos - g_aEnemy[nNumber].posOld;
+
+			//X
+			//右方向の計算
+			vecLineRight = pos1 - pos0;
+			vecToPosRight = g_aEnemy[nNumber].pos - pos0;
+			vecToPosOldRight = g_aEnemy[nNumber].posOld - pos0;
+
+			//左方向の計算
+			vecLineLeft = pos3 - pos2;
+			vecToPosLeft = g_aEnemy[nNumber].pos - pos2;
+			vecToPosOldLeft = g_aEnemy[nNumber].posOld - pos2;
+
+			//Z
+			//上方向の計算
+			vecLineUp = pos2 - pos1;
+			vecToPosUp = g_aEnemy[nNumber].pos - pos1;
+			vecToPosOldUp = g_aEnemy[nNumber].posOld - pos1;
+			//下方向の計算
+			vecLineDown = pos0 - pos3;
+			vecToPosDown = g_aEnemy[nNumber].pos - pos3;
+			vecToPosOldDown = g_aEnemy[nNumber].posOld - pos3;
+
+			//当たり判定本番
+			//X
+			//面積求める
+			fAreaARight = (vecToPosRight.z * vecMove.x) - (vecToPosRight.x * vecMove.z);
+			fAreaALeft = (vecToPosLeft.z * vecMove.x) - (vecToPosLeft.x * vecMove.z);
+			fAreaBRight = (vecLineRight.z * vecMove.x) - (vecLineRight.x * vecMove.z);
+			fAreaBLeft = (vecLineLeft.z * vecMove.x) - (vecLineLeft.x * vecMove.z);
+
+			//左側AND範囲内vecToPosOldOps
+			if ((vecLineRight.z * vecToPosOldRight.x) - (vecLineRight.x * vecToPosOldRight.z) >= 0.0f && (vecLineRight.z * vecToPosRight.x) - (vecLineRight.x * vecToPosRight.z) < 0.0f)
 			{
-				if (g_enemy[].posOld.x <= obj->pos.x + pBPrint->vtxMin.x && g_enemy[].pos.x > obj->pos.x + pBPrint->vtxMin.x)
-				{
-					g_enemy[].pos.x = obj->pos.x + pBPrint->vtxMin.x;
+				if (fAreaARight / fAreaBRight >= 0.0f && fAreaARight / fAreaBRight <= 1.0f)
+				{//ごっつん
+					float fRate = fAreaARight / fAreaBRight;
+					g_aEnemy[nNumber].pos.x = pos0.x + (vecLineRight.x * fRate) - sinf(pObject->rot.y) / D3DX_PI * PUSHING_BACK;
+					g_aEnemy[nNumber].pos.z = pos0.z + (vecLineRight.z * fRate) - cosf(pObject->rot.y) / D3DX_PI * PUSHING_BACK;
+					break;
 				}
-				if (g_enemy[].posOld.x >= obj->pos.x + pBPrint->vtxMax.x && g_enemy[].pos.x < obj->pos.x + pBPrint->vtxMax.x)
-				{
-					g_enemy[].pos.x = obj->pos.x + pBPrint->vtxMax.x;
+			}
+			else if ((vecLineLeft.z * vecToPosOldLeft.x) - (vecLineLeft.x * vecToPosOldLeft.z) >= 0.0f && (vecLineLeft.z * vecToPosLeft.x) - (vecLineLeft.x * vecToPosLeft.z) < 0.0f)
+			{
+				if (fAreaALeft / fAreaBLeft >= 0.0f && fAreaALeft / fAreaBLeft <= 1.0f)
+				{//ごっつん
+					float fRate = fAreaALeft / fAreaBLeft;
+					g_aEnemy[nNumber].pos.x = pos2.x + (vecLineLeft.x * fRate) + sinf(pObject->rot.y) / D3DX_PI * PUSHING_BACK;
+					g_aEnemy[nNumber].pos.z = pos2.z + (vecLineLeft.z * fRate) + cosf(pObject->rot.y) / D3DX_PI * PUSHING_BACK;
+					break;
 				}
 			}
 
-			if (g_enemy[].pos.x >= obj->pos.x + pBPrint->vtxMin.x && g_enemy[].pos.x <= obj->pos.x + pBPrint->vtxMax.x)
+			//Z
+			//面積求める
+			fAreaAUp = (vecToPosUp.z * vecMove.x) - (vecToPosUp.x * vecMove.z);
+			fAreaADown = (vecToPosDown.z * vecMove.x) - (vecToPosDown.x * vecMove.z);
+			fAreaBUp = (vecLineUp.z * vecMove.x) - (vecLineUp.x * vecMove.z);
+			fAreaBDown = (vecLineDown.z * vecMove.x) - (vecLineDown.x * vecMove.z);
+
+			//左側AND範囲内vecToPosOldOps
+			if ((vecLineUp.z * vecToPosOldUp.x) - (vecLineUp.x * vecToPosOldUp.z) >= 0.0f && (vecLineUp.z * vecToPosUp.x) - (vecLineUp.x * vecToPosUp.z) < 0.0f)
 			{
-				if (g_enemy[].posOld.z <= obj->pos.z + pBPrint->vtxMin.z && g_enemy[].pos.z > obj->pos.z + pBPrint->vtxMin.z)
-				{
-					g_enemy[].pos.z = obj->pos.z + pBPrint->vtxMin.z;
+				if (fAreaAUp / fAreaBUp >= 0.0f && fAreaAUp / fAreaBUp <= 1.0f)
+				{//ごっつん
+					float fRate = fAreaAUp / fAreaBUp;
+					g_aEnemy[nNumber].pos.x = pos1.x + (vecLineUp.x * fRate) + cosf(pObject->rot.y) / D3DX_PI * PUSHING_BACK;
+					g_aEnemy[nNumber].pos.z = pos1.z + (vecLineUp.z * fRate) - sinf(pObject->rot.y) / D3DX_PI * PUSHING_BACK;
+					break;
 				}
-				if (g_enemy[].posOld.z >= obj->pos.z + pBPrint->vtxMax.z && g_enemy[].pos.z < obj->pos.z + pBPrint->vtxMax.z)
-				{
-					g_enemy[].pos.z = obj->pos.z + pBPrint->vtxMax.z;
+			}
+			else if ((vecLineDown.z * vecToPosOldDown.x) - (vecLineDown.x * vecToPosOldDown.z) >= 0.0f && (vecLineDown.z * vecToPosDown.x) - (vecLineDown.x * vecToPosDown.z) < 0.0f)
+			{
+				if (fAreaADown / fAreaBDown >= 0.0f && fAreaADown / fAreaBDown <= 1.0f)
+				{//ごっつん
+					float fRate = fAreaADown / fAreaBDown;
+					g_aEnemy[nNumber].pos.x = pos3.x + (vecLineDown.x * fRate) - cosf(pObject->rot.y) / D3DX_PI * PUSHING_BACK;
+					g_aEnemy[nNumber].pos.z = pos3.z + (vecLineDown.z * fRate) + sinf(pObject->rot.y) / D3DX_PI * PUSHING_BACK;
+					break;
 				}
 			}
 		}
@@ -352,5 +568,5 @@ void CollisionObjEnemy(void)
 //========================
 Enemy *GetEnemy(void)
 {
-	return &g_enemy[];
+	return &g_aEnemy[0];
 }

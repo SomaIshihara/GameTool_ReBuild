@@ -21,7 +21,6 @@
 #define PLAYER_MOVE_SPEED	(7.0f)	//プレイヤー移動速度
 #define DUMP_COEF			(0.4f)	//減衰係数
 #define BULLET_SPEED		(20.0f)	//弾の速さ
-#define PUSHING_BACK		(1.0f)	//オブジェクトに当たった時の押し戻し
 
 //仮
 #define PLAYER_WIDTH		(20.0f)
@@ -39,7 +38,7 @@
 
 //プロト
 void CollisionWallPlayer(int nNumber);
-void CollisionObjPlayer(void);
+void CollisionObjPlayer(int nNumber);
 
 //グローバル変数
 Player g_player;
@@ -67,21 +66,18 @@ void InitPlayer(void)
 {
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();	//デバイスの取得
 	Camera *pCamera = GetCamera();
+	Model *pModel = GetModel(MODELNAME_EXITHUMAN);
 
 	//変数初期化
 	g_player.pos = PLAYER_POS;
 	g_player.posOld = g_player.pos;
-
 	g_player.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	g_player.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	g_player.bIntoSafeArea = false;
-	g_nIdxShadow = -1;
-
-	for (int nCntInitModel = 0; nCntInitModel < EXITHUMAN_MODEL_NUM; nCntInitModel++)
-	{
-		g_player.aModel[nCntInitModel] = {};
-	}
+	
 	g_player.nNumModel = 0;
+
+	g_nIdxShadow = -1;
 
 	//対角線の長さ・角度
 	g_player.fLength = sqrtf(PLAYER_WIDTH * PLAYER_WIDTH + PLAYER_DEPTH * PLAYER_DEPTH) * 0.5f;
@@ -90,6 +86,8 @@ void InitPlayer(void)
 	//Xファイル読み込み
 	for (int nCntModel = 0; nCntModel < EXITHUMAN_MODEL_NUM; nCntModel++)
 	{
+		g_player.aModel[nCntModel] = pModel[nCntModel];
+#if 0
 		D3DXLoadMeshFromX(
 			c_pFileNamePlayer[nCntModel],
 			D3DXMESH_SYSTEMMEM,
@@ -116,8 +114,10 @@ void InitPlayer(void)
 					&g_player.aModel[nCntModel].apTexture[nCntTex]);
 			}
 		}
+#endif
 	}
 
+#if 0
 	//階層構造設定
 	//体
 	g_player.aModel[0].nIdxModelParent = -1;
@@ -159,6 +159,7 @@ void InitPlayer(void)
 	g_player.aModel[9].nIdxModelParent = 8;
 	g_player.aModel[9].pos = D3DXVECTOR3(0.0f, -12.0f, 0.0f);
 	g_player.aModel[9].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+#endif
 
 	//影設定
 	g_nIdxShadow = SetShadow();
@@ -171,6 +172,10 @@ void UninitPlayer(void)
 {
 	for (int nCntModel = 0; nCntModel < EXITHUMAN_MODEL_NUM; nCntModel++)
 	{
+		//model.cppの方でReleaseするからこっちはNULL入れるだけでいいよ
+		g_player.aModel[nCntModel].pMesh = NULL;
+		g_player.aModel[nCntModel].pBuffMat = NULL;
+#if 0
 		//メッシュの破棄
 		if (g_player.aModel[nCntModel].pMesh != NULL)
 		{
@@ -184,6 +189,7 @@ void UninitPlayer(void)
 			g_player.aModel[nCntModel].pBuffMat->Release();
 			g_player.aModel[nCntModel].pBuffMat = NULL;
 		}
+#endif
 	}
 }
 
@@ -265,7 +271,7 @@ void UpdatePlayer(void)
 	CollisionWallPlayer(0);
 
 	//オブジェクト当たり判定
-	CollisionObjPlayer();
+	CollisionObjPlayer(0);
 
 	GetCamera()->posV.x += g_player.pos.x - g_player.posOld.x;
 	GetCamera()->posV.z += g_player.pos.z - g_player.posOld.z;
@@ -421,7 +427,6 @@ void CollisionWallPlayer(int nNumber)
 					float fRate = fAreaA / fAreaB;
 					g_player.pos.x = pos0.x + (vecLine.x * fRate) - sinf(wall->rot.y) / D3DX_PI * PUSHING_BACK;
 					g_player.pos.z = pos0.z + (vecLine.z * fRate) - cosf(wall->rot.y) / D3DX_PI * PUSHING_BACK;
-					PrintDebugProc("ごっつん\n");
 					break;
 				}
 			}
@@ -432,7 +437,7 @@ void CollisionWallPlayer(int nNumber)
 //========================
 //オブジェクト当たり判定処理
 //========================
-void CollisionObjPlayer(void)
+void CollisionObjPlayer(int nNumber)
 {
 	//=pos0~pos3の説明==================
 	// pos3		pos2
@@ -471,7 +476,7 @@ void CollisionObjPlayer(void)
 			fLengthX = pObject->pos.x - (pObject->pos.x + (pbprint + pObject->bpidx)->vtxMin.x);
 			fLengthZ = pObject->pos.z - (pObject->pos.z + (pbprint + pObject->bpidx)->vtxMin.z);
 
-			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
+			fLength = sqrtf(powf(fLengthX, 2) + powf(fLengthZ, 2));	//頂点と中心の距離を求める
 			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
 			//0 - 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
 			rot = FIX_ROT(-fAngle - pObject->rot.y);
@@ -487,7 +492,7 @@ void CollisionObjPlayer(void)
 			fLengthX = pObject->pos.x - (pObject->pos.x + (pbprint + pObject->bpidx)->vtxMax.x);
 			fLengthZ = pObject->pos.z - (pObject->pos.z + (pbprint + pObject->bpidx)->vtxMin.z);
 
-			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
+			fLength = sqrtf(powf(fLengthX, 2) + powf(fLengthZ, 2));	//頂点と中心の距離を求める
 			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
 			//0 + 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
 			rot = FIX_ROT(-fAngle - pObject->rot.y);
@@ -503,7 +508,7 @@ void CollisionObjPlayer(void)
 			fLengthX = pObject->pos.x - (pObject->pos.x + (pbprint + pObject->bpidx)->vtxMax.x);
 			fLengthZ = pObject->pos.z - (pObject->pos.z + (pbprint + pObject->bpidx)->vtxMax.z);
 
-			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
+			fLength = sqrtf(powf(fLengthX, 2) + powf(fLengthZ, 2));	//頂点と中心の距離を求める
 			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
 			//PI - 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
 			rot = FIX_ROT(D3DX_PI - fAngle - pObject->rot.y);
@@ -519,7 +524,7 @@ void CollisionObjPlayer(void)
 			fLengthX = pObject->pos.x - (pObject->pos.x + (pbprint + pObject->bpidx)->vtxMin.x);
 			fLengthZ = pObject->pos.z - (pObject->pos.z + (pbprint + pObject->bpidx)->vtxMax.z);
 
-			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
+			fLength = sqrtf(powf(fLengthX, 2) + powf(fLengthZ, 2));	//頂点と中心の距離を求める
 			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
 			//-PI + 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
 			rot = FIX_ROT(-D3DX_PI - fAngle - pObject->rot.y);
@@ -571,7 +576,6 @@ void CollisionObjPlayer(void)
 					float fRate = fAreaARight / fAreaBRight;
 					g_player.pos.x = pos0.x + (vecLineRight.x * fRate) - sinf(pObject->rot.y) / D3DX_PI * PUSHING_BACK;
 					g_player.pos.z = pos0.z + (vecLineRight.z * fRate) - cosf(pObject->rot.y) / D3DX_PI * PUSHING_BACK;
-					PrintDebugProc("ごっつん\n");
 					break;
 				}
 			}
@@ -582,7 +586,6 @@ void CollisionObjPlayer(void)
 					float fRate = fAreaALeft / fAreaBLeft;
 					g_player.pos.x = pos2.x + (vecLineLeft.x * fRate) + sinf(pObject->rot.y) / D3DX_PI * PUSHING_BACK;
 					g_player.pos.z = pos2.z + (vecLineLeft.z * fRate) + cosf(pObject->rot.y) / D3DX_PI * PUSHING_BACK;
-					PrintDebugProc("ごっつん\n");
 					break;
 				}
 			}
@@ -602,7 +605,6 @@ void CollisionObjPlayer(void)
 					float fRate = fAreaAUp / fAreaBUp;
 					g_player.pos.x = pos1.x + (vecLineUp.x * fRate) + cosf(pObject->rot.y) / D3DX_PI * PUSHING_BACK;
 					g_player.pos.z = pos1.z + (vecLineUp.z * fRate) - sinf(pObject->rot.y) / D3DX_PI * PUSHING_BACK;
-					PrintDebugProc("ごっつん\n");
 					break;
 				}
 			}
@@ -613,7 +615,6 @@ void CollisionObjPlayer(void)
 					float fRate = fAreaADown / fAreaBDown;
 					g_player.pos.x = pos3.x + (vecLineDown.x * fRate) - cosf(pObject->rot.y) / D3DX_PI * PUSHING_BACK;
 					g_player.pos.z = pos3.z + (vecLineDown.z * fRate) + sinf(pObject->rot.y) / D3DX_PI * PUSHING_BACK;
-					PrintDebugProc("ごっつん\n");
 					break;
 				}
 			}
