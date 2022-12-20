@@ -315,8 +315,12 @@ void SetObject(BLUEPRINTIDX bpidx, D3DXVECTOR3 pos, D3DXVECTOR3 rot, bool bLifeU
 			g_aObject[nCntObj].bLifeUse = bLifeUse;
 			g_aObject[nCntObj].nLife = nLife;
 
-			//影設定
-			g_aObject[nCntObj].nIdxShadow = SetShadow();
+			//体力を使用する場合のみ影設定
+			if (g_aObject[nCntObj].bLifeUse == true)
+			{
+				//影設定
+				g_aObject[nCntObj].nIdxShadow = SetShadow();
+			}
 
 			//使用していることにする
 			g_aObject[nCntObj].bUse = true;
@@ -355,17 +359,17 @@ void HitObj(int nNumObj)
 	if (g_aObject[nNumObj].bLifeUse == true)
 	{
 		g_aObject[nNumObj].nLife--;
-	}
 
-	if (g_aObject[nNumObj].nLife <= 0)
-	{//ぶっこわーす処理
-		DestroyObj(nNumObj);
-		ReleaseIdxShadow(g_aObject[nNumObj].nIdxShadow);
-	}
-	else
-	{
-		g_aObject[nNumObj].state = OBJSTATE_DAMAGE;
-		g_aObject[nNumObj].nCounterState = OBJ_DAMAGE_TIME;
+		if (g_aObject[nNumObj].nLife <= 0)
+		{//ぶっこわーす処理
+			DestroyObj(nNumObj);
+			ReleaseIdxShadow(g_aObject[nNumObj].nIdxShadow);
+		}
+		else
+		{
+			g_aObject[nNumObj].state = OBJSTATE_DAMAGE;
+			g_aObject[nNumObj].nCounterState = OBJ_DAMAGE_TIME;
+		}
 	}
 }
 

@@ -20,7 +20,7 @@
 //マクロ
 #define PLAYER_MOVE_SPEED	(7.0f)	//プレイヤー移動速度
 #define DUMP_COEF			(0.4f)	//減衰係数
-#define BULLET_SPEED		(15.0f)	//弾の速さ
+#define BULLET_SPEED		(20.0f)	//弾の速さ
 #define PUSHING_BACK		(1.0f)	//オブジェクトに当たった時の押し戻し
 
 //仮

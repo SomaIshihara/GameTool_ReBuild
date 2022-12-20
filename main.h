@@ -39,6 +39,7 @@ typedef enum
 #define FVF_VERTEX_2D		(D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1)	//2D
 #define FVF_VERTEX_3D		(D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX1)	//3D
 #define FIX_ROT(x)			((float)fmod(x + (D3DX_PI * 3), D3DX_PI * 2) - D3DX_PI)	//äpìxÇ-PI~PIÇ…èCê≥
+#define TASUKIGAKE(ax,az,bx,bz)	((az * bx) - (ax * bz))
 #define PLAYER_POS			D3DXVECTOR3(0.0f, 0.0f, -960.0f)
 
 //í∏ì_èÓïÒ[2D]

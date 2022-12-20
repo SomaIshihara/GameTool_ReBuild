@@ -428,7 +428,8 @@ void Draw(void)
 		//操作方法を文字にして送る
 		PrintDebugProc("移動:WASD, 弾発射:マウス右クリック, 視点移動:マウス移動(F1で有効無効切り替え)\n");
 		PrintDebugProc("[ゲーム画面以外]マウス左クリック:遷移\n");
-		PrintDebugProc("[ゲーム画面]クリア判定:F2,ゲームオーバー判定:F3\n\n");
+		PrintDebugProc("[ゲーム画面]クリア判定:F2,ゲームオーバー判定:F3\n");
+		PrintDebugProc("[ゲーム画面]大人の壁表示:F4\n\n");
 		//PrintDebugProc("オブジェクト再生成:F5\n\n");
 
 		//カメラ設定

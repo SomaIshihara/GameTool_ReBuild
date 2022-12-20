@@ -75,6 +75,27 @@ void InitGame(void)
 	SetWall(D3DXVECTOR3(480.0f, 0.0f, 160.0f), D3DXVECTOR3(0.0f, 1.0f * D3DX_PI, 0.0f), 160.0f, 200.0f, true);
 	SetWall(D3DXVECTOR3(480.0f, 0.0f, -160.0f), D3DXVECTOR3(0.0f, 0.0f * D3DX_PI, 0.0f), 160.0f, 200.0f, true);
 
+	SetWall(D3DXVECTOR3(-1040.0f, 0.0f, -240.0f), D3DXVECTOR3(0.0f, -0.5f * D3DX_PI, 0.0f), 160.0f, 200.0f, true);
+	SetWall(D3DXVECTOR3(-880.0f, 0.0f, -240.0f), D3DXVECTOR3(0.0f, 0.5f * D3DX_PI, 0.0f), 160.0f, 200.0f, true);
+	SetWall(D3DXVECTOR3(-560.0f, 0.0f, -240.0f), D3DXVECTOR3(0.0f, -0.5f * D3DX_PI, 0.0f), 160.0f, 200.0f, true);
+	SetWall(D3DXVECTOR3(560.0f, 0.0f, -240.0f), D3DXVECTOR3(0.0f, 0.5f * D3DX_PI, 0.0f), 160.0f, 200.0f, true);
+	SetWall(D3DXVECTOR3(880.0f, 0.0f, -240.0f), D3DXVECTOR3(0.0f, -0.5f * D3DX_PI, 0.0f), 160.0f, 200.0f, true);
+	SetWall(D3DXVECTOR3(1040.0f, 0.0f, -240.0f), D3DXVECTOR3(0.0f, 0.5f * D3DX_PI, 0.0f), 160.0f, 200.0f, true);
+
+	SetWall(D3DXVECTOR3(0.0f, 0.0f, -320.0f), D3DXVECTOR3(0.0f, 1.0f * D3DX_PI, 0.0f), 160.0f, 200.0f, true);
+	SetWall(D3DXVECTOR3(0.0f, 0.0f, -640.0f), D3DXVECTOR3(0.0f, 0.0f * D3DX_PI, 0.0f), 160.0f, 200.0f, true);
+	SetWall(D3DXVECTOR3(-480.0f, 0.0f, -320.0f), D3DXVECTOR3(0.0f, 1.0f * D3DX_PI, 0.0f), 160.0f, 200.0f, true);
+	SetWall(D3DXVECTOR3(-480.0f, 0.0f, -640.0f), D3DXVECTOR3(0.0f, 0.0f * D3DX_PI, 0.0f), 160.0f, 200.0f, true);
+
+	SetWall(D3DXVECTOR3(-1040.0f, 0.0f, -720.0f), D3DXVECTOR3(0.0f, -0.5f * D3DX_PI, 0.0f), 160.0f, 200.0f, true);
+	SetWall(D3DXVECTOR3(80.0f, 0.0f, -720.0f), D3DXVECTOR3(0.0f, 0.5f * D3DX_PI, 0.0f), 160.0f, 200.0f, true);
+	SetWall(D3DXVECTOR3(400.0f, 0.0f, -720.0f), D3DXVECTOR3(0.0f, -0.5f * D3DX_PI, 0.0f), 160.0f, 200.0f, true);
+	SetWall(D3DXVECTOR3(1040.0f, 0.0f, -720.0f), D3DXVECTOR3(0.0f, 0.5f * D3DX_PI, 0.0f), 160.0f, 200.0f, true);
+
+	SetWall(D3DXVECTOR3(-960.0f, 0.0f, -800.0f), D3DXVECTOR3(0.0f, 1.0f * D3DX_PI, 0.0f), 160.0f, 200.0f, true);
+	SetWall(D3DXVECTOR3(480.0f, 0.0f, -800.0f), D3DXVECTOR3(0.0f, 1.0f * D3DX_PI, 0.0f), 160.0f, 200.0f, true);
+	SetWall(D3DXVECTOR3(960.0f, 0.0f, -800.0f), D3DXVECTOR3(0.0f, 1.0f * D3DX_PI, 0.0f), 160.0f, 200.0f, true);
+
 	//ファイル読み込み・オブジェクト生成
 	LoadMapFile();
 }
@@ -163,18 +184,19 @@ void DrawGame(void)
 	//メッシュフィールド
 	DrawMeshfield();
 
+	//影
+	DrawShadow();
+
+	//弾
+	DrawBullet();
+
 	//壁
 	DrawWall();
 
-	//影
-	DrawShadow();
 
 	//プレイヤー
 	DrawPlayer();
 
 	//オブジェクト
 	DrawObject();
-
-	//弾
-	DrawBullet();
 }

@@ -12,6 +12,7 @@
 LPDIRECT3DVERTEXBUFFER9 g_pVtxbuffWall;	//頂点バッファポインタ
 LPDIRECT3DTEXTURE9 g_pTextureWall;		//テクスチャポインタ
 Wall g_wall[MAX_WALL];
+bool g_bDispAdultWall;
 
 //========================
 //初期化処理
@@ -43,6 +44,9 @@ void InitWall(void)
 		g_wall[nCntWall].fHeight = 0.0f;
 		g_wall[nCntWall].bUse = false;
 	}
+
+	//変数初期化
+	g_bDispAdultWall = false;
 
 	VERTEX_3D *pVtx;
 
@@ -103,7 +107,10 @@ void UninitWall(void)
 //========================
 void UpdateWall(void)
 {
-	//無
+	if (GetKeyboardTrigger(DIK_F4) == true)
+	{
+		g_bDispAdultWall = g_bDispAdultWall ? false : true;
+	}
 }
 
 //========================
@@ -122,27 +129,30 @@ void DrawWall(void)
 	pDevice->SetFVF(FVF_VERTEX_3D);
 
 	for (nCntWall = 0; nCntWall < MAX_WALL; nCntWall++)
-	{// && g_wall[nCntWall].bAdult == false
+	{
 		if (g_wall[nCntWall].bUse == true)
 		{
-			//ワールドマトリックス初期化
-			D3DXMatrixIdentity(&g_wall[nCntWall].mtxWorld);
+			if (g_wall[nCntWall].bAdult == false || g_bDispAdultWall == true)
+			{
+				//ワールドマトリックス初期化
+				D3DXMatrixIdentity(&g_wall[nCntWall].mtxWorld);
 
-			//向きを反映
-			D3DXMatrixRotationYawPitchRoll(&mtxRot, g_wall[nCntWall].rot.y, g_wall[nCntWall].rot.x, g_wall[nCntWall].rot.z);
-			D3DXMatrixMultiply(&g_wall[nCntWall].mtxWorld, &g_wall[nCntWall].mtxWorld, &mtxRot);
+				//向きを反映
+				D3DXMatrixRotationYawPitchRoll(&mtxRot, g_wall[nCntWall].rot.y, g_wall[nCntWall].rot.x, g_wall[nCntWall].rot.z);
+				D3DXMatrixMultiply(&g_wall[nCntWall].mtxWorld, &g_wall[nCntWall].mtxWorld, &mtxRot);
 
-			//位置反映
-			D3DXMatrixTranslation(&mtxTrans, g_wall[nCntWall].pos.x, g_wall[nCntWall].pos.y, g_wall[nCntWall].pos.z);
-			D3DXMatrixMultiply(&g_wall[nCntWall].mtxWorld, &g_wall[nCntWall].mtxWorld, &mtxTrans);
+				//位置反映
+				D3DXMatrixTranslation(&mtxTrans, g_wall[nCntWall].pos.x, g_wall[nCntWall].pos.y, g_wall[nCntWall].pos.z);
+				D3DXMatrixMultiply(&g_wall[nCntWall].mtxWorld, &g_wall[nCntWall].mtxWorld, &mtxTrans);
 
-			//ワールドマトリックス設定
-			pDevice->SetTransform(D3DTS_WORLD, &g_wall[nCntWall].mtxWorld);
+				//ワールドマトリックス設定
+				pDevice->SetTransform(D3DTS_WORLD, &g_wall[nCntWall].mtxWorld);
 
-			//テクスチャ設定
-			pDevice->SetTexture(0, g_pTextureWall);
+				//テクスチャ設定
+				pDevice->SetTexture(0, g_pTextureWall);
 
-			pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 4 * nCntWall, 2);
+				pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 4 * nCntWall, 2);
+			}
 		}
 	}
 }

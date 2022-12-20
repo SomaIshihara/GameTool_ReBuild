@@ -9,6 +9,7 @@
 
 //マクロ
 #define MAX_SHADOW	(256)
+#define SHADOW_ALPHA	(0.5f)
 
 //グローバル変数
 LPDIRECT3DVERTEXBUFFER9 g_pVtxbuffShadow;	//頂点バッファポインタ
@@ -65,10 +66,10 @@ void InitShadow(void)
 		pVtx[3].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 
 		//カラー
-		pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f);
-		pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f);
-		pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f);
-		pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.8f);
+		pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, SHADOW_ALPHA);
+		pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, SHADOW_ALPHA);
+		pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, SHADOW_ALPHA);
+		pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, SHADOW_ALPHA);
 
 		//テクスチャ座標
 		pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);

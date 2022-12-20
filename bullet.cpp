@@ -17,11 +17,8 @@
 #define MAX_BULLET				(128)	//弾の最大数
 #define BULLET_TEXSIZE_WIDTH	(12)	//弾のサイズ（幅）
 #define BULLET_TEXSIZE_HEIGHT	(12)	//弾のサイズ（高さ）
-#define TASUKIGAKE(ax,az,bx,bz)	((az * bx) - (ax * bz))
-
-//仮
-#define POS0	D3DXVECTOR3(-100.0f,0.0f,100.0f)
-#define POS1	D3DXVECTOR3(100.0f,0.0f,100.0f)
+#define BULLET_ATTENUATION_COEF	(0.01f)	//弾の移動速度減衰係数
+#define BULLET_SLOW_SPEED		(4.0f)	//弾が遅いとみなす速度
 
 //弾構造体の定義
 typedef struct
@@ -156,12 +153,23 @@ void UpdateBullet(void)
 			//位置更新
 			g_aBullet[nCntBullet].pos += g_aBullet[nCntBullet].move;
 
+			//減衰
+			g_aBullet[nCntBullet].move.x += (0 - g_aBullet[nCntBullet].move.x) * BULLET_ATTENUATION_COEF;
+			g_aBullet[nCntBullet].move.z += (0 - g_aBullet[nCntBullet].move.z) * BULLET_ATTENUATION_COEF;
+
 			//当たり判定
 			CollisionWallBullet(nCntBullet);
 			CollisionObjBullet(nCntBullet);
 
 			//影位置設定
 			SetPositionShadow(g_aBullet[nCntBullet].nIdxShadow, g_aBullet[nCntBullet].pos);
+
+			//弾が遅すぎる
+			if (fabsf(g_aBullet[nCntBullet].move.x) <= BULLET_SLOW_SPEED && fabsf(g_aBullet[nCntBullet].move.z) <= BULLET_SLOW_SPEED)
+			{
+				g_aBullet[nCntBullet].bUse = false;
+				ReleaseIdxShadow(g_aBullet[nCntBullet].nIdxShadow);
+			}
 
 			g_aBullet[nCntBullet].nLife--;
 			if (g_aBullet[nCntBullet].nLife <= 0)
@@ -286,7 +294,7 @@ void CollisionWallBullet(int nCount)
 	for (int nCntWall = 0; nCntWall < MAX_WALL; nCntWall++, wall++)
 	{
 		//使っているときだけ処理
-		if (wall->bUse == true)
+		if (wall->bUse == true && wall->bAdult == false)
 		{
 			//移動ベクトル
 			vecMove = g_aBullet[nCount].pos - g_aBullet[nCount].posOld;
@@ -305,8 +313,8 @@ void CollisionWallBullet(int nCount)
 			vecToPosOld = g_aBullet[nCount].posOld - pos0;
 
 			//面積求める
-			fAreaA = (vecToPos.z * vecMove.x) - (vecToPos.x * vecMove.z);
-			fAreaB = (vecLine.z * vecMove.x) - (vecLine.x * vecMove.z);
+			fAreaA = TASUKIGAKE(vecToPos.x, vecToPos.z, vecMove.x, vecMove.z);
+			fAreaB = TASUKIGAKE(vecLine.x, vecLine.z, vecMove.x, vecMove.z);
 
 			if ((vecLine.z * vecToPosOld.x) - (vecLine.x * vecToPosOld.z) >= 0.0f && (vecLine.z * vecToPos.x) - (vecLine.x * vecToPos.z) < 0.0f)
 			{
@@ -450,10 +458,10 @@ void CollisionObjBullet(int nCount)
 			//当たり判定本番
 			//X
 			//面積求める
-			fAreaARight = (vecToPosRight.z * vecMove.x) - (vecToPosRight.x * vecMove.z);
-			fAreaALeft = (vecToPosLeft.z * vecMove.x) - (vecToPosLeft.x * vecMove.z);
-			fAreaBRight = (vecLineRight.z * vecMove.x) - (vecLineRight.x * vecMove.z);
-			fAreaBLeft = (vecLineLeft.z * vecMove.x) - (vecLineLeft.x * vecMove.z);
+			fAreaARight = TASUKIGAKE(vecToPosRight.x, vecToPosRight.z, vecMove.x, vecMove.z);
+			fAreaALeft = TASUKIGAKE(vecToPosLeft.x, vecToPosLeft.z, vecMove.x, vecMove.z);
+			fAreaBRight = TASUKIGAKE(vecLineRight.x, vecLineRight.z, vecMove.x, vecMove.z);
+			fAreaBLeft = TASUKIGAKE(vecLineLeft.x, vecLineLeft.z, vecMove.x, vecMove.z);
 
 			//左側AND範囲内vecToPosOldOps
 			if ((vecLineRight.z * vecToPosRight.x) - (vecLineRight.x * vecToPosRight.z) <= 0.0f && (vecLineRight.z * vecToPosOldRight.x) - (vecLineRight.x * vecToPosOldRight.z) >= 0.0f)
@@ -479,10 +487,10 @@ void CollisionObjBullet(int nCount)
 
 			//Z
 			//面積求める
-			fAreaAUp = (vecToPosUp.z * vecMove.x) - (vecToPosUp.x * vecMove.z);
-			fAreaADown = (vecToPosDown.z * vecMove.x) - (vecToPosDown.x * vecMove.z);
-			fAreaBUp = (vecLineUp.z * vecMove.x) - (vecLineUp.x * vecMove.z);
-			fAreaBDown = (vecLineDown.z * vecMove.x) - (vecLineDown.x * vecMove.z);
+			fAreaAUp = TASUKIGAKE(vecToPosUp.x, vecToPosUp.z, vecMove.x, vecMove.z);
+			fAreaADown = TASUKIGAKE(vecToPosDown.x, vecToPosDown.z, vecMove.x, vecMove.z);
+			fAreaBUp = TASUKIGAKE(vecLineUp.x, vecLineUp.z, vecMove.x, vecMove.z);
+			fAreaBDown = TASUKIGAKE(vecLineDown.x, vecLineDown.z, vecMove.x, vecMove.z);
 
 			//左側AND範囲内vecToPosOldOps
 			if ((vecLineUp.z * vecToPosUp.x) - (vecLineUp.x * vecToPosUp.z) <= 0.0f && (vecLineUp.z * vecToPosOldUp.x) - (vecLineUp.x * vecToPosOldUp.z) >= 0.0f)
