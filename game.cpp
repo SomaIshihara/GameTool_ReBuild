@@ -170,6 +170,14 @@ void UpdateGame(void)
 		g_nCnterSafeAreaTime = 0;
 	}
 
+	//[提出用]敵に当たったか
+	if (pPlayer->bInfection == true)
+	{
+		SetResult(RESULT_OVER);
+		SetMode(MODE_RESULT);
+		ResetCamera(200.0f, D3DXVECTOR2(0.0f, 100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-0.5f, 0.0f, 0.0f));
+	}
+
 	//リザルト移行
 	if (GetKeyboardTrigger(DIK_F2) == true)
 	{

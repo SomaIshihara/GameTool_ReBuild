@@ -41,6 +41,7 @@ typedef enum
 #define FIX_ROT(x)			((float)fmod(x + (D3DX_PI * 3), D3DX_PI * 2) - D3DX_PI)	//角度を-PI~PIに修正
 #define TASUKIGAKE(ax,az,bx,bz)	((az * bx) - (ax * bz))
 #define PLAYER_POS			D3DXVECTOR3(0.0f, 0.0f, -960.0f)
+#define OBJ_RED_ALPHA		(0.5f)	//赤さんの不透明度
 
 //頂点情報[2D]
 typedef struct

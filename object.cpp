@@ -13,7 +13,6 @@
 
 //マクロ
 #define OBJ_MOVE_SPEED		(1.0f)	//モデル移動速度
-#define OBJ_RED_ALPHA		(0.5f)	//赤さんの不透明度
 
 //グローバル変数
 BluePrint g_aBPrint[BLUEPRINTIDX_MAX];

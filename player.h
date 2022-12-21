@@ -23,6 +23,7 @@ typedef struct
 	int nNumModel;			//パーツ総数
 	D3DXMATRIX mtxWorld;	//ワールドマトリ
 	bool bIntoSafeArea;		//セーフエリアに入っているか
+	bool bInfection;		//感染しているか（提出分は敵に当たったかの判定のみ）
 } Player;
 
 //プロトタイプ宣言

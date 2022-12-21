@@ -97,90 +97,109 @@ void UpdateEnemy(void)
 {
 	for (int nCntEnemy = 0; nCntEnemy < MAX_ENEMY; nCntEnemy++)
 	{
-		//現在の位置を前回の位置にする
-		g_aEnemy[nCntEnemy].posOld = g_aEnemy[nCntEnemy].pos;
+		if (g_aEnemy[nCntEnemy].bUse == true)
+		{
+			//現在の位置を前回の位置にする
+			g_aEnemy[nCntEnemy].posOld = g_aEnemy[nCntEnemy].pos;
 
-		//メモ。今はやらないで暇なときやって
+			//状態に応じて処理
+			switch (g_aEnemy[nCntEnemy].state)
+			{
+			case OBJSTATE_NONE:
+				break;
+			case OBJSTATE_DAMAGE:
+				g_aEnemy[nCntEnemy].nCounterState--;
+				if (g_aEnemy[nCntEnemy].nCounterState <= 0)
+				{
+					g_aEnemy[nCntEnemy].state = OBJSTATE_NONE;
+				}
+				break;
+			case OBJSTATE_BROKEN:
+				break;
+			}
+
+			//メモ。今はやらないで暇なときやって
 #if 0
-		//カメラ向きに応じてプレイヤーの向き旋回
-		if (GetMouseClickPress(MOUSE_CLICK_LEFT) == true)
-		{
-			g_aEnemy[nCntEnemy].rot.y = -(float)fmod(GetCamera()->rot.y + 1.0f * D3DX_PI + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-		}
+			//カメラ向きに応じてプレイヤーの向き旋回
+			if (GetMouseClickPress(MOUSE_CLICK_LEFT) == true)
+			{
+				g_aEnemy[nCntEnemy].rot.y = -(float)fmod(GetCamera()->rot.y + 1.0f * D3DX_PI + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
+			}
 
-		//モデル移動
-		//カメラからみて
-		if (GetKeyboardPress(DIK_W) == true)
-		{
-			if (false)
-			{//左前
-				g_aEnemy[nCntEnemy].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_WA + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
+			//モデル移動
+			//カメラからみて
+			if (GetKeyboardPress(DIK_W) == true)
+			{
+				if (false)
+				{//左前
+					g_aEnemy[nCntEnemy].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_WA + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
+					g_aEnemy[nCntEnemy].move.x = sinf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+					g_aEnemy[nCntEnemy].move.z = cosf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+				}
+				else if (false)
+				{//右前
+					g_aEnemy[nCntEnemy].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_WD + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
+					g_aEnemy[nCntEnemy].move.x = sinf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+					g_aEnemy[nCntEnemy].move.z = cosf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+				}
+				else
+				{//前
+					g_aEnemy[nCntEnemy].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_W + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
+					g_aEnemy[nCntEnemy].move.x = sinf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+					g_aEnemy[nCntEnemy].move.z = cosf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+				}
+			}
+			else if (GetKeyboardPress(DIK_S) == true)
+			{
+				if (false)
+				{//左後
+					g_aEnemy[nCntEnemy].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_SA + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
+					g_aEnemy[nCntEnemy].move.x = sinf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+					g_aEnemy[nCntEnemy].move.z = cosf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+				}
+				else if (false)
+				{//右後
+					g_aEnemy[nCntEnemy].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_SD + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
+					g_aEnemy[nCntEnemy].move.x = sinf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+					g_aEnemy[nCntEnemy].move.z = cosf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+				}
+				else
+				{//後ろ
+					g_aEnemy[nCntEnemy].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_S + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
+					g_aEnemy[nCntEnemy].move.x = sinf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+					g_aEnemy[nCntEnemy].move.z = cosf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
+				}
+			}
+			else if (false)
+			{//左
+				g_aEnemy[nCntEnemy].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_A + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
 				g_aEnemy[nCntEnemy].move.x = sinf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
 				g_aEnemy[nCntEnemy].move.z = cosf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
 			}
 			else if (false)
-			{//右前
-				g_aEnemy[nCntEnemy].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_WD + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
+			{//右
+				g_aEnemy[nCntEnemy].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_D + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
 				g_aEnemy[nCntEnemy].move.x = sinf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
 				g_aEnemy[nCntEnemy].move.z = cosf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
 			}
-			else
-			{//前
-				g_aEnemy[nCntEnemy].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_W + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-				g_aEnemy[nCntEnemy].move.x = sinf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
-				g_aEnemy[nCntEnemy].move.z = cosf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
-			}
-		}
-		else if (GetKeyboardPress(DIK_S) == true)
-		{
-			if (false)
-			{//左後
-				g_aEnemy[nCntEnemy].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_SA + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-				g_aEnemy[nCntEnemy].move.x = sinf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
-				g_aEnemy[nCntEnemy].move.z = cosf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
-			}
-			else if (false)
-			{//右後
-				g_aEnemy[nCntEnemy].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_SD + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-				g_aEnemy[nCntEnemy].move.x = sinf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
-				g_aEnemy[nCntEnemy].move.z = cosf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
-			}
-			else
-			{//後ろ
-				g_aEnemy[nCntEnemy].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_S + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-				g_aEnemy[nCntEnemy].move.x = sinf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
-				g_aEnemy[nCntEnemy].move.z = cosf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
-			}
-		}
-		else if (false)
-		{//左
-			g_aEnemy[nCntEnemy].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_A + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-			g_aEnemy[nCntEnemy].move.x = sinf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
-			g_aEnemy[nCntEnemy].move.z = cosf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
-		}
-		else if (false)
-		{//右
-			g_aEnemy[nCntEnemy].rot.y = -(float)fmod(GetCamera()->rot.y + ROT_D + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-			g_aEnemy[nCntEnemy].move.x = sinf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
-			g_aEnemy[nCntEnemy].move.z = cosf((float)fmod((g_aEnemy[nCntEnemy].rot.y + D3DX_PI) + (D3DX_PI + (D3DX_PI * 2)), D3DX_PI * 2) - D3DX_PI) * ENEMY_MOVE_SPEED;
-		}
 
-		//ボタン操作に応じてプレイヤー移動
-		g_aEnemy[nCntEnemy].pos.x += g_aEnemy[nCntEnemy].move.x;
-		g_aEnemy[nCntEnemy].pos.z += g_aEnemy[nCntEnemy].move.z;
+			//ボタン操作に応じてプレイヤー移動
+			g_aEnemy[nCntEnemy].pos.x += g_aEnemy[nCntEnemy].move.x;
+			g_aEnemy[nCntEnemy].pos.z += g_aEnemy[nCntEnemy].move.z;
 
-		//壁当たり判定
-		CollisionWallEnemy(nCntEnemy);
+			//壁当たり判定
+			CollisionWallEnemy(nCntEnemy);
 
-		//オブジェクト当たり判定
-		CollisionObjEnemy(nCntEnemy);
+			//オブジェクト当たり判定
+			CollisionObjEnemy(nCntEnemy);
 
-		//移動量減衰
-		g_aEnemy[nCntEnemy].move.x += (0 - g_aEnemy[nCntEnemy].move.x) * DUMP_COEF;
-		g_aEnemy[nCntEnemy].move.z += (0 - g_aEnemy[nCntEnemy].move.z) * DUMP_COEF;
+			//移動量減衰
+			g_aEnemy[nCntEnemy].move.x += (0 - g_aEnemy[nCntEnemy].move.x) * DUMP_COEF;
+			g_aEnemy[nCntEnemy].move.z += (0 - g_aEnemy[nCntEnemy].move.z) * DUMP_COEF;
 #endif
-		//影位置設定
-		SetPositionShadow(g_aEnemy[nCntEnemy].nIdxShadow, g_aEnemy[nCntEnemy].pos);
+			//影位置設定
+			SetPositionShadow(g_aEnemy[nCntEnemy].nIdxShadow, g_aEnemy[nCntEnemy].pos);
+		}
 	}
 }
 
@@ -252,8 +271,21 @@ void DrawEnemy(void)
 
 				for (int nCntMat = 0; nCntMat < (int)g_aEnemy[nCntEnemy].aModel[nCntModel].dwNumMatModel; nCntMat++)
 				{
+					//ゾンさんは緑
 					//マテリアル設定
-					pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+					D3DMATERIAL9 changeMat = pMat[nCntMat].MatD3D;
+					//ダメージ状態なら赤追加
+					changeMat.Diffuse = D3DXCOLOR(0.0f, 0.45f, 0.13f, 1.0f);
+
+					if (g_aEnemy[nCntEnemy].state == OBJSTATE_DAMAGE)
+					{
+						changeMat.Diffuse.r = 1.0f * OBJ_RED_ALPHA + changeMat.Diffuse.r * (1.0f - OBJ_RED_ALPHA);
+						changeMat.Diffuse.g = 0.0f * OBJ_RED_ALPHA + changeMat.Diffuse.g * (1.0f - OBJ_RED_ALPHA);
+						changeMat.Diffuse.b = 0.0f * OBJ_RED_ALPHA + changeMat.Diffuse.b * (1.0f - OBJ_RED_ALPHA);
+					}
+
+					//マテリアル設定
+					pDevice->SetMaterial(&changeMat);
 
 					//テクスチャ設定
 					pDevice->SetTexture(0, g_aEnemy[nCntEnemy].aModel[nCntModel].apTexture[nCntMat]);
