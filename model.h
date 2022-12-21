@@ -11,6 +11,10 @@
 #define EXITHUMAN_MODEL_NUM	(10)	//非常口の人に使われているモデル数
 #define PUSHING_BACK		(1.0f)	//オブジェクトに当たった時の押し戻し
 
+//非常口の人の幅高さ
+#define EXITHUMAN_WIDTH		(30.0f)
+#define EXITHUMAN_HEIGHT	(30.0f)
+
 //モデル名列挙
 typedef enum
 {

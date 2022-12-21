@@ -22,10 +22,6 @@
 #define DUMP_COEF			(0.4f)	//減衰係数
 #define BULLET_SPEED		(20.0f)	//弾の速さ
 
-//仮
-#define PLAYER_WIDTH		(20.0f)
-#define PLAYER_DEPTH		(15.0f)
-
 //向き
 #define ROT_WA	(-0.75f * D3DX_PI)	//左上
 #define ROT_WD	(0.75f * D3DX_PI)	//右上
@@ -43,21 +39,6 @@ void CollisionObjPlayer(int nNumber);
 //グローバル変数
 Player g_player;
 int g_nIdxShadow = -1;
-
-//ファイル名
-const char *c_pFileNamePlayer[] =
-{
-	"data\\MODEL\\exithuman_x\\01_Body.x",
-	"data\\MODEL\\exithuman_x\\02_Head.x",
-	"data\\MODEL\\exithuman_x\\03_Left_Arm.x",
-	"data\\MODEL\\exithuman_x\\04_Left_Hand.x",
-	"data\\MODEL\\exithuman_x\\05_Right_Arm.x",
-	"data\\MODEL\\exithuman_x\\06_Right_Hand.x",
-	"data\\MODEL\\exithuman_x\\07_Left_Leg.x",
-	"data\\MODEL\\exithuman_x\\08_Left_Foot.x",
-	"data\\MODEL\\exithuman_x\\09_Right_Leg.x",
-	"data\\MODEL\\exithuman_x\\10_Right_Foot.x"
-};
 
 //========================
 //初期化処理
@@ -80,8 +61,8 @@ void InitPlayer(void)
 	g_nIdxShadow = -1;
 
 	//対角線の長さ・角度
-	g_player.fLength = sqrtf(PLAYER_WIDTH * PLAYER_WIDTH + PLAYER_DEPTH * PLAYER_DEPTH) * 0.5f;
-	g_player.fAngle = atan2f(PLAYER_WIDTH, PLAYER_DEPTH);
+	g_player.fLength = sqrtf(EXITHUMAN_WIDTH * EXITHUMAN_WIDTH + EXITHUMAN_HEIGHT * EXITHUMAN_HEIGHT) * 0.5f;
+	g_player.fAngle = atan2f(EXITHUMAN_WIDTH, EXITHUMAN_HEIGHT);
 
 	//Xファイル読み込み
 	for (int nCntModel = 0; nCntModel < EXITHUMAN_MODEL_NUM; nCntModel++)
@@ -202,10 +183,7 @@ void UpdatePlayer(void)
 	g_player.posOld = g_player.pos;
 
 	//カメラ向きに応じてプレイヤーの向き旋回
-	if (GetMouseClickPress(MOUSE_CLICK_LEFT) == true)
-	{
-		g_player.rot.y = -(float)fmod(GetCamera()->rot.y + 1.0f * D3DX_PI + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
-	}
+	g_player.rot.y = -(float)fmod(GetCamera()->rot.y + 1.0f * D3DX_PI + D3DX_PI + (D3DX_PI * 2), D3DX_PI * 2) - D3DX_PI;
 
 	//モデル移動
 	if (GetKeyboardPress(DIK_W) == true)
@@ -293,7 +271,7 @@ void UpdatePlayer(void)
 	}
 
 	//GetMouseClickTrigger
-	if (GetMouseClickPress(MOUSE_CLICK_LEFT) == true)
+	if (GetMouseClickRepeate(MOUSE_CLICK_LEFT) == true)
 	{
 		SetBullet(g_player.pos + D3DXVECTOR3(0.0f, 40.0f, 0.0f) , BULLET_SPEED, g_player.rot.y, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 	}

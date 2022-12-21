@@ -39,6 +39,7 @@ bool GetUseGamepad(void);
 //É}ÉEÉX
 bool GetMouseClickPress(int nButton);
 bool GetMouseClickTrigger(int nButton);
+bool GetMouseClickRepeate(int nButton);
 D3DXVECTOR3 GetMousePos(void);
 D3DXVECTOR3 GetMouseMove(void);
 

@@ -1,6 +1,6 @@
 //==========================================
 //
-//プレイヤープログラム[enemy.cpp]
+//敵プログラム[enemy.cpp]
 //Author:石原颯馬
 //
 //==========================================
@@ -19,41 +19,12 @@
 #define ENEMY_MOVE_SPEED	(5.0f)	//プレイヤー移動速度
 #define DUMP_COEF			(0.4f)	//減衰係数
 
-//仮
-#define ENEMY_WIDTH		(20.0f)
-#define ENEMY_DEPTH		(15.0f)
-
-//向き
-#define ROT_WA	(-0.75f * D3DX_PI)	//左上
-#define ROT_WD	(0.75f * D3DX_PI)	//右上
-#define ROT_SA	(-0.25f * D3DX_PI)	//左下
-#define ROT_SD	(0.25f * D3DX_PI)	//右下
-#define ROT_W	(1.0f * D3DX_PI)	//上
-#define ROT_A	(-0.5f * D3DX_PI)	//左
-#define ROT_S	(0.0f * D3DX_PI)	//下
-#define ROT_D	(0.5f * D3DX_PI)	//右
-
 //プロト
 void CollisionWallEnemy(int nNumber);
 void CollisionObjEnemy(int nNumber);
 
 //グローバル変数
 Enemy g_aEnemy[MAX_ENEMY];
-
-//ファイル名
-const char *c_pFileNameEnemy[] =
-{
-	"data\\MODEL\\exithuman_x\\01_Body.x",
-	"data\\MODEL\\exithuman_x\\02_Head.x",
-	"data\\MODEL\\exithuman_x\\03_Left_Arm.x",
-	"data\\MODEL\\exithuman_x\\04_Left_Hand.x",
-	"data\\MODEL\\exithuman_x\\05_Right_Arm.x",
-	"data\\MODEL\\exithuman_x\\06_Right_Hand.x",
-	"data\\MODEL\\exithuman_x\\07_Left_Leg.x",
-	"data\\MODEL\\exithuman_x\\08_Left_Foot.x",
-	"data\\MODEL\\exithuman_x\\09_Right_Leg.x",
-	"data\\MODEL\\exithuman_x\\10_Right_Foot.x"
-};
 
 //========================
 //初期化処理
@@ -80,8 +51,8 @@ void InitEnemy(void)
 		}
 
 		//対角線の長さ・角度
-		g_aEnemy[nCntEnemy].fLength = sqrtf(ENEMY_WIDTH * ENEMY_WIDTH + ENEMY_DEPTH * ENEMY_DEPTH) * 0.5f;
-		g_aEnemy[nCntEnemy].fAngle = atan2f(ENEMY_WIDTH, ENEMY_DEPTH);
+		g_aEnemy[nCntEnemy].fLength = sqrtf(EXITHUMAN_WIDTH * EXITHUMAN_WIDTH + EXITHUMAN_HEIGHT * EXITHUMAN_HEIGHT) * 0.5f;
+		g_aEnemy[nCntEnemy].fAngle = atan2f(EXITHUMAN_WIDTH, EXITHUMAN_HEIGHT);
 
 		//影設定
 		g_aEnemy[nCntEnemy].nIdxShadow = -1;
@@ -310,6 +281,7 @@ void SetEnemy(D3DXVECTOR3 pos, D3DXVECTOR3 rot, MODELNAME name, int nLife)
 			Model *pModel = GetModel(name);
 			g_aEnemy[nCntEnemy].pos = pos;
 			g_aEnemy[nCntEnemy].rot = rot;
+			g_aEnemy[nCntEnemy].nLife = nLife;
 			for (int nCntParts = 0; nCntParts < EXITHUMAN_MODEL_NUM; nCntParts++)
 			{
 				g_aEnemy[nCntEnemy].aModel[nCntParts] = *(pModel + nCntParts);
@@ -319,7 +291,8 @@ void SetEnemy(D3DXVECTOR3 pos, D3DXVECTOR3 rot, MODELNAME name, int nLife)
 			g_aEnemy[nCntEnemy].posOld = g_aEnemy[nCntEnemy].pos;
 			g_aEnemy[nCntEnemy].move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 			g_aEnemy[nCntEnemy].nIdxShadow = SetShadow();
-			
+			g_aEnemy[nCntEnemy].bUse = true;
+
 			break;
 		}
 	}
@@ -569,4 +542,31 @@ void CollisionObjEnemy(int nNumber)
 Enemy *GetEnemy(void)
 {
 	return &g_aEnemy[0];
+}
+
+//========================
+//当たった時の処理
+//========================
+void HitEnemy(int nNumber)
+{
+	g_aEnemy[nNumber].nLife--;
+
+	if (g_aEnemy[nNumber].nLife <= 0)
+	{//ぶっこわーす処理
+		DestroyEnemy(nNumber);
+	}
+	else
+	{
+		g_aEnemy[nNumber].state = OBJSTATE_DAMAGE;
+		g_aEnemy[nNumber].nCounterState = OBJ_DAMAGE_TIME;
+	}
+}
+
+//========================
+//ぶっこわーす処理
+//========================
+void DestroyEnemy(int nNumber)
+{
+	g_aEnemy[nNumber].bUse = false;
+	ReleaseIdxShadow(g_aEnemy[nNumber].nIdxShadow);
 }

@@ -32,6 +32,7 @@ typedef struct
 	//パラメータ関係
 	int nLife;				//体力
 	OBJSTATE state;			//状態
+	int nCounterState;		//状態変化までの時間
 
 	bool bUse;				//使用するか
 } Enemy;
@@ -43,5 +44,7 @@ void UpdateEnemy(void);
 void DrawEnemy(void);
 void SetEnemy(D3DXVECTOR3 pos, D3DXVECTOR3 rot, MODELNAME name, int nLife);
 Enemy *GetEnemy(void);
+void HitEnemy(int nNumObj);
+void DestroyEnemy(int nNumObj);
 
 #endif // !_ENEMY_H_

@@ -149,7 +149,7 @@ void UpdateGame(void)
 	UpdatePlayer();
 
 	//敵
-	//UpdateEnemy();
+	UpdateEnemy();
 
 	//オブジェクト
 	UpdateObject();

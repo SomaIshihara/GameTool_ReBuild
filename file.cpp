@@ -122,11 +122,11 @@ void LoadMapFile(void)
 			}
 
 			//文字列チェック
-			if (strncmp(&aCode[0], CODE_MV_SCRIPT, sizeof CODE_MV_SCRIPT / sizeof(char) - 1) == 0)
+			if (strncmp(&aCode[0], CODE_SCRIPT, sizeof CODE_SCRIPT / sizeof(char) - 1) == 0)
 			{//読み取り開始
 				bRead = true;
 			}
-			else if (strncmp(&aCode[0], CODE_MV_END_SCRIPT, sizeof CODE_MV_END_SCRIPT / sizeof(char) - 1) == 0)
+			else if (strncmp(&aCode[0], CODE_END_SCRIPT, sizeof CODE_END_SCRIPT / sizeof(char) - 1) == 0)
 			{//読み取り終了
 				bRead = false;
 				break;
@@ -431,11 +431,11 @@ void LoadMapFile(void)
 			}
 
 			//文字列チェック
-			if (strncmp(&aCode[0], CODE_MV_SCRIPT, sizeof CODE_MV_SCRIPT / sizeof(char) - 1) == 0)
+			if (strncmp(&aCode[0], CODE_SCRIPT, sizeof CODE_SCRIPT / sizeof(char) - 1) == 0)
 			{//読み取り開始
 				bRead = true;
 			}
-			else if (strncmp(&aCode[0], CODE_MV_END_SCRIPT, sizeof CODE_MV_END_SCRIPT / sizeof(char) - 1) == 0)
+			else if (strncmp(&aCode[0], CODE_END_SCRIPT, sizeof CODE_END_SCRIPT / sizeof(char) - 1) == 0)
 			{//読み取り終了
 				bRead = false;
 				break;
@@ -459,7 +459,7 @@ void LoadMapFile(void)
 					}
 					break;
 				case READSTAT_SETENEMY:		//モデル情報取得
-					if (strncmp(&aCode[0], CODE_END_MODELSET, sizeof CODE_END_MODELSET / sizeof(char) - 1) == 0)
+					if (strncmp(&aCode[0], CODE_END_SETENEMY, sizeof CODE_END_SETENEMY / sizeof(char) - 1) == 0)
 					{
 						SetEnemy(g_pos, g_rot, g_name, g_nLife);
 						g_readStat = READSTAT_NONE;
@@ -498,12 +498,16 @@ void LoadMapFile(void)
 					}
 					else if (strncmp(&aCode[0], CODE_NAMEIDX, sizeof CODE_NAMEIDX / sizeof(char) - 1) == 0)
 					{//モデル番号設定
-						 //読み取り
+						pSprit = strtok(&aCode[0], " =\n");	//処理内容の部分消す
+
+						//読み取り
 						pSprit = strtok(NULL, " =\n");
 						g_name = (MODELNAME)atoi(pSprit);
 					}
 					else if (strncmp(&aCode[0], CODE_LIFE, sizeof CODE_LIFE / sizeof(char) - 1) == 0)
 					{//体力設定
+						pSprit = strtok(&aCode[0], " =\n");	//処理内容の部分消す
+
 					 //読み取り
 						pSprit = strtok(NULL, " =\n");
 						g_nLife = atoi(pSprit);

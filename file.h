@@ -15,8 +15,8 @@
 //コード名
 //共通
 //読み込み開始・終了
-#define CODE_MV_SCRIPT			"SCRIPT"			//スクリプト開始（MV専用）
-#define CODE_MV_END_SCRIPT		"END_SCRIPT"		//スクリプト終了（MV専用）
+#define CODE_SCRIPT				"SCRIPT"			//スクリプト開始
+#define CODE_END_SCRIPT			"END_SCRIPT"		//スクリプト終了
 
 //オリジナル
 //敵配置

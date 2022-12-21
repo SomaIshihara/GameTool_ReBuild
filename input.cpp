@@ -37,9 +37,12 @@ bool g_bUseGamepad;
 //マウス部
 LPDIRECTINPUT8 g_pInputMouse = NULL;
 LPDIRECTINPUTDEVICE8 g_pDevMouse = NULL;
-DIMOUSESTATE g_MouseState;					//マウスの情報（プレス）
+DIMOUSESTATE g_MouseState;						//マウスの情報（プレス）
 BYTE g_aMouseStateTrigger[MOUSE_BUTTON_MAX];	//ボタンのトリガー情報
 BYTE g_aMouseStateRelease[MOUSE_BUTTON_MAX];	//ボタンのリリース情報
+BYTE g_aMouseStateRepeate[MOUSE_BUTTON_MAX];	//リピート情報
+DWORD g_aMouseCurrentTime[NUM_KEY_MAX];			//現在の時間（リピート使用）
+DWORD g_aMouseExecLastTime[NUM_KEY_MAX];		//最後にtrueを返した時間（リピート使用)
 D3DXVECTOR3 g_posPoint;						//マウス座標
 D3DXVECTOR3 g_moveMouse;					//マウス移動量
 
@@ -48,7 +51,7 @@ D3DXVECTOR3 g_moveMouse;					//マウス移動量
 //========================
 HRESULT InitKeyboard(HINSTANCE hInstance, HWND hWnd)
 {
-	int nCntKey;		//カウンタ
+	int nCntInit;		//カウンタ
 
 	//キーボード部
 	//DireceInputオブジェクトの生成
@@ -111,10 +114,15 @@ HRESULT InitKeyboard(HINSTANCE hInstance, HWND hWnd)
 
 
 	//時間初期化
-	for (nCntKey = 0; nCntKey < NUM_KEY_MAX; nCntKey++)
+	for (nCntInit = 0; nCntInit < NUM_KEY_MAX; nCntInit++)
 	{
-		g_aKeyboardCurrentTime[nCntKey] = 0;
-		g_aKeyboardExecLastTime[nCntKey] = timeGetTime() - REPEATE_TIME;
+		g_aKeyboardCurrentTime[nCntInit] = 0;
+		g_aKeyboardExecLastTime[nCntInit] = timeGetTime() - REPEATE_TIME;
+	}
+	for (nCntInit = 0; nCntInit < MOUSE_BUTTON_MAX; nCntInit++)
+	{
+		g_aMouseCurrentTime[nCntInit] = 0;
+		g_aMouseExecLastTime[nCntInit] = timeGetTime() - REPEATE_TIME;
 	}
 
 	g_GamepadCurrentTime = 0;
@@ -206,6 +214,18 @@ void UpdateKeyboard(void)
 			//トリガーとリリース
 			g_aMouseStateTrigger[nCntKey] = (g_MouseState.rgbButtons[nCntKey] ^ MouseState.rgbButtons[nCntKey]) & MouseState.rgbButtons[nCntKey];
 			g_aMouseStateRelease[nCntKey] = (g_MouseState.rgbButtons[nCntKey] ^ MouseState.rgbButtons[nCntKey]) & ~MouseState.rgbButtons[nCntKey];
+
+			//リピート
+			g_aMouseCurrentTime[nCntKey] = timeGetTime();
+			if (MouseState.rgbButtons[nCntKey] && (g_aMouseCurrentTime[nCntKey] - g_aMouseExecLastTime[nCntKey]) > REPEATE_TIME)
+			{
+				g_aMouseExecLastTime[nCntKey] = g_aMouseCurrentTime[nCntKey];
+				g_aMouseStateRepeate[nCntKey] = MouseState.rgbButtons[nCntKey];
+			}
+			else
+			{
+				g_aMouseStateRepeate[nCntKey] = 0;
+			}
 		}
 
 		//プレス
@@ -428,6 +448,14 @@ bool GetMouseClickPress(int nButton)
 bool GetMouseClickTrigger(int nButton)
 {
 	return g_aMouseStateTrigger[nButton] & 0x80 ? true : false;
+}
+
+//========================
+//マウスのリピート情報を返す処理
+//=======================
+bool GetMouseClickRepeate(int nButton)
+{
+	return g_aMouseStateRepeate[nButton] & 0x80 ? true : false;
 }
 
 //========================

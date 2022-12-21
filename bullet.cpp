@@ -9,6 +9,7 @@
 #include "shadow.h"
 #include "wall.h"
 #include "player.h"
+#include "enemy.h"
 #include "object.h"
 #include "debugproc.h"
 #include <assert.h>
@@ -34,6 +35,7 @@ typedef struct
 
 void CollisionWallBullet(int nCount);
 void CollisionObjBullet(int nCount);
+void CollisionEnemyBullet(int nCount);
 
 LPDIRECT3DTEXTURE9 g_pTextureBullet;	//テクスチャポインタ
 LPDIRECT3DVERTEXBUFFER9 g_pVtxbuffBullet;	//頂点バッファポインタ
@@ -160,6 +162,7 @@ void UpdateBullet(void)
 			//当たり判定
 			CollisionWallBullet(nCntBullet);
 			CollisionObjBullet(nCntBullet);
+			CollisionEnemyBullet(nCntBullet);
 
 			//影位置設定
 			SetPositionShadow(g_aBullet[nCntBullet].nIdxShadow, g_aBullet[nCntBullet].pos);
@@ -509,6 +512,194 @@ void CollisionObjBullet(int nCount)
 				{
 					g_aBullet[nCount].bUse = false;
 					HitObj(nCntObj);
+					ReleaseIdxShadow(g_aBullet[nCount].nIdxShadow);
+					break;
+				}
+			}
+		}
+	}
+}
+
+//========================
+//弾当たり判定処理
+//========================
+void CollisionEnemyBullet(int nCount)
+{
+	//=pos0~pos3の説明==================
+	// pos3		pos2
+	//	・<-----・		矢印:vecLine
+	//	｜		↑
+	//	｜		｜
+	//	↓		｜
+	//	・----->・
+	// pos0		pos1
+	//==================================
+
+	BluePrint *pbprint = GetBluePrint();
+	Enemy *pEnemy = GetEnemy();
+	D3DXVECTOR3 pos0, pos1, pos2, pos3;
+	D3DXVECTOR3 vecLineRight, vecToPosRight, vecToPosOldRight;
+	D3DXVECTOR3 vecLineLeft, vecToPosLeft, vecToPosOldLeft;
+	D3DXVECTOR3 vecLineUp, vecToPosUp, vecToPosOldUp;
+	D3DXVECTOR3 vecLineDown, vecToPosDown, vecToPosOldDown;
+	D3DXVECTOR3 vecMove;
+	float fAreaARight, fAreaALeft, fAreaBRight, fAreaBLeft;
+	float fAreaAUp, fAreaADown, fAreaBUp, fAreaBDown;
+
+
+	for (int nCntEnemy = 0; nCntEnemy < MAX_ENEMY; nCntEnemy++, pEnemy++)
+	{
+		if (pEnemy->bUse == true)
+		{
+			//各頂点求める
+			float fLengthX, fLengthZ;
+			float fLength;
+			float fAngle;
+			float rot;
+
+			//-pos0---------------------------------------------------------------------------------------------------------------------------
+			//頂点と中心の距離をXとZ別々で計算する
+			fLengthX = -EXITHUMAN_WIDTH / 2;
+			fLengthZ = -EXITHUMAN_HEIGHT / 2;
+
+			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
+			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
+																	//0 - 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
+			rot = FIX_ROT(-fAngle - pEnemy->rot.y);
+
+			//角度に応じて頂点の位置をずらす
+			pos0.x = pEnemy->pos.x + sinf(rot) * fLength;
+			pos0.y = 0.0f;
+			pos0.z = pEnemy->pos.z - cosf(rot) * fLength;
+			//-pos0---------------------------------------------------------------------------------------------------------------------------
+
+			//-pos1---------------------------------------------------------------------------------------------------------------------------
+			//頂点と中心の距離をXとZ別々で計算する
+			fLengthX = EXITHUMAN_WIDTH / 2;
+			fLengthZ = -EXITHUMAN_HEIGHT / 2;
+
+			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
+			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
+																	//0 + 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
+			rot = FIX_ROT(-fAngle - pEnemy->rot.y);
+
+			//角度に応じて頂点の位置をずらす
+			pos1.x = pEnemy->pos.x + sinf(rot) * fLength;
+			pos1.y = 0.0f;
+			pos1.z = pEnemy->pos.z - cosf(rot) * fLength;
+			//-pos1---------------------------------------------------------------------------------------------------------------------------
+
+			//-pos2---------------------------------------------------------------------------------------------------------------------------
+			//頂点と中心の距離をXとZ別々で計算する
+			fLengthX = -EXITHUMAN_WIDTH / 2;
+			fLengthZ = EXITHUMAN_HEIGHT / 2;
+
+			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
+			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
+																	//PI - 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
+			rot = FIX_ROT(D3DX_PI - fAngle - pEnemy->rot.y);
+
+			//角度に応じて頂点の位置をずらす
+			pos2.x = pEnemy->pos.x - sinf(rot) * fLength;
+			pos2.y = 0.0f;
+			pos2.z = pEnemy->pos.z + cosf(rot) * fLength;
+			//-pos2---------------------------------------------------------------------------------------------------------------------------
+
+			//-pos3---------------------------------------------------------------------------------------------------------------------------
+			//頂点と中心の距離をXとZ別々で計算する
+			fLengthX = EXITHUMAN_WIDTH / 2;
+			fLengthZ = EXITHUMAN_HEIGHT / 2;
+
+			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
+			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
+																	//-PI + 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
+			rot = FIX_ROT(-D3DX_PI - fAngle - pEnemy->rot.y);
+
+			//角度に応じて頂点の位置をずらす
+			pos3.x = pEnemy->pos.x - sinf(rot) * fLength;
+			pos3.y = 0.0f;
+			pos3.z = pEnemy->pos.z + cosf(rot) * fLength;
+			//-pos3---------------------------------------------------------------------------------------------------------------------------
+
+			//ベクトル求める
+			//move
+			vecMove = g_aBullet[nCount].pos - g_aBullet[nCount].posOld;
+
+			//X
+			//右方向の計算
+			vecLineRight = pos1 - pos0;
+			vecToPosRight = g_aBullet[nCount].pos - pos0;
+			vecToPosOldRight = g_aBullet[nCount].posOld - pos0;
+
+			//左方向の計算
+			vecLineLeft = pos3 - pos2;
+			vecToPosLeft = g_aBullet[nCount].pos - pos2;
+			vecToPosOldLeft = g_aBullet[nCount].posOld - pos2;
+
+			//Z
+			//上方向の計算
+			vecLineUp = pos2 - pos1;
+			vecToPosUp = g_aBullet[nCount].pos - pos1;
+			vecToPosOldUp = g_aBullet[nCount].posOld - pos1;
+			//下方向の計算
+			vecLineDown = pos0 - pos3;
+			vecToPosDown = g_aBullet[nCount].pos - pos3;
+			vecToPosOldDown = g_aBullet[nCount].posOld - pos3;
+
+			//当たり判定本番
+			//X
+			//面積求める
+			fAreaARight = TASUKIGAKE(vecToPosRight.x, vecToPosRight.z, vecMove.x, vecMove.z);
+			fAreaALeft = TASUKIGAKE(vecToPosLeft.x, vecToPosLeft.z, vecMove.x, vecMove.z);
+			fAreaBRight = TASUKIGAKE(vecLineRight.x, vecLineRight.z, vecMove.x, vecMove.z);
+			fAreaBLeft = TASUKIGAKE(vecLineLeft.x, vecLineLeft.z, vecMove.x, vecMove.z);
+
+			//左側AND範囲内vecToPosOldOps
+			if ((vecLineRight.z * vecToPosRight.x) - (vecLineRight.x * vecToPosRight.z) <= 0.0f && (vecLineRight.z * vecToPosOldRight.x) - (vecLineRight.x * vecToPosOldRight.z) >= 0.0f)
+			{
+				if (fAreaARight / fAreaBRight >= 0.0f && fAreaARight / fAreaBRight <= 1.0f)
+				{
+					g_aBullet[nCount].bUse = false;
+					HitEnemy(nCntEnemy);
+					ReleaseIdxShadow(g_aBullet[nCount].nIdxShadow);
+					break;
+				}
+			}
+			else if ((vecLineLeft.z * vecToPosLeft.x) - (vecLineLeft.x * vecToPosLeft.z) <= 0.0f && (vecLineLeft.z * vecToPosOldLeft.x) - (vecLineLeft.x * vecToPosOldLeft.z) >= 0.0f)
+			{
+				if (fAreaALeft / fAreaBLeft >= 0.0f && fAreaALeft / fAreaBLeft <= 1.0f)
+				{
+					g_aBullet[nCount].bUse = false;
+					HitEnemy(nCntEnemy);
+					ReleaseIdxShadow(g_aBullet[nCount].nIdxShadow);
+					break;
+				}
+			}
+
+			//Z
+			//面積求める
+			fAreaAUp = TASUKIGAKE(vecToPosUp.x, vecToPosUp.z, vecMove.x, vecMove.z);
+			fAreaADown = TASUKIGAKE(vecToPosDown.x, vecToPosDown.z, vecMove.x, vecMove.z);
+			fAreaBUp = TASUKIGAKE(vecLineUp.x, vecLineUp.z, vecMove.x, vecMove.z);
+			fAreaBDown = TASUKIGAKE(vecLineDown.x, vecLineDown.z, vecMove.x, vecMove.z);
+
+			//左側AND範囲内vecToPosOldOps
+			if ((vecLineUp.z * vecToPosUp.x) - (vecLineUp.x * vecToPosUp.z) <= 0.0f && (vecLineUp.z * vecToPosOldUp.x) - (vecLineUp.x * vecToPosOldUp.z) >= 0.0f)
+			{
+				if (fAreaAUp / fAreaBUp >= 0.0f && fAreaAUp / fAreaBUp <= 1.0f)
+				{
+					g_aBullet[nCount].bUse = false;
+					HitEnemy(nCntEnemy);
+					ReleaseIdxShadow(g_aBullet[nCount].nIdxShadow);
+					break;
+				}
+			}
+			else if ((vecLineDown.z * vecToPosDown.x) - (vecLineDown.x * vecToPosDown.z) <= 0.0f && (vecLineDown.z * vecToPosOldDown.x) - (vecLineDown.x * vecToPosOldDown.z) >= 0.0f)
+			{
+				if (fAreaADown / fAreaBDown >= 0.0f && fAreaADown / fAreaBDown <= 1.0f)
+				{
+					g_aBullet[nCount].bUse = false;
+					HitEnemy(nCntEnemy);
 					ReleaseIdxShadow(g_aBullet[nCount].nIdxShadow);
 					break;
 				}

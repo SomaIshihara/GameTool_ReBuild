@@ -10,6 +10,7 @@
 //マクロ
 #define MAX_OBJECT				(512)
 #define OBJ_MAX_TEXTURE			(16)
+#define OBJ_DAMAGE_TIME		(5)		//ダメージ状態にする時間(F)
 
 //オブジェクト状態列挙
 typedef enum
