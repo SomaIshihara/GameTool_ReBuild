@@ -374,7 +374,7 @@ void CollisionObjBullet(int nCount)
 			fLengthX = pObject->pos.x - (pObject->pos.x + (pbprint + pObject->bpidx)->vtxMin.x);
 			fLengthZ = pObject->pos.z - (pObject->pos.z + (pbprint + pObject->bpidx)->vtxMin.z);
 
-			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
+			fLength = sqrtf(powf(fLengthX, 2) + powf(fLengthZ, 2));	//頂点と中心の距離を求める
 			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
 			//0 - 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
 			rot = FIX_ROT(-fAngle - pObject->rot.y);
@@ -390,7 +390,7 @@ void CollisionObjBullet(int nCount)
 			fLengthX = pObject->pos.x - (pObject->pos.x + (pbprint + pObject->bpidx)->vtxMax.x);
 			fLengthZ = pObject->pos.z - (pObject->pos.z + (pbprint + pObject->bpidx)->vtxMin.z);
 
-			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
+			fLength = sqrtf(powf(fLengthX, 2) + powf(fLengthZ, 2));	//頂点と中心の距離を求める
 			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
 			//0 + 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
 			rot = FIX_ROT(-fAngle - pObject->rot.y);
@@ -406,7 +406,7 @@ void CollisionObjBullet(int nCount)
 			fLengthX = pObject->pos.x - (pObject->pos.x + (pbprint + pObject->bpidx)->vtxMax.x);
 			fLengthZ = pObject->pos.z - (pObject->pos.z + (pbprint + pObject->bpidx)->vtxMax.z);
 
-			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
+			fLength = sqrtf(powf(fLengthX, 2) + powf(fLengthZ, 2));	//頂点と中心の距離を求める
 			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
 			//PI - 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
 			rot = FIX_ROT(D3DX_PI - fAngle - pObject->rot.y);
@@ -422,7 +422,7 @@ void CollisionObjBullet(int nCount)
 			fLengthX = pObject->pos.x - (pObject->pos.x + (pbprint + pObject->bpidx)->vtxMin.x);
 			fLengthZ = pObject->pos.z - (pObject->pos.z + (pbprint + pObject->bpidx)->vtxMax.z);
 
-			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
+			fLength = sqrtf(powf(fLengthX, 2) + powf(fLengthZ, 2));	//頂点と中心の距離を求める
 			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
 			//-PI + 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
 			rot = FIX_ROT(-D3DX_PI - fAngle - pObject->rot.y);
@@ -562,7 +562,7 @@ void CollisionEnemyBullet(int nCount)
 			fLengthX = -EXITHUMAN_WIDTH / 2;
 			fLengthZ = -EXITHUMAN_HEIGHT / 2;
 
-			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
+			fLength = sqrtf(powf(fLengthX, 2) + powf(fLengthZ, 2));	//頂点と中心の距離を求める
 			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
 																	//0 - 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
 			rot = FIX_ROT(-fAngle - pEnemy->rot.y);
@@ -578,7 +578,7 @@ void CollisionEnemyBullet(int nCount)
 			fLengthX = EXITHUMAN_WIDTH / 2;
 			fLengthZ = -EXITHUMAN_HEIGHT / 2;
 
-			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
+			fLength = sqrtf(powf(fLengthX, 2) + powf(fLengthZ, 2));	//頂点と中心の距離を求める
 			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
 																	//0 + 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
 			rot = FIX_ROT(-fAngle - pEnemy->rot.y);
@@ -594,7 +594,7 @@ void CollisionEnemyBullet(int nCount)
 			fLengthX = -EXITHUMAN_WIDTH / 2;
 			fLengthZ = EXITHUMAN_HEIGHT / 2;
 
-			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
+			fLength = sqrtf(powf(fLengthX, 2) + powf(fLengthZ, 2));	//頂点と中心の距離を求める
 			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
 																	//PI - 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
 			rot = FIX_ROT(D3DX_PI - fAngle - pEnemy->rot.y);
@@ -610,7 +610,7 @@ void CollisionEnemyBullet(int nCount)
 			fLengthX = EXITHUMAN_WIDTH / 2;
 			fLengthZ = EXITHUMAN_HEIGHT / 2;
 
-			fLength = sqrtf(pow(fLengthX, 2) + pow(fLengthZ, 2));	//頂点と中心の距離を求める
+			fLength = sqrtf(powf(fLengthX, 2) + powf(fLengthZ, 2));	//頂点と中心の距離を求める
 			fAngle = atan2f(fLengthX * 2, fLengthZ * 2);			//頂点と中心の角度を求める
 																	//-PI + 計算で出した角度 + オブジェクトの角度を -PI ~ PIに修正
 			rot = FIX_ROT(-D3DX_PI - fAngle - pEnemy->rot.y);
