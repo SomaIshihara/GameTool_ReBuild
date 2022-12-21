@@ -42,6 +42,8 @@ typedef enum
 #define TASUKIGAKE(ax,az,bx,bz)	((az * bx) - (ax * bz))
 #define PLAYER_POS			D3DXVECTOR3(0.0f, 0.0f, -960.0f)
 #define OBJ_RED_ALPHA		(0.5f)	//赤さんの不透明度
+#define NUMDATA(x)			(x)		//文字表示に使用。単に数字を入れただけ
+#define CHARDATA(x)			(x - 0x37)	//文字表示に使用。文字を上のやつを考慮した数字に変換する
 
 //頂点情報[2D]
 typedef struct
