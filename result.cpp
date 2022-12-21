@@ -30,10 +30,10 @@ void InitResult(void)
 
 	//テクスチャ読み込み
 	D3DXCreateTextureFromFile(pDevice,
-		"data\\TEXTURE\\kariClear.png",
+		"data\\TEXTURE\\ESCAPE_SUCCESS.png",
 		&g_pTextureResult[0]);
 	D3DXCreateTextureFromFile(pDevice,
-		"data\\TEXTURE\\kariOver.png",
+		"data\\TEXTURE\\ESCAPE_FAILURE.png",
 		&g_pTextureResult[1]);
 
 	//頂点バッファの生成
@@ -50,10 +50,10 @@ void InitResult(void)
 	g_pVtxbuffResult->Lock(0, 0, (void **)&pVtx, 0);
 
 	//頂点座標（相対座標）
-	pVtx[0].pos = D3DXVECTOR3(-80.0f, 60.0f, 0.0f);
-	pVtx[1].pos = D3DXVECTOR3(80.0f, 60.0f, 0.0f);
-	pVtx[2].pos = D3DXVECTOR3(-80.0f, -60.0f, 0.0f);
-	pVtx[3].pos = D3DXVECTOR3(80.0f, -60.0f, 0.0f);
+	pVtx[0].pos = D3DXVECTOR3(-96.0f, 16.0f, 0.0f);
+	pVtx[1].pos = D3DXVECTOR3(96.0f, 16.0f, 0.0f);
+	pVtx[2].pos = D3DXVECTOR3(-96.0f, -16.0f, 0.0f);
+	pVtx[3].pos = D3DXVECTOR3(96.0f, -16.0f, 0.0f);
 
 	//法線ベクトル
 	pVtx[0].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);

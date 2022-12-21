@@ -13,10 +13,11 @@
 #include "title.h"
 #include "game.h"
 #include "result.h"
+#include "player.h"
 
 //マクロ定義
 #define WINDOW_NAME		"hogehoge"
-#define PROC_SPEED	(1000/60)
+#define PROC_SPEED	(1000 / MAX_FPS)
 #define FPS_SPEED	(500)
 #define SHOWCURSOR_COUNTER		(2)	//カーソル表示非表示が正常にされるカウンタ
 
@@ -34,6 +35,7 @@ LPDIRECT3DDEVICE9 g_pD3DDevice = NULL;	//Direct3Dデバイスへのポインタ
 int g_nCountFPS;			//FPSカウンタ
 MODE g_mode = MODE_TITLE;
 bool g_bShowCursor = true;
+bool g_bDebug = true;
 
 //========================
 //メイン関数
@@ -374,6 +376,12 @@ void Update(void)
 	//キーボードの更新
 	UpdateKeyboard();
 
+	//デバッグ表示切替
+	if (GetKeyboardTrigger(DIK_F2) == true)
+	{
+		g_bDebug = g_bDebug ? false : true;
+	}
+
 	//ファイル
 	UpdateFile();
 
@@ -406,31 +414,53 @@ void Update(void)
 //========================
 void Draw(void)
 {
+	Camera *pCamera = GetCamera();
+	Player *pPlayer = GetPlayer();
+
 	//画面クリア（バックバッファとZバッファのクリア
-#if 1
+#if 0
 	g_pD3DDevice->Clear(0, NULL,
 		(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
 		D3DCOLOR_RGBA(0, 0, 0, 0), 1.0f, 0);
 #endif
-#if 0
+#if 1
 	g_pD3DDevice->Clear(0, NULL,
 		(D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER),
-		D3DCOLOR_RGBA(104, 199, 236, 0), 1.0f, 0);
+		D3DCOLOR_RGBA(50, 50, 50, 0), 1.0f, 0);
 #endif
 
 
 	//描画開始
 	if (SUCCEEDED(g_pD3DDevice->BeginScene()))
 	{//成功した場合
-		 //FPSを文字にして送る
-		PrintDebugProc("FPS:%d\n\n", g_nCountFPS);
+		if (g_bDebug == true)
+		{
+#ifdef _DEBUG
+			//FPSを文字にして送る
+			PrintDebugProc("FPS:%d\n\n", g_nCountFPS);
+#endif // _DEBUG
 
-		//操作方法を文字にして送る
-		PrintDebugProc("移動:WASD, 弾発射:マウス右クリック, 視点移動:マウス移動(F1で有効無効切り替え)\n");
-		PrintDebugProc("[ゲーム画面以外]マウス左クリック:遷移\n");
-		PrintDebugProc("[ゲーム画面]クリア判定:F2,ゲームオーバー判定:F3\n");
-		PrintDebugProc("[ゲーム画面]大人の壁表示:F4\n\n");
-		//PrintDebugProc("オブジェクト再生成:F5\n\n");
+#if 1
+			//操作方法を文字にして送る
+			PrintDebugProc("[共通]デバッグ表示/非表示切り替え:F2\n");
+			PrintDebugProc("[ゲーム画面以外]マウス左クリック:遷移\n");
+			PrintDebugProc("[ゲーム画面]移動:WASD, 弾発射:マウス左クリック\n");
+			PrintDebugProc("[ゲーム画面]視点移動:マウス移動(F1で有効無効切り替え)\n");
+			PrintDebugProc("[ゲーム画面]大人の壁表示:F4\n\n");
+#endif
+
+#ifdef _DEBUG
+			//デバッグ情報を文字にして送る
+			PrintDebugProc("posV = (x = %d, y = %d, z = %d)\nposR = (x = %d, y = %d, z = %d)\nvecU = (x = %f, y = %f, z = %f)\nRot = (x = %f, y = %f, z = %f)\n",
+				(int)pCamera->posV.x, (int)pCamera->posV.y, (int)pCamera->posV.z,
+				(int)pCamera->posR.x, (int)pCamera->posR.y, (int)pCamera->posR.z,
+				pCamera->vecU.x, pCamera->vecU.y, pCamera->vecU.z,
+				pCamera->rot.x, pCamera->rot.y, pCamera->rot.z);
+
+			//プレイヤー位置表示
+			PrintDebugProc("Player.Pos = (x = %f, y = %f, z = %f)", pPlayer->pos.x, pPlayer->pos.y, pPlayer->pos.z);
+#endif // _DEBUG
+		}
 
 		//カメラ設定
 		SetCamera();

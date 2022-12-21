@@ -296,9 +296,6 @@ void DrawPlayer(void)
 	D3DMATERIAL9 matDef;			//現在のマテリアル保存用
 	D3DXMATERIAL *pMat;				//マテリアルデータへのポインタ
 
-	//プレイヤー位置表示
-	PrintDebugProc("Player.Pos = (x = %f, y = %f, z = %f)", g_player.pos.x, g_player.pos.y, g_player.pos.z);
-
 	//"プレイヤーの"ワールドマトリックス初期化
 	D3DXMatrixIdentity(&g_player.mtxWorld);
 

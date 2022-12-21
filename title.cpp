@@ -29,7 +29,7 @@ void InitTitle(void)
 
 	//テクスチャ読み込み
 	D3DXCreateTextureFromFile(pDevice,
-		"data\\TEXTURE\\kariTitle.png",
+		"data\\TEXTURE\\ESCAPECiTY_LOGO.png",
 		&g_pTextureTitle);
 
 	//頂点バッファの生成
@@ -46,10 +46,10 @@ void InitTitle(void)
 	g_pVtxbuffTitle->Lock(0, 0, (void **)&pVtx, 0);
 
 	//頂点座標（相対座標）
-	pVtx[0].pos = D3DXVECTOR3(-80.0f, 60.0f, 0.0f);
-	pVtx[1].pos = D3DXVECTOR3(80.0f, 60.0f, 0.0f);
-	pVtx[2].pos = D3DXVECTOR3(-80.0f, -60.0f, 0.0f);
-	pVtx[3].pos = D3DXVECTOR3(80.0f, -60.0f, 0.0f);
+	pVtx[0].pos = D3DXVECTOR3(-64.0f, 40.0f, 0.0f);
+	pVtx[1].pos = D3DXVECTOR3(64.0f, 40.0f, 0.0f);
+	pVtx[2].pos = D3DXVECTOR3(-64.0f, -40.0f, 0.0f);
+	pVtx[3].pos = D3DXVECTOR3(64.0f, -40.0f, 0.0f);
 
 	//法線ベクトル
 	pVtx[0].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);

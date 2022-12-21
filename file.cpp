@@ -305,15 +305,15 @@ void LoadMapFile(void)
 
 						//X座標読み取り
 						pSprit = strtok(NULL, " =\n");
-						g_pos.x = atof(pSprit);
+						g_pos.x = (float)atof(pSprit);
 
 						//Y座標読み取り
 						pSprit = strtok(NULL, " =\n");
-						g_pos.y = atof(pSprit);
+						g_pos.y = (float)atof(pSprit);
 
 						//Z座標読み取り
 						pSprit = strtok(NULL, " =\n");
-						g_pos.z = atof(pSprit);
+						g_pos.z = (float)atof(pSprit);
 					}
 					else if (strncmp(&aCode[0], CODE_ROT, sizeof CODE_ROT / sizeof(char) - 1) == 0)
 					{
@@ -321,15 +321,15 @@ void LoadMapFile(void)
 
 						//X座標読み取り
 						pSprit = strtok(NULL, " =\n");
-						g_rot.x = (atof(pSprit) / 180) * D3DX_PI;
+						g_rot.x = ((float)atof(pSprit) / 180) * D3DX_PI;
 
 						//Y座標読み取り
 						pSprit = strtok(NULL, " =\n");
-						g_rot.y = (atof(pSprit) / 180) * D3DX_PI;
+						g_rot.y = ((float)atof(pSprit) / 180) * D3DX_PI;
 
 						//Z座標読み取り
 						pSprit = strtok(NULL, " =\n");
-						g_rot.z = (atof(pSprit) / 180) * D3DX_PI;
+						g_rot.z = ((float)atof(pSprit) / 180) * D3DX_PI;
 					}
 					else if (strncmp(&aCode[0], CODE_STATE, sizeof CODE_STATE / sizeof(char) - 1) == 0)
 					{//状態指定
@@ -470,15 +470,15 @@ void LoadMapFile(void)
 
 						//X座標読み取り
 						pSprit = strtok(NULL, " =\n");
-						g_pos.x = atof(pSprit);
+						g_pos.x = (float)atof(pSprit);
 
 						//Y座標読み取り
 						pSprit = strtok(NULL, " =\n");
-						g_pos.y = atof(pSprit);
+						g_pos.y = (float)atof(pSprit);
 
 						//Z座標読み取り
 						pSprit = strtok(NULL, " =\n");
-						g_pos.z = atof(pSprit);
+						g_pos.z = (float)atof(pSprit);
 					}
 					else if (strncmp(&aCode[0], CODE_ROT, sizeof CODE_ROT / sizeof(char) - 1) == 0)
 					{
@@ -486,15 +486,15 @@ void LoadMapFile(void)
 
 															//X座標読み取り
 						pSprit = strtok(NULL, " =\n");
-						g_rot.x = (atof(pSprit) / 180) * D3DX_PI;
+						g_rot.x = ((float)atof(pSprit) / 180) * D3DX_PI;
 
 						//Y座標読み取り
 						pSprit = strtok(NULL, " =\n");
-						g_rot.y = (atof(pSprit) / 180) * D3DX_PI;
+						g_rot.y = ((float)atof(pSprit) / 180) * D3DX_PI;
 
 						//Z座標読み取り
 						pSprit = strtok(NULL, " =\n");
-						g_rot.z = (atof(pSprit) / 180) * D3DX_PI;
+						g_rot.z = ((float)atof(pSprit) / 180) * D3DX_PI;
 					}
 					else if (strncmp(&aCode[0], CODE_NAMEIDX, sizeof CODE_NAMEIDX / sizeof(char) - 1) == 0)
 					{//モデル番号設定

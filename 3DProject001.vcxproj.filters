@@ -43,17 +43,20 @@
     <Filter Include="ヘッダー ファイル\Transition">
       <UniqueIdentifier>{d3018829-cda9-4b93-8a6c-72c53a9df157}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Canbus">
+      <UniqueIdentifier>{af1055fa-9eef-48e5-a9a4-fe263aa9d47e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Canbus">
+      <UniqueIdentifier>{ec80e2f1-a9bb-4125-8d01-39bf1b058ba5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Sys">
+      <UniqueIdentifier>{fc43efb1-b244-48a6-a80c-b41b906980a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Sys">
+      <UniqueIdentifier>{fa9b92b8-92b5-47db-a281-68a3b96b3ce6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="input.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="debucproc.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="camera.cpp">
       <Filter>ソース ファイル\View</Filter>
     </ClCompile>
@@ -84,9 +87,6 @@
     <ClCompile Include="explosion.cpp">
       <Filter>ソース ファイル\Effect</Filter>
     </ClCompile>
-    <ClCompile Include="file.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="sky.cpp">
       <Filter>ソース ファイル\Object</Filter>
     </ClCompile>
@@ -102,20 +102,26 @@
     <ClCompile Include="enemy.cpp">
       <Filter>ソース ファイル\Model</Filter>
     </ClCompile>
+    <ClCompile Include="timer.cpp">
+      <Filter>ソース ファイル\Canbus</Filter>
+    </ClCompile>
+    <ClCompile Include="debucproc.cpp">
+      <Filter>ソース ファイル\Sys</Filter>
+    </ClCompile>
+    <ClCompile Include="file.cpp">
+      <Filter>ソース ファイル\Sys</Filter>
+    </ClCompile>
+    <ClCompile Include="input.cpp">
+      <Filter>ソース ファイル\Sys</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>ソース ファイル\Sys</Filter>
+    </ClCompile>
     <ClCompile Include="sound.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Sys</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="input.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="main.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="debugproc.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="camera.h">
       <Filter>ヘッダー ファイル\View</Filter>
     </ClInclude>
@@ -146,9 +152,6 @@
     <ClInclude Include="explosion.h">
       <Filter>ヘッダー ファイル\Effect</Filter>
     </ClInclude>
-    <ClInclude Include="file.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="sky.h">
       <Filter>ヘッダー ファイル\Object</Filter>
     </ClInclude>
@@ -164,8 +167,23 @@
     <ClInclude Include="enemy.h">
       <Filter>ヘッダー ファイル\Model</Filter>
     </ClInclude>
+    <ClInclude Include="timer.h">
+      <Filter>ヘッダー ファイル\Canbus</Filter>
+    </ClInclude>
+    <ClInclude Include="debugproc.h">
+      <Filter>ヘッダー ファイル\Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="file.h">
+      <Filter>ヘッダー ファイル\Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>ヘッダー ファイル\Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>ヘッダー ファイル\Sys</Filter>
+    </ClInclude>
     <ClInclude Include="sound.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Sys</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

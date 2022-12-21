@@ -16,6 +16,7 @@
 #include "sky.h"
 #include "object.h"
 #include "model.h"
+#include "timer.h"
 #include "file.h"
 #include "input.h"
 #include "camera.h"
@@ -25,6 +26,7 @@
 
 //グローバル
 int g_nCnterSafeAreaTime;
+int g_nCnterTimer;
 
 //========================
 //初期化処理
@@ -33,6 +35,7 @@ void InitGame(void)
 {
 	//変数初期化
 	g_nCnterSafeAreaTime = 0;
+	g_nCnterTimer = 0;
 
 	//オブジェクト初期化
 	InitSky();
@@ -44,6 +47,7 @@ void InitGame(void)
 	InitPlayer();
 	InitEnemy();
 	InitObject();
+	InitTimer();
 
 	//壁生成（デジャブ）
 	//普通の壁
@@ -110,6 +114,7 @@ void InitGame(void)
 void UninitGame(void)
 {
 	//終了処理
+	UninitTimer();
 	UninitObject();
 	UninitEnemy();
 	UninitPlayer();
@@ -154,6 +159,15 @@ void UpdateGame(void)
 	//オブジェクト
 	UpdateObject();
 
+	//タイマー
+	g_nCnterTimer++;
+	if (GetTimer() < MAX_TIME && g_nCnterTimer >= MAX_FPS)
+	{
+		g_nCnterTimer = 0;
+		AddTimer(1);
+	}
+	UpdateTimer();
+
 	//セーフエリアに入っているか確認
 	if (pPlayer->bIntoSafeArea == true)
 	{
@@ -172,20 +186,6 @@ void UpdateGame(void)
 
 	//[提出用]敵に当たったか
 	if (pPlayer->bInfection == true)
-	{
-		SetResult(RESULT_OVER);
-		SetMode(MODE_RESULT);
-		ResetCamera(200.0f, D3DXVECTOR2(0.0f, 100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-0.5f, 0.0f, 0.0f));
-	}
-
-	//リザルト移行
-	if (GetKeyboardTrigger(DIK_F2) == true)
-	{
-		SetResult(RESULT_CLEAR);
-		SetMode(MODE_RESULT);
-		ResetCamera(200.0f, D3DXVECTOR2(0.0f, 100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(-0.5f, 0.0f, 0.0f));
-	}
-	else if (GetKeyboardTrigger(DIK_F3) == true)
 	{
 		SetResult(RESULT_OVER);
 		SetMode(MODE_RESULT);
@@ -221,4 +221,7 @@ void DrawGame(void)
 
 	//オブジェクト
 	DrawObject();
+
+	//タイマー
+	DrawTimer();
 }

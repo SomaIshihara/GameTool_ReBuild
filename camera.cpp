@@ -163,13 +163,6 @@ void SetCamera(void)
 {
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();	//デバイスの取得
 
-	//情報を文字にして送る
-	PrintDebugProc("posV = (x = %d, y = %d, z = %d)\nposR = (x = %d, y = %d, z = %d)\nvecU = (x = %f, y = %f, z = %f)\nRot = (x = %f, y = %f, z = %f)\n",
-		(int)g_camera.posV.x, (int)g_camera.posV.y, (int)g_camera.posV.z,
-		(int)g_camera.posR.x, (int)g_camera.posR.y, (int)g_camera.posR.z,
-		g_camera.vecU.x, g_camera.vecU.y, g_camera.vecU.z,
-		g_camera.rot.x, g_camera.rot.y, g_camera.rot.z);
-
 	//プロジェクションマトリックス初期化
 	D3DXMatrixIdentity(&g_camera.mtxProjection);
 
