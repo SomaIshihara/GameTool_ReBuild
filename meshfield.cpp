@@ -32,7 +32,7 @@ void InitMeshfield(void)
 
 	//テクスチャ読み込み
 	D3DXCreateTextureFromFile(pDevice,
-		"data\\TEXTURE\\map_Route.png",
+		"data\\TEXTURE\\map.png",
 		&g_pTextureMeshfield);
 
 	//頂点バッファの生成

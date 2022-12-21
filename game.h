@@ -11,7 +11,7 @@
 
 //É}ÉNÉç
 #define SAFEAREA_MIN_X		(-80.0f)
-#define SAFEAREA_MIN_Z		(800.0f)
+#define SAFEAREA_MIN_Z		(798.0f)
 #define SAFEAREA_MAX_X		(80.0f)
 #define SAFEAREA_MAX_Z		(1120.0f)
 
