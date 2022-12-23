@@ -330,9 +330,9 @@ void DrawPlayer(void)
 		D3DXMatrixMultiply(&g_player.aModel[nCntModel].mtxWorld, &g_player.aModel[nCntModel].mtxWorld, &mtxTransModel);
 
 		//パーツの親マトリ設定
-		if (g_player.aModel[nCntModel].nIdxModelParent != -1)
+		if (g_player.aModel[nCntModel].mIdxModelParent != -1)
 		{
-			mtxParent = g_player.aModel[g_player.aModel[nCntModel].nIdxModelParent].mtxWorld;
+			mtxParent = g_player.aModel[g_player.aModel[nCntModel].mIdxModelParent].mtxWorld;
 		}
 		else
 		{

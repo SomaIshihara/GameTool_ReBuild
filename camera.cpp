@@ -13,7 +13,7 @@
 //マクロ
 #define CAMERA_MOVE_SPEED		(1.0f)		//カメラ移動速度
 #define CAMERA_KEY_ROT_SPEED	(0.005f)	//キーボード入力での回転速度
-#define CAMERA_MOU_ROT_SPEED	(0.003f)	//マウス移動での回転速度
+#define CAMERA_MOU_ROT_SPEED	(0.0012f)	//マウス移動での回転速度
 #define CAMERA_LENGTH			(5200.0f)	//カメラが見える最大距離
 #define CAMERA_ROT_X_MIN		(-0.5f)		//カメラのX角度の最低値[rad]
 #define CAMERA_ROT_X_MAX		(0.035f)	//カメラのX角度の最低値[rad]

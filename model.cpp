@@ -81,43 +81,43 @@ void InitModel(void)
 
 	//äKëwç\ë¢ê›íË
 	//ëÃ
-	g_aModel[0][0].nIdxModelParent = -1;
+	g_aModel[0][0].mIdxModelParent = -1;
 	g_aModel[0][0].pos = D3DXVECTOR3(0.0f, 35.0f, 0.0f);
 	g_aModel[0][0].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	//ì™
-	g_aModel[0][1].nIdxModelParent = 0;
+	g_aModel[0][1].mIdxModelParent = 0;
 	g_aModel[0][1].pos = D3DXVECTOR3(0.0f, 10.0f, 0.0f);
 	g_aModel[0][1].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	//ç∂òr
-	g_aModel[0][2].nIdxModelParent = 0;
+	g_aModel[0][2].mIdxModelParent = 0;
 	g_aModel[0][2].pos = D3DXVECTOR3(-5.0f, 7.0f, 0.0f);
 	g_aModel[0][2].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	//ç∂éË
-	g_aModel[0][3].nIdxModelParent = 2;
+	g_aModel[0][3].mIdxModelParent = 2;
 	g_aModel[0][3].pos = D3DXVECTOR3(-10.0f, 0.0f, 0.0f);
 	g_aModel[0][3].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	//âEòr
-	g_aModel[0][4].nIdxModelParent = 0;
+	g_aModel[0][4].mIdxModelParent = 0;
 	g_aModel[0][4].pos = D3DXVECTOR3(5.0f, 7.0f, 0.0f);
 	g_aModel[0][4].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	//âEéË
-	g_aModel[0][5].nIdxModelParent = 4;
+	g_aModel[0][5].mIdxModelParent = 4;
 	g_aModel[0][5].pos = D3DXVECTOR3(10.0f, 0.0f, 0.0f);
 	g_aModel[0][5].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	//ç∂ë⁄
-	g_aModel[0][6].nIdxModelParent = 0;
+	g_aModel[0][6].mIdxModelParent = 0;
 	g_aModel[0][6].pos = D3DXVECTOR3(-3.0f, -8.0f, 0.0f);
 	g_aModel[0][6].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	//ç∂ë´
-	g_aModel[0][7].nIdxModelParent = 6;
+	g_aModel[0][7].mIdxModelParent = 6;
 	g_aModel[0][7].pos = D3DXVECTOR3(0.0f, -12.0f, 0.0f);
 	g_aModel[0][7].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	//âEë⁄
-	g_aModel[0][8].nIdxModelParent = 0;
+	g_aModel[0][8].mIdxModelParent = 0;
 	g_aModel[0][8].pos = D3DXVECTOR3(3.0f, -8.0f, 0.0f);
 	g_aModel[0][8].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	//âEë´
-	g_aModel[0][9].nIdxModelParent = 8;
+	g_aModel[0][9].mIdxModelParent = 8;
 	g_aModel[0][9].pos = D3DXVECTOR3(0.0f, -12.0f, 0.0f);
 	g_aModel[0][9].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 }

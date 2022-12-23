@@ -251,9 +251,9 @@ void DrawEnemy(void)
 				D3DXMatrixMultiply(&g_aEnemy[nCntEnemy].aModel[nCntModel].mtxWorld, &g_aEnemy[nCntEnemy].aModel[nCntModel].mtxWorld, &mtxTransModel);
 
 				//パーツの親マトリ設定
-				if (g_aEnemy[nCntEnemy].aModel[nCntModel].nIdxModelParent != -1)
+				if (g_aEnemy[nCntEnemy].aModel[nCntModel].mIdxModelParent != -1)
 				{
-					mtxParent = g_aEnemy[nCntEnemy].aModel[g_aEnemy[nCntEnemy].aModel[nCntModel].nIdxModelParent].mtxWorld;
+					mtxParent = g_aEnemy[nCntEnemy].aModel[g_aEnemy[nCntEnemy].aModel[nCntModel].mIdxModelParent].mtxWorld;
 				}
 				else
 				{
