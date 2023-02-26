@@ -10,10 +10,7 @@
 #include "light.h"
 #include "file.h"
 #include "debugproc.h"
-#include "title.h"
 #include "game.h"
-#include "result.h"
-#include "player.h"
 
 //マクロ定義
 #define WINDOW_NAME		"hogehoge"
@@ -114,7 +111,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hInstancePrev, LPSTR lpCmdLine
 	UpdateWindow(hWnd);
 
 	//カーソルを消す
-	SetShowCursor(false);
+	SetShowCursor(true);
 
 	//メッセージループ
 	while (1)
@@ -337,9 +334,7 @@ void Uninit(void)
 {
 	//終了処理（自分が作ったものを捨てる）
 	//まとまったもの
-	UninitResult();
 	UninitGame();
-	UninitTitle();
 
 	//単品
 	UninitFile();
@@ -389,13 +384,13 @@ void Update(void)
 	switch (g_mode)
 	{
 	case MODE_TITLE:
-		UpdateTitle();
+		UpdateGame();
 		break;
 	case MODE_GAME:
 		UpdateGame();
 		break;
 	case MODE_RESULT:
-		UpdateResult();
+		UpdateGame();
 		break;
 	}
 
@@ -415,7 +410,6 @@ void Update(void)
 void Draw(void)
 {
 	Camera *pCamera = GetCamera();
-	Player *pPlayer = GetPlayer();
 
 	//画面クリア（バックバッファとZバッファのクリア
 #if 0
@@ -433,35 +427,6 @@ void Draw(void)
 	//描画開始
 	if (SUCCEEDED(g_pD3DDevice->BeginScene()))
 	{//成功した場合
-		if (g_bDebug == true)
-		{
-#ifdef _DEBUG
-			//FPSを文字にして送る
-			PrintDebugProc("FPS:%d\n\n", g_nCountFPS);
-#endif // _DEBUG
-
-#if 1
-			//操作方法を文字にして送る
-			PrintDebugProc("[共通]デバッグ表示/非表示切り替え:F2\n");
-			PrintDebugProc("[ゲーム画面以外]マウス左クリック:遷移\n");
-			PrintDebugProc("[ゲーム画面]移動:WASD, 弾発射:マウス左クリック\n");
-			PrintDebugProc("[ゲーム画面]視点移動:マウス移動(F1で有効無効切り替え)\n");
-			PrintDebugProc("[ゲーム画面]大人の壁表示:F4\n\n");
-#endif
-
-#ifdef _DEBUG
-			//デバッグ情報を文字にして送る
-			PrintDebugProc("posV = (x = %d, y = %d, z = %d)\nposR = (x = %d, y = %d, z = %d)\nvecU = (x = %f, y = %f, z = %f)\nRot = (x = %f, y = %f, z = %f)\n",
-				(int)pCamera->posV.x, (int)pCamera->posV.y, (int)pCamera->posV.z,
-				(int)pCamera->posR.x, (int)pCamera->posR.y, (int)pCamera->posR.z,
-				pCamera->vecU.x, pCamera->vecU.y, pCamera->vecU.z,
-				pCamera->rot.x, pCamera->rot.y, pCamera->rot.z);
-
-			//プレイヤー位置表示
-			PrintDebugProc("Player.Pos = (x = %f, y = %f, z = %f)", pPlayer->pos.x, pPlayer->pos.y, pPlayer->pos.z);
-#endif // _DEBUG
-		}
-
 		//カメラ設定
 		SetCamera();
 
@@ -470,13 +435,13 @@ void Draw(void)
 		switch (g_mode)
 		{
 		case MODE_TITLE:
-			DrawTitle();
+			DrawGame();
 			break;
 		case MODE_GAME:
 			DrawGame();
 			break;
 		case MODE_RESULT:
-			DrawResult();
+			DrawGame();
 			break;
 		}
 
@@ -546,13 +511,13 @@ void SetMode(MODE mode)
 	switch (g_mode)
 	{
 	case MODE_TITLE:
-		UninitTitle();
+		UninitGame();
 		break;
 	case MODE_GAME:
 		UninitGame();
 		break;
 	case MODE_RESULT:
-		UninitResult();
+		UninitGame();
 		break;
 	}
 
@@ -560,13 +525,13 @@ void SetMode(MODE mode)
 	switch (mode)
 	{
 	case MODE_TITLE:
-		InitTitle();
+		InitGame();
 		break;
 	case MODE_GAME:
 		InitGame();
 		break;
 	case MODE_RESULT:
-		InitResult();
+		InitGame();
 		break;
 	}
 

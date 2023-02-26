@@ -1,427 +1,319 @@
-//==========================================
+//==========================================================================================
 //
 //入力プログラム[input.cpp]
 //Author:石原颯馬
 //
-//==========================================
+//==========================================================================================
+//Ver.2.2.2（プロジェクト制作中のもの）
+//使用可能な入力:キーボード・マウス（カーソル位置・移動量）・ゲームパッド（1~4台）
+//==========================================================================================
 #include "input.h"
-#include <assert.h>
+#include "sound.h"
 
 //マクロ定義
-#define NUM_KEY_MAX	(256)	//キーの最大数
-#define MOUSE_BUTTON_MAX	(3)	//マウスボタンの最大数
-#define REPEATE_TIME	(150)	//リピートの間隔
+#define REPEATE_TIME		(150)	//リピートの間隔
 #define GAMEPAD_BUTTON_NUM	(14)	//ゲームパッドのボタン数
-#define STICK_DEADZONE	(655)		//遊び
+#define STICK_DEADZONE		(655)	//遊び
 
-//グローバル変数
-//キーボード部
-LPDIRECTINPUT8 g_pInputKeyboard = NULL;
-LPDIRECTINPUTDEVICE8 g_pDevKeyboard = NULL;
-BYTE g_aKeyState[NUM_KEY_MAX];				//プレス情報
-BYTE g_akeyStateTrigger[NUM_KEY_MAX];		//トリガー情報
-BYTE g_akeyStateRelease[NUM_KEY_MAX];		//リリース情報
-BYTE g_akeyStateRepeate[NUM_KEY_MAX];		//リピート情報
-DWORD g_aKeyboardCurrentTime[NUM_KEY_MAX];			//現在の時間（リピート使用）
-DWORD g_aKeyboardExecLastTime[NUM_KEY_MAX];			//最後にtrueを返した時間（リピート使用)
+//プロト
+void AdjustStick(SHORT* pStick);
 
-//ゲームパッド（XInput使用）部
-XINPUT_STATE g_XinputState;					//XInputの状態
-WORD g_wButtonTrigger;
-WORD g_wButtonRelease;
-WORD g_wButtonRepeate;
-DWORD g_GamepadCurrentTime;
-DWORD g_GamepadExecLastTime;
-bool g_bUseGamepad;
-
-//マウス部
-LPDIRECTINPUT8 g_pInputMouse = NULL;
-LPDIRECTINPUTDEVICE8 g_pDevMouse = NULL;
-DIMOUSESTATE g_MouseState;						//マウスの情報（プレス）
-BYTE g_aMouseStateTrigger[MOUSE_BUTTON_MAX];	//ボタンのトリガー情報
-BYTE g_aMouseStateRelease[MOUSE_BUTTON_MAX];	//ボタンのリリース情報
-BYTE g_aMouseStateRepeate[MOUSE_BUTTON_MAX];	//リピート情報
-DWORD g_aMouseCurrentTime[NUM_KEY_MAX];			//現在の時間（リピート使用）
-DWORD g_aMouseExecLastTime[NUM_KEY_MAX];		//最後にtrueを返した時間（リピート使用)
-D3DXVECTOR3 g_posPoint;						//マウス座標
-D3DXVECTOR3 g_moveMouse;					//マウス移動量
-
+//==================================================
+//						キーボード
+//==================================================
 //========================
-//入力初期化処理
+//キーボードコンストラクタ（今は何もしない）
 //========================
-HRESULT InitKeyboard(HINSTANCE hInstance, HWND hWnd)
+cKeyboard::cKeyboard()
 {
-	int nCntInit;		//カウンタ
+	
+}
 
-	//キーボード部
+//========================
+//キーボードデストラクタ（終了処理）
+//========================
+cKeyboard::~cKeyboard()
+{
+	//入力デバイスの破棄
+	if (this->m_pDevKeyboard != NULL)
+	{
+		this->m_pDevKeyboard->Unacquire();
+		this->m_pDevKeyboard->Release();
+		this->m_pDevKeyboard = NULL;
+	}
+
+	//DirectInputオブジェクトの破棄
+	if (this->m_pInputKeyboard != NULL)
+	{
+		this->m_pInputKeyboard->Release();
+		this->m_pInputKeyboard = NULL;
+	}
+}
+
+//========================
+//キーボード初期化処理
+//========================
+HRESULT cKeyboard::Init(HINSTANCE hInstance, HWND hWnd)
+{
 	//DireceInputオブジェクトの生成
-	if (FAILED(DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void **)&g_pInputKeyboard, NULL)))
+	if (FAILED(DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&this->m_pInputKeyboard, NULL)))
 	{
 		return E_FAIL;
 	}
 
 	//デバイス取得
-	if (FAILED(g_pInputKeyboard->CreateDevice(GUID_SysKeyboard, &g_pDevKeyboard, NULL)))
+	if (FAILED(this->m_pInputKeyboard->CreateDevice(GUID_SysKeyboard, &this->m_pDevKeyboard, NULL)))
 	{
 		return E_FAIL;
 	}
 
 	//データフォーマット設定
-	if (FAILED(g_pDevKeyboard->SetDataFormat(&c_dfDIKeyboard)))
+	if (FAILED(this->m_pDevKeyboard->SetDataFormat(&c_dfDIKeyboard)))
 	{
 		return E_FAIL;
 	}
 
 	//協調モード設定
-	if (FAILED(g_pDevKeyboard->SetCooperativeLevel(hWnd,
+	if (FAILED(this->m_pDevKeyboard->SetCooperativeLevel(hWnd,
 		(DISCL_FOREGROUND | DISCL_NONEXCLUSIVE))))
 	{
 		return E_FAIL;
 	}
 
 	//キーボードへのアクセス権を獲得
-	g_pDevKeyboard->Acquire();
-
-
-	//マウス部
-	//DireceInputオブジェクトの生成
-	if (FAILED(DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void **)&g_pInputMouse, NULL)))
-	{
-		return E_FAIL;
-	}
-
-	//デバイス取得
-	if (FAILED(g_pInputMouse->CreateDevice(GUID_SysMouse, &g_pDevMouse, NULL)))
-	{
-		return E_FAIL;
-	}
-
-	//データフォーマット設定
-	if (FAILED(g_pDevMouse->SetDataFormat(&c_dfDIMouse)))
-	{
-		return E_FAIL;
-	}
-
-	//協調モード設定
-	if (FAILED(g_pDevMouse->SetCooperativeLevel(hWnd,
-		(DISCL_FOREGROUND | DISCL_NONEXCLUSIVE))))
-	{
-		return E_FAIL;
-	}
-
-	//マウスへのアクセス権を獲得
-	g_pDevMouse->Acquire();
-
+	this->m_pDevKeyboard->Acquire();
 
 	//時間初期化
-	for (nCntInit = 0; nCntInit < NUM_KEY_MAX; nCntInit++)
+	for (int nCntKey = 0; nCntKey < NUM_KEY_MAX; nCntKey++)
 	{
-		g_aKeyboardCurrentTime[nCntInit] = 0;
-		g_aKeyboardExecLastTime[nCntInit] = timeGetTime() - REPEATE_TIME;
+		this->m_Key[nCntKey].currentTime = 0;
+		this->m_Key[nCntKey].execLastTime = timeGetTime() - REPEATE_TIME;
 	}
-	for (nCntInit = 0; nCntInit < MOUSE_BUTTON_MAX; nCntInit++)
-	{
-		g_aMouseCurrentTime[nCntInit] = 0;
-		g_aMouseExecLastTime[nCntInit] = timeGetTime() - REPEATE_TIME;
-	}
-
-	g_GamepadCurrentTime = 0;
-	g_GamepadExecLastTime = timeGetTime();
-	g_bUseGamepad = false;
 
 	return S_OK;
 }
 
 //========================
-//入力終了処理
+//キーボード更新処理
 //========================
-void UninitKeyboard(void)
-{
-	//入力デバイスの破棄
-	if (g_pDevKeyboard != NULL)
-	{
-		g_pDevKeyboard->Unacquire();
-		g_pDevKeyboard->Release();
-		g_pDevKeyboard = NULL;
-	}
-	if (g_pDevMouse != NULL)
-	{
-		g_pDevMouse->Unacquire();
-		g_pDevMouse->Release();
-		g_pDevMouse = NULL;
-	}
-
-	//DirectInputオブジェクトの破棄
-	if (g_pInputKeyboard != NULL)
-	{
-		g_pInputKeyboard->Release();
-		g_pInputKeyboard = NULL;
-	}
-	if (g_pInputMouse != NULL)
-	{
-		g_pInputMouse->Release();
-		g_pInputMouse = NULL;
-	}
-
-}
-
-//========================
-//入力更新処理
-//========================
-void UpdateKeyboard(void)
+void cKeyboard::Update(void)
 {
 	BYTE aKeyState[NUM_KEY_MAX];
-	DIMOUSESTATE MouseState;
-	XINPUT_STATE xInputState;
-	POINT point;
-	int nCntKey;
 
 	//入力デバイスからデバイスを取得
-	if (SUCCEEDED(g_pDevKeyboard->GetDeviceState(sizeof(aKeyState), &aKeyState[0])))
+	if (SUCCEEDED(this->m_pDevKeyboard->GetDeviceState(sizeof(aKeyState), &aKeyState[0])))
 	{
-		for (nCntKey = 0; nCntKey < NUM_KEY_MAX; nCntKey++) 
+		for (int nCntKey = 0; nCntKey < NUM_KEY_MAX; nCntKey++)
 		{
-			//トリガーとリリース
-			g_akeyStateTrigger[nCntKey] = (g_aKeyState[nCntKey] ^ aKeyState[nCntKey]) & aKeyState[nCntKey];
- 			g_akeyStateRelease[nCntKey] = (g_aKeyState[nCntKey] ^ aKeyState[nCntKey]) & ~aKeyState[nCntKey];
+			this->m_Key[nCntKey].trigger = (this->m_Key[nCntKey].state ^ aKeyState[nCntKey]) & aKeyState[nCntKey];
+			this->m_Key[nCntKey].release = (this->m_Key[nCntKey].state ^ aKeyState[nCntKey]) & ~aKeyState[nCntKey];
 
 			//リピート
-			g_aKeyboardCurrentTime[nCntKey] = timeGetTime();
-			if (aKeyState[nCntKey] && (g_aKeyboardCurrentTime[nCntKey] - g_aKeyboardExecLastTime[nCntKey]) > REPEATE_TIME)
+			this->m_Key->currentTime = timeGetTime();
+			if (aKeyState[nCntKey] && (this->m_Key->currentTime - this->m_Key->execLastTime) > REPEATE_TIME)
 			{
-				g_aKeyboardExecLastTime[nCntKey] = g_aKeyboardCurrentTime[nCntKey];
-				g_akeyStateRepeate[nCntKey] = aKeyState[nCntKey];
+				this->m_Key->execLastTime = this->m_Key->currentTime;
+				this->m_Key[nCntKey].repeate = aKeyState[nCntKey];
 			}
 			else
 			{
-				g_akeyStateRepeate[nCntKey] = 0;
+				this->m_Key[nCntKey].repeate = 0;
 			}
 			//プレス
-			g_aKeyState[nCntKey] = aKeyState[nCntKey];	//キーボードのプレス情報を保存
+			this->m_Key[nCntKey].state = aKeyState[nCntKey];	//キーボードのプレス情報を保存
 		}
 	}
 	else
 	{
-		g_pDevKeyboard->Acquire();
+		this->m_pDevKeyboard->Acquire();
 	}
+}
 
-
-	//マウス取得
-	if (SUCCEEDED(g_pDevMouse->GetDeviceState(sizeof(DIMOUSESTATE), &MouseState)))
+//========================
+//キーボード情報取得処理
+//========================
+bool cKeyboard::GetKeyboard(INPUTTYPE type, int nKey)
+{
+	switch (type)
 	{
-		for (nCntKey = 0; nCntKey < MOUSE_BUTTON_MAX; nCntKey++)
-		{
-			//トリガーとリリース
-			g_aMouseStateTrigger[nCntKey] = (g_MouseState.rgbButtons[nCntKey] ^ MouseState.rgbButtons[nCntKey]) & MouseState.rgbButtons[nCntKey];
-			g_aMouseStateRelease[nCntKey] = (g_MouseState.rgbButtons[nCntKey] ^ MouseState.rgbButtons[nCntKey]) & ~MouseState.rgbButtons[nCntKey];
-
-			//リピート
-			g_aMouseCurrentTime[nCntKey] = timeGetTime();
-			if (MouseState.rgbButtons[nCntKey] && (g_aMouseCurrentTime[nCntKey] - g_aMouseExecLastTime[nCntKey]) > REPEATE_TIME)
-			{
-				g_aMouseExecLastTime[nCntKey] = g_aMouseCurrentTime[nCntKey];
-				g_aMouseStateRepeate[nCntKey] = MouseState.rgbButtons[nCntKey];
-			}
-			else
-			{
-				g_aMouseStateRepeate[nCntKey] = 0;
-			}
-		}
-
-		//プレス
-		g_MouseState = MouseState;	//キーボードのプレス情報を保存
-
-		//移動量
-		g_moveMouse = D3DXVECTOR3(g_MouseState.lX, g_MouseState.lY, 0.0f);
+	case INPUTTYPE_PRESS:
+		return (this->m_Key[nKey].state & 0x80) ? true : false;
+		break;
+	case INPUTTYPE_TRIGGER:
+		return (this->m_Key[nKey].trigger & 0x80) ? true : false;
+		break;
+	case INPUTTYPE_RELEASE:
+		return (this->m_Key[nKey].release & 0x80) ? true : false;
+		break;
+	case INPUTTYPE_REPEATE:
+		return (this->m_Key[nKey].repeate & 0x80) ? true : false;
+		break;
 	}
-	else
-	{
-		g_pDevMouse->Acquire();
-	}
+}
 
-	//マウス座標取得
-	GetCursorPos(&point);
-	ScreenToClient(FindWindowA(CLASS_NAME, nullptr), &point);
-	g_posPoint.x = (float)point.x;
-	g_posPoint.y = (float)point.y;
+//==================================================
+//						ゲームパッド
+//==================================================
+//========================
+//ゲームパッドコンストラクタ（今は何もしない）
+//========================
+cGamePad::cGamePad()
+{
 
+}
+
+//========================
+//ゲームパッドデストラクタ（今は何もしない）
+//========================
+cGamePad::~cGamePad()
+{
+
+}
+
+//========================
+//ゲームパッド初期化処理
+//========================
+void cGamePad::Init(GAMEPAD_NO PadNum)
+{
+	//変数初期化
+	this->m_Pad[PadNum].currentTime = 0;
+	this->m_Pad[PadNum].execLastTime = timeGetTime();
+	this->m_PadNum = PadNum;
+	this->m_Pad[PadNum].bUse = false;
+}
+
+//========================
+//ゲームパッド終了処理
+//========================
+void cGamePad::Release(void)
+{
+	//XInput終了
+	XInputEnable(false);
+}
+
+//========================
+//ゲームパッド更新処理
+//========================
+void cGamePad::Update(void)
+{
+	XINPUT_STATE xInputState;
 
 	//ゲームパッドから情報取得
-	if (XInputGetState(0, &xInputState) == ERROR_SUCCESS)
+	for (int nCntGPad = 0; nCntGPad < MAX_USE_GAMEPAD; nCntGPad++)
 	{
-		g_bUseGamepad = true;
-	}
-	else
-	{
-		g_bUseGamepad = false;
-	}
-
-	//ボタントリガー情報取得
-	g_wButtonTrigger = (g_XinputState.Gamepad.wButtons ^ xInputState.Gamepad.wButtons) & xInputState.Gamepad.wButtons;
-
-	//ボタンリリース情報取得
-	g_wButtonRelease = (g_XinputState.Gamepad.wButtons ^ xInputState.Gamepad.wButtons) & ~xInputState.Gamepad.wButtons;
-
-	//リピート情報生成
-	g_GamepadCurrentTime = timeGetTime();
-	for (nCntKey = 0; nCntKey < GAMEPAD_BUTTON_NUM; nCntKey++)
-	{
-		if (g_XinputState.Gamepad.wButtons & 1 << nCntKey && (g_GamepadCurrentTime - g_GamepadExecLastTime) > REPEATE_TIME)
+		bool bOldUseGPad = this->m_Pad[this->m_PadNum].bUse;
+		if (XInputGetState(nCntGPad, &xInputState) == ERROR_SUCCESS)
 		{
-			g_GamepadExecLastTime = g_GamepadCurrentTime;
-			g_wButtonRepeate += 1 << nCntKey;
+			//使ってるよ
+			this->m_Pad[this->m_PadNum].bUse = true;
+
+			//ボタントリガー情報取得
+			this->m_Pad[this->m_PadNum].trigger = (this->m_Pad[this->m_PadNum].state.Gamepad.wButtons ^ xInputState.Gamepad.wButtons) & xInputState.Gamepad.wButtons;
+
+			//ボタンリリース情報取得
+			this->m_Pad[this->m_PadNum].release = (this->m_Pad[this->m_PadNum].state.Gamepad.wButtons ^ xInputState.Gamepad.wButtons) & ~xInputState.Gamepad.wButtons;
+
+			//リピート情報生成
+			this->m_Pad[this->m_PadNum].currentTime = timeGetTime();
+			for (int nCntKey = 0; nCntKey < GAMEPAD_BUTTON_NUM; nCntKey++)
+			{
+				if (this->m_Pad[this->m_PadNum].state.Gamepad.wButtons & 1 << nCntKey && (this->m_Pad[this->m_PadNum].currentTime - this->m_Pad[this->m_PadNum].execLastTime) > REPEATE_TIME)
+				{
+					this->m_Pad[this->m_PadNum].execLastTime = this->m_Pad[this->m_PadNum].currentTime;
+					this->m_Pad[this->m_PadNum].repeate += 1 << nCntKey;
+				}
+			}
+
+			//プレス情報その他もろもろ設定
+			this->m_Pad[this->m_PadNum].state = xInputState;
+
+			//スティック傾き調整
+			AdjustStick(&this->m_Pad[this->m_PadNum].state.Gamepad.sThumbLX);
+			AdjustStick(&this->m_Pad[this->m_PadNum].state.Gamepad.sThumbLY);
+			AdjustStick(&this->m_Pad[this->m_PadNum].state.Gamepad.sThumbRX);
+			AdjustStick(&this->m_Pad[this->m_PadNum].state.Gamepad.sThumbRY);
+		}
+		else
+		{
+			//使ってないよ
+			this->m_Pad[this->m_PadNum].bUse = false;
 		}
 	}
-
-	//プレス情報その他もろもろ設定
-	g_XinputState = xInputState;
 }
 
 //========================
-//プレス情報を返す処理
+//ゲームパッドボタン取得処理
 //========================
-bool GetKeyboardPress(int nKey)
+bool cGamePad::GetGamePadButton(INPUTTYPE type, int nButton)
 {
-	return (g_aKeyState[nKey] & 0x80) ? true : false;	//?が条件式作ることになってるみたいよ
-}
-
-//========================
-//トリガー情報を返す処理
-//========================
-bool GetKeyboardTrigger(int nKey)
-{
-	return (g_akeyStateTrigger[nKey] & 0x80) ? true : false;
-}
-
-//========================
-//リリース情報を返す処理
-//========================
-bool GetKeyboardRelease(int nKey)
-{
-	return (g_akeyStateRelease[nKey] & 0x80) ? true : false;
-}
-
-//========================
-//リピート情報を返す処理
-//========================
-bool GetKeyboardRepeate(int nKey)
-{
- 	return (g_akeyStateRepeate[nKey] & 0x80) ? true : false;
-}
-
-
-
-//========================
-//ゲームパッドのプレス情報を返す処理
-//=======================
-bool GetGamepadPress(int nButton)
-{
-	return g_XinputState.Gamepad.wButtons & nButton ? true : false;
-}
-
-//========================
-//ゲームパッドのトリガー情報を返す処理
-//=======================
-bool GetGamepadTrigger(int nButton)
-{
-	return g_wButtonTrigger & nButton ? true : false;
-}
-
-//========================
-//ゲームパッドのリリース情報を返す処理
-//=======================
-bool GetGamepadRelease(int nButton)
-{
-	return g_wButtonRelease & nButton ? true : false;
-}
-
-//========================
-//ゲームパッドのリピート情報を返す処理
-//=======================
-bool GetGamepadRepeate(int nButton)
-{
-	return g_wButtonRepeate & nButton ? true : false;
-}
-
-//========================
-//左スティックの横軸を返す処理
-//=======================
-SHORT GetLStickX(void)
-{
-	//-値最大なら+値最大に合わせる
-	if (g_XinputState.Gamepad.sThumbLX < -STICK_MAX)
+	if (this->m_Pad[this->m_PadNum].bUse == true)
 	{
-		g_XinputState.Gamepad.sThumbLX = -STICK_MAX;
-	}
-
-	if (abs(g_XinputState.Gamepad.sThumbLX) > STICK_DEADZONE)
-	{
-		return g_XinputState.Gamepad.sThumbLX;
+		switch (type)
+		{
+		case INPUTTYPE_PRESS:
+			return this->m_Pad[this->m_PadNum].state.Gamepad.wButtons & nButton ? true : false;
+			break;
+		case INPUTTYPE_TRIGGER:
+			return this->m_Pad[this->m_PadNum].trigger & nButton ? true : false;
+			break;
+		case INPUTTYPE_RELEASE:
+			return this->m_Pad[this->m_PadNum].release & nButton ? true : false;
+			break;
+		case INPUTTYPE_REPEATE:
+			return this->m_Pad[this->m_PadNum].repeate & nButton ? true : false;
+			break;
+		}
 	}
 	else
 	{
-		return 0;
+		return false;
 	}
 }
 
 //========================
-//左スティックの横軸を返す処理
-//=======================
-SHORT GetLStickY(void)
-{
-	//-値最大なら+値最大に合わせる
-	if (g_XinputState.Gamepad.sThumbLY < -STICK_MAX)
-	{
-		g_XinputState.Gamepad.sThumbLY = -STICK_MAX;
-	}
-
-	if (abs(g_XinputState.Gamepad.sThumbLY) > STICK_DEADZONE)
-	{
-		return g_XinputState.Gamepad.sThumbLY;
-	}
-	else
-	{
-		return 0;
-	}
-}
-
+//ゲームパッドスティック取得処理
 //========================
-//右スティックの横軸を返す処理
-//=======================
-SHORT GetRStickX(void)
+bool cGamePad::GetGamePadStick(char location, char dir)
 {
-	//-値最大なら+値最大に合わせる
-	if (g_XinputState.Gamepad.sThumbRX < -STICK_MAX)
+	if (this->m_Pad[this->m_PadNum].bUse == true)
 	{
-		g_XinputState.Gamepad.sThumbRX = -STICK_MAX;
-	}
-
-	if (abs(g_XinputState.Gamepad.sThumbRX) > STICK_DEADZONE)
-	{
-		return g_XinputState.Gamepad.sThumbRX;
+		if (location == 'L')
+		{//Lスティック指定
+			if (location == 'X')
+			{//X方向指定
+				return this->m_Pad->state.Gamepad.sThumbLX;
+			}
+			else if (location == 'Y')
+			{//Y方向指定
+				return this->m_Pad->state.Gamepad.sThumbLY;
+			}
+			else
+			{//そんなものはない
+				return 0;
+			}
+		}
+		else if (location == 'R')
+		{//Rスティック指定
+			if (location == 'X')
+			{//X方向指定
+				return this->m_Pad->state.Gamepad.sThumbRX;
+			}
+			else if (location == 'Y')
+			{//Y方向指定
+				return this->m_Pad->state.Gamepad.sThumbRY;
+			}
+			else
+			{//そんなものはない
+				return 0;
+			}
+		}
+		else
+		{//そんなものはない
+			return 0;
+		}
 	}
 	else
-	{
-		return 0;
-	}
-}
-//========================
-//右スティックの横軸を返す処理
-//=======================
-SHORT GetRStickY(void)
-{
-	//-値最大なら+値最大に合わせる
-	if (g_XinputState.Gamepad.sThumbRY < -STICK_MAX)
-	{
-		g_XinputState.Gamepad.sThumbRY = -STICK_MAX;
-	}
-
-	if (abs(g_XinputState.Gamepad.sThumbRY) > STICK_DEADZONE)
-	{
-		return g_XinputState.Gamepad.sThumbRY;
-	}
-	else
-	{
+	{//使っていなかったら0返す
 		return 0;
 	}
 }
@@ -429,47 +321,188 @@ SHORT GetRStickY(void)
 //========================
 //ゲームパッド使用しているか返す処理
 //=======================
-bool GetUseGamepad(void)
+bool cGamePad::GetUseGamePad(GAMEPAD_NO PadNum)
 {
-	return g_bUseGamepad;
+	return m_Pad[PadNum].bUse;
 }
 
 //========================
-//マウスのプレス情報を返す処理
+//スティック傾き調整処理
 //=======================
-bool GetMouseClickPress(int nButton)
+void AdjustStick(SHORT* pStick)
 {
-	return g_MouseState.rgbButtons[nButton] & 0x80 ? true : false;
+	//遊びの範囲内か
+	if (abs(*pStick) > STICK_DEADZONE)
+	{//範囲外
+		//-値最大なら+値最大に合わせる
+		if (*pStick < -STICK_MAX)
+		{
+			*pStick = -STICK_MAX;
+		}
+	}
+	else
+	{//範囲内
+		*pStick = 0;
+	}
+}
+
+//==================================================
+//						マウス
+//==================================================
+//========================
+//キーボードコンストラクタ（今は何もしない）
+//========================
+cMouse::cMouse()
+{
+
 }
 
 //========================
-//マウスのトリガー情報を返す処理
-//=======================
-bool GetMouseClickTrigger(int nButton)
+//キーボードデストラクタ（終了処理）
+//========================
+cMouse::~cMouse()
 {
-	return g_aMouseStateTrigger[nButton] & 0x80 ? true : false;
+	//入力デバイスの破棄
+	if (this->m_pDevMouse != NULL)
+	{
+		this->m_pDevMouse->Unacquire();
+		this->m_pDevMouse->Release();
+		this->m_pDevMouse = NULL;
+	}
+
+	//DirectInputオブジェクトの破棄
+	if (this->m_pInputMouse != NULL)
+	{
+		this->m_pInputMouse->Release();
+		this->m_pInputMouse = NULL;
+	}
 }
 
 //========================
-//マウスのリピート情報を返す処理
-//=======================
-bool GetMouseClickRepeate(int nButton)
+//マウス初期化処理
+//========================
+HRESULT cMouse::Init(HINSTANCE hInstance, HWND hWnd)
 {
-	return g_aMouseStateRepeate[nButton] & 0x80 ? true : false;
+	//DireceInputオブジェクトの生成
+	if (FAILED(DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void **)&this->m_pInputMouse, NULL)))
+	{
+		return E_FAIL;
+	}
+
+	//デバイス取得
+	if (FAILED(this->m_pInputMouse->CreateDevice(GUID_SysMouse, &this->m_pDevMouse, NULL)))
+	{
+		return E_FAIL;
+	}
+
+	//データフォーマット設定
+	if (FAILED(this->m_pDevMouse->SetDataFormat(&c_dfDIMouse)))
+	{
+		return E_FAIL;
+	}
+
+	//協調モード設定
+	if (FAILED(this->m_pDevMouse->SetCooperativeLevel(hWnd,
+		(DISCL_FOREGROUND | DISCL_NONEXCLUSIVE))))
+	{
+		return E_FAIL;
+	}
+
+	//マウスへのアクセス権を獲得
+	this->m_pDevMouse->Acquire();
+
+	//時間初期化
+	for (int nCntInit = 0; nCntInit < MOUSE_BUTTON_MAX; nCntInit++)
+	{
+		this->m_Mouse.mb[nCntInit].currentTime = 0;
+		this->m_Mouse.mb[nCntInit].execLastTime = timeGetTime() - REPEATE_TIME;
+	}
+
+	return S_OK;
+}
+
+//========================
+//マウス更新処理
+//========================
+void cMouse::Update(void)
+{
+	DIMOUSESTATE MouseState;
+	POINT point;
+
+	//マウス取得
+	if (SUCCEEDED(this->m_pDevMouse->GetDeviceState(sizeof(DIMOUSESTATE), &MouseState)))
+	{
+		for (int nCntKey = 0; nCntKey < MOUSE_BUTTON_MAX; nCntKey++)
+		{
+			//トリガーとリリース
+			this->m_Mouse.mb[nCntKey].trigger = (this->m_Mouse.state.rgbButtons[nCntKey] ^ MouseState.rgbButtons[nCntKey]) & MouseState.rgbButtons[nCntKey];
+			this->m_Mouse.mb[nCntKey].release = (this->m_Mouse.state.rgbButtons[nCntKey] ^ MouseState.rgbButtons[nCntKey]) & ~MouseState.rgbButtons[nCntKey];
+
+			//リピート
+			this->m_Mouse.mb[nCntKey].currentTime = timeGetTime();
+			if (MouseState.rgbButtons[nCntKey] && (this->m_Mouse.mb[nCntKey].currentTime - this->m_Mouse.mb[nCntKey].execLastTime) > REPEATE_TIME)
+			{
+				this->m_Mouse.mb[nCntKey].execLastTime = this->m_Mouse.mb[nCntKey].currentTime;
+				this->m_Mouse.mb[nCntKey].repeate = MouseState.rgbButtons[nCntKey];
+			}
+			else
+			{
+				this->m_Mouse.mb[nCntKey].repeate = 0;
+			}
+		}
+
+		//プレス
+		this->m_Mouse.state = MouseState;	//キーボードのプレス情報を保存
+
+		//移動量
+		this->m_Mouse.move = D3DXVECTOR3((float)this->m_Mouse.state.lX, (float)this->m_Mouse.state.lY, 0.0f);
+	}
+	else
+	{
+		this->m_pDevMouse->Acquire();
+	}
+
+	//マウス座標取得
+	GetCursorPos(&point);
+	ScreenToClient(FindWindowA(CLASS_NAME, nullptr), &point);
+	this->m_Mouse.pos.x = (float)point.x;
+	this->m_Mouse.pos.y = (float)point.y;
+}
+
+//========================
+//マウスのクリック情報取得処理
+//=======================
+bool cMouse::GetMouseClick(INPUTTYPE type, int button)
+{
+	switch (type)
+	{
+	case INPUTTYPE_PRESS:
+		return this->m_Mouse.state.rgbButtons[button] & 0x80 ? true : false;
+		break;
+	case INPUTTYPE_TRIGGER:
+		return this->m_Mouse.mb[button].trigger & 0x80 ? true : false;
+		break;
+	case INPUTTYPE_RELEASE:
+		return this->m_Mouse.mb[button].repeate & 0x80 ? true : false;
+		break;
+	case INPUTTYPE_REPEATE:
+		return false;	//工事中
+		break;
+	}
 }
 
 //========================
 //マウスのカーソル位置を返す処理
 //=======================
-D3DXVECTOR3 GetMousePos(void)
+D3DXVECTOR3 cMouse::GetMousePos(void)
 {
-	return g_posPoint;
+	return this->m_Mouse.pos;
 }
 
 //========================
 //マウスのカーソル移動量を返す処理
 //=======================
-D3DXVECTOR3 GetMouseMove(void)
+D3DXVECTOR3 cMouse::GetMouseMove(void)
 {
-	return g_moveMouse;
+	return this->m_Mouse.move;
 }

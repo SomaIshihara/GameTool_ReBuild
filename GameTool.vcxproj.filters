@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="ソース ファイル\Object">
+      <UniqueIdentifier>{e9b2b73b-0611-4f65-aa7b-7479963047ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Object">
+      <UniqueIdentifier>{6a95f5fd-91e7-4a5f-afd1-9a14129f8ffc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\View">
+      <UniqueIdentifier>{b41bc78d-f061-4e52-8580-ec56352f680b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\View">
+      <UniqueIdentifier>{1b268a42-cfc8-4e39-92d6-c1b46b98d736}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Transition">
+      <UniqueIdentifier>{ee77debc-09f6-4282-a324-16ffc9dab4f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Transition">
+      <UniqueIdentifier>{d3018829-cda9-4b93-8a6c-72c53a9df157}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Sys">
+      <UniqueIdentifier>{fc43efb1-b244-48a6-a80c-b41b906980a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Sys">
+      <UniqueIdentifier>{fa9b92b8-92b5-47db-a281-68a3b96b3ce6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Resource">
+      <UniqueIdentifier>{6f438306-fd4d-4bfc-88db-86da3608f8de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Resource">
+      <UniqueIdentifier>{e5ef3081-482a-40bf-aa41-122f097aa456}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="game.cpp">
+      <Filter>ソース ファイル\Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="debucproc.cpp">
+      <Filter>ソース ファイル\Sys</Filter>
+    </ClCompile>
+    <ClCompile Include="file.cpp">
+      <Filter>ソース ファイル\Sys</Filter>
+    </ClCompile>
+    <ClCompile Include="input.cpp">
+      <Filter>ソース ファイル\Sys</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>ソース ファイル\Sys</Filter>
+    </ClCompile>
+    <ClCompile Include="sound.cpp">
+      <Filter>ソース ファイル\Sys</Filter>
+    </ClCompile>
+    <ClCompile Include="cModel.cpp">
+      <Filter>ソース ファイル\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="cTexture.cpp">
+      <Filter>ソース ファイル\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="cCamera.cpp">
+      <Filter>ソース ファイル\View</Filter>
+    </ClCompile>
+    <ClCompile Include="cLight.cpp">
+      <Filter>ソース ファイル\View</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="game.h">
+      <Filter>ヘッダー ファイル\Transition</Filter>
+    </ClInclude>
+    <ClInclude Include="debugproc.h">
+      <Filter>ヘッダー ファイル\Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="file.h">
+      <Filter>ヘッダー ファイル\Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>ヘッダー ファイル\Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>ヘッダー ファイル\Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="sound.h">
+      <Filter>ヘッダー ファイル\Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="cModel.h">
+      <Filter>ヘッダー ファイル\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="cTexture.h">
+      <Filter>ヘッダー ファイル\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="cCamera.h">
+      <Filter>ヘッダー ファイル\View</Filter>
+    </ClInclude>
+    <ClInclude Include="cLight.h">
+      <Filter>ヘッダー ファイル\View</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
