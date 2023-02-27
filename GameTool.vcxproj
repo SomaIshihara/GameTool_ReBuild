@@ -154,10 +154,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="cCamera.cpp" />
+    <ClCompile Include="cDebugproc.cpp" />
     <ClCompile Include="cLight.cpp" />
     <ClCompile Include="cModel.cpp" />
     <ClCompile Include="cTexture.cpp" />
-    <ClCompile Include="debucproc.cpp" />
     <ClCompile Include="file.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="input.cpp" />
@@ -166,10 +166,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cCamera.h" />
+    <ClInclude Include="cDebugproc.h" />
     <ClInclude Include="cLight.h" />
     <ClInclude Include="cModel.h" />
     <ClInclude Include="cTexture.h" />
-    <ClInclude Include="debugproc.h" />
     <ClInclude Include="file.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="input.h" />

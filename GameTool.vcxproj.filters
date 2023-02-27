@@ -48,9 +48,6 @@
     <ClCompile Include="game.cpp">
       <Filter>ソース ファイル\Transition</Filter>
     </ClCompile>
-    <ClCompile Include="debucproc.cpp">
-      <Filter>ソース ファイル\Sys</Filter>
-    </ClCompile>
     <ClCompile Include="file.cpp">
       <Filter>ソース ファイル\Sys</Filter>
     </ClCompile>
@@ -75,13 +72,13 @@
     <ClCompile Include="cLight.cpp">
       <Filter>ソース ファイル\View</Filter>
     </ClCompile>
+    <ClCompile Include="cDebugproc.cpp">
+      <Filter>ソース ファイル\Sys</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h">
       <Filter>ヘッダー ファイル\Transition</Filter>
-    </ClInclude>
-    <ClInclude Include="debugproc.h">
-      <Filter>ヘッダー ファイル\Sys</Filter>
     </ClInclude>
     <ClInclude Include="file.h">
       <Filter>ヘッダー ファイル\Sys</Filter>
@@ -106,6 +103,9 @@
     </ClInclude>
     <ClInclude Include="cLight.h">
       <Filter>ヘッダー ファイル\View</Filter>
+    </ClInclude>
+    <ClInclude Include="cDebugproc.h">
+      <Filter>ヘッダー ファイル\Sys</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

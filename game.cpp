@@ -8,7 +8,7 @@
 #include "game.h"
 #include "file.h"
 #include "input.h"
-#include "camera.h"
+#include "cCamera.h"
 
 //========================
 //‰Šú‰»ˆ—

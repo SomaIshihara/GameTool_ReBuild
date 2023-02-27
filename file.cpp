@@ -6,21 +6,9 @@
 //==========================================
 #include "main.h"
 #include "file.h"
-#include "camera.h"
-#include "HDR_camera.h"
-#include "light.h"
-#include "model.h"
-#include "meshfault.h"
+#include "cCamera.h"
 #include <stdio.h>
 #include <assert.h>
-
-//マクロ
-//マクロなんてねぇよ
-//意訳：枠組みだけ用意してある
-
-//セーブデータ
-//セーブデータなんてねぇよ
-//意訳：枠組みだけ用意してある
 
 //コード関係
 #define CODE_LENGTH	(128 + MAX_PATH_STR)
