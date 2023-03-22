@@ -4,9 +4,9 @@
 //Author:石原颯馬
 //
 //==========================================
-#include "main.h"
+#include "..\..\Core\Main\main.h"
 #include "billboard.h"
-#include "input.h"
+#include "..\..\Core\Input\input.h"	
 
 //グローバル変数
 LPDIRECT3DVERTEXBUFFER9 g_pVtxbuffBillboard;	//頂点バッファポインタ

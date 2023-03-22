@@ -5,12 +5,12 @@
 //
 //==========================================
 #include "main.h"
-#include "input.h"
-#include "camera.h"
-#include "light.h"
-#include "file.h"
-#include "debugproc.h"
-#include "game.h"
+#include "..\..\Core\Input\input.h"
+#include "..\..\3D\Camera\cCamera.h"
+#include "..\..\3D\Light\cLight.h"
+#include "..\..\Core\Input\input.h"
+#include "..\..\Core\DebugProc\cDebugproc.h"
+#include "..\..\Transition\Game\game.h"
 
 //É}ÉNÉçíËã`
 #define WINDOW_NAME		"hogehoge"

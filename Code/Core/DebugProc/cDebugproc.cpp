@@ -4,9 +4,8 @@
 //Author:êŒå¥ÈDîn
 //
 //==========================================
-#include "main.h"
+#include "..\..\Core\Main\main.h"
 #include "cDebugproc.h"
-#include "input.h"
 #include <stdio.h>
 #include <stdarg.h>
 

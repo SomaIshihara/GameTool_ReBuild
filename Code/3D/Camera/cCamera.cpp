@@ -4,10 +4,10 @@
 //Author:石原颯馬
 //
 //==========================================
-#include "main.h"
+#include "..\..\Core\Main\main.h"
 #include "cCamera.h"
-#include "input.h"
-#include "debugproc.h"
+#include "..\..\Core\Input\input.h"
+#include "..\..\Core\Debugproc\cDebugproc.h"
 
 //マクロ
 #define CAMERA_MOVE_SPEED		(1.0f)		//カメラ移動速度

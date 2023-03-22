@@ -7,7 +7,7 @@
 #ifndef _CLASS_TEXTURE_H_
 #define _CLASS_TEXTURE_H_
 
-#include "main.h"
+#include "..\..\Core\Main\main.h"
 
 //ƒNƒ‰ƒX
 class cTexture

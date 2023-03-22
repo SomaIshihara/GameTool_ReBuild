@@ -7,7 +7,7 @@
 #ifndef _FILE_H_
 #define _FILE_H_
 
-#include "main.h"
+#include "..\..\Core\Main\main.h"
 
 //マクロ
 #define MAX_NUM_TEXTURE	(32)	//最大テクスチャ数

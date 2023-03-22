@@ -4,9 +4,9 @@
 //Author:êŒå¥ÈDîn
 //
 //==========================================
-#include "main.h"
+#include "..\..\Core\Main\main.h"
 #include "file.h"
-#include "cCamera.h"
+#include "..\..\3D\Camera\cCamera.h"
 #include <stdio.h>
 #include <assert.h>
 

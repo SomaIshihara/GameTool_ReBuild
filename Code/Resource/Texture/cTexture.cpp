@@ -4,7 +4,7 @@
 //Author:ÎŒ´éD”n
 //
 //==========================================
-#include "main.h"
+#include "..\..\Core\Main\main.h"
 #include "cTexture.h"
 
 cTexture::cTexture()

@@ -4,9 +4,8 @@
 //Author:ÎŒ´éD”n
 //
 //==========================================
-#include "main.h"
+#include "..\..\Core\Main\main.h"
 #include "collision.h"
-#include "fence.h"
 
 
 //“–‚½‚è”»’è”ÍˆÍ\‘¢‘Ì

@@ -4,11 +4,11 @@
 //Author:ÎŒ´éD”n
 //
 //==========================================
-#include "main.h"
+#include "..\..\Core\Main\main.h"
 #include "game.h"
-#include "file.h"
-#include "input.h"
-#include "cCamera.h"
+#include "..\..\Core\File\file.h"
+#include "..\..\Core\Input\input.h"
+#include "..\..\3D\Camera\cCamera.h"
 
 //========================
 //‰Šú‰»ˆ—

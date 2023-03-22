@@ -4,7 +4,7 @@
 //Author:êŒå¥ÈDîn
 //
 //==========================================
-#include "main.h"
+#include "..\..\Core\Main\main.h"
 #include "cLight.h"
 
 //========================

@@ -7,8 +7,7 @@
 #ifndef _COLLISION_H_
 #define _COLLISION_H_
 
-#include "main.h"
-#include "PvP_player.h"
+#include "..\..\Core\Main\main.h"
 
 //プロトタイプ宣言
 bool CollisionPP(Player *pATKPlayer, float fWidth, float fHeight, float fDepth);										//プレイヤー同士の衝突判定

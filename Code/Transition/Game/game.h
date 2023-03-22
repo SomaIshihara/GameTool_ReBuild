@@ -7,7 +7,7 @@
 #ifndef _GAME_H_
 #define _GAME_H_
 
-#include "main.h"
+#include "..\..\Core\Main\main.h"
 
 //É}ÉNÉç
 #define SAFEAREA_MIN_X		(-80.0f)
