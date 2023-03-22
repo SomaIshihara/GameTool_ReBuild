@@ -40,10 +40,7 @@ typedef enum
 #define MAX_PATH_STR		(1024)		//ファイルパスの長さ
 #define FVF_VERTEX_2D		(D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1)	//2D
 #define FVF_VERTEX_3D		(D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX1)	//3D
-#define FIX_ROT(x)			((float)fmod(x + (D3DX_PI * 3), D3DX_PI * 2) - D3DX_PI)	//角度を-PI~PIに修正
-#define TASUKIGAKE(ax,az,bx,bz)	((az * bx) - (ax * bz))
-#define fatof(x)			(float)atof(x)
-#define PLAYER_POS			D3DXVECTOR3(0.0f, 0.0f, -960.0f)
+#define INIT_ZERO			D3DXVECTER3(0.0f, 0.0f, 0.0f)
 
 //頂点情報[2D]
 typedef struct

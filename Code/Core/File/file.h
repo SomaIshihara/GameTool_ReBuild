@@ -80,13 +80,8 @@
 #define CODE_KEY				"KEY"				//キー設定開始
 #define CODE_END_KEY			"END_KEY"			//キー設定終了
 
-//モデルオリジナル用
-//断面図
-#define CODE_FAULTSET			"FAULTSET"			//断面図設定開始
-#define CODE_END_FAULTSET		"END_FAULTSET"		//断面図設定終了
-
 //パラメータ類
-//モデル・モーション・オリジナル共通
+//モデル・モーション共通
 #define CODE_POS				"POS"				//位置
 #define CODE_ROT				"ROT"				//向き
 #define CODE_RADIUS				"RADIUS"			//半径

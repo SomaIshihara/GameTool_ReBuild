@@ -15,10 +15,13 @@ typedef struct
 } CollisionPos;
 
 //プロト
-void GenerateCollision(D3DXVECTOR3 pos, D3DXVECTOR3 rot, CollisionPos *pCollision, float fWidth, float fDepth);
+void GenerateCollision(CollisionPos *pGeneratedColl, CollisionPos rawColl, D3DXVECTOR3 pos, D3DXVECTOR3 rot);
+#if 0
 void RefrectPlayer(Player *pPlayer, Fence *pFence, float fRate, D3DXVECTOR3 vecLine);
 bool HitPlayerToPlayer(Player *pATKPlayer, Player *pHitPlayer, D3DXVECTOR3 collPos, D3DXVECTOR3 vecLine, float fRate);
+#endif
 
+#if 0
 //========================
 //プレイヤー同士の衝突判定処理
 //========================
@@ -387,11 +390,12 @@ bool CollisionFence(Player *pPlayer, float fFenceWidth, float fPlayerHeight, flo
 	}
 	return false;
 }
+#endif
 
 //========================
 //当たり判定生成
 //========================
-void GenerateCollision(D3DXVECTOR3 pos, D3DXVECTOR3 rot, CollisionPos *pCollision, float fWidth, float fDepth)
+void GenerateCollision(CollisionPos *pGeneratedColl, CollisionPos rawColl, D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 {
 	//各頂点を求めるのに必要な変数
 	D3DXMATRIX mtxWorld;	//回転のベースとなるワールドマトリ
@@ -420,14 +424,14 @@ void GenerateCollision(D3DXVECTOR3 pos, D3DXVECTOR3 rot, CollisionPos *pCollisio
 	mtxTrans = mtxWorld;
 
 	//0度のときの点を置く
-	D3DXVECTOR3 vtxPos = D3DXVECTOR3(-fWidth, 0.0f, -fDepth);
+	D3DXVECTOR3 vtxPos = rawColl.pos0;
 
 	//回転行列とかけ合わせる
 	D3DXVec3TransformCoord(&vtxTrans, &vtxPos, &mtxTrans);
 
-	pCollision->pos0.x = vtxTrans.x;
-	pCollision->pos0.y = vtxTrans.y;
-	pCollision->pos0.z = vtxTrans.z;
+	pGeneratedColl->pos0.x = vtxTrans.x;
+	pGeneratedColl->pos0.y = vtxTrans.y;
+	pGeneratedColl->pos0.z = vtxTrans.z;
 	//-pos0---------------------------------------------------------------------------------------------------------------------------
 
 	//-pos1---------------------------------------------------------------------------------------------------------------------------
@@ -436,15 +440,15 @@ void GenerateCollision(D3DXVECTOR3 pos, D3DXVECTOR3 rot, CollisionPos *pCollisio
 	mtxTrans = mtxWorld;
 
 	//0度のときの点を置く
-	vtxPos = D3DXVECTOR3(+fWidth, 0.0f, -fDepth);
+	vtxPos = rawColl.pos1;
 
 	//回転行列とかけ合わせる
 	D3DXVec3TransformCoord(&vtxTrans, &vtxPos, &mtxTrans);
 
 	//変換後の点の場所を代入
-	pCollision->pos1.x = vtxTrans.x;
-	pCollision->pos1.y = vtxTrans.y;
-	pCollision->pos1.z = vtxTrans.z;
+	pGeneratedColl->pos1.x = vtxTrans.x;
+	pGeneratedColl->pos1.y = vtxTrans.y;
+	pGeneratedColl->pos1.z = vtxTrans.z;
 	//-pos1---------------------------------------------------------------------------------------------------------------------------
 
 	//-pos2---------------------------------------------------------------------------------------------------------------------------
@@ -453,15 +457,15 @@ void GenerateCollision(D3DXVECTOR3 pos, D3DXVECTOR3 rot, CollisionPos *pCollisio
 	mtxTrans = mtxWorld;
 
 	//0度のときの点を置く
-	vtxPos = D3DXVECTOR3(+fWidth, 0.0f, +fDepth);
+	vtxPos = rawColl.pos2;
 
 	//回転行列とかけ合わせる
 	D3DXVec3TransformCoord(&vtxTrans, &vtxPos, &mtxTrans);
 
 	//変換後の点の場所を代入
-	pCollision->pos2.x = vtxTrans.x;
-	pCollision->pos2.y = vtxTrans.y;
-	pCollision->pos2.z = vtxTrans.z;
+	pGeneratedColl->pos2.x = vtxTrans.x;
+	pGeneratedColl->pos2.y = vtxTrans.y;
+	pGeneratedColl->pos2.z = vtxTrans.z;
 	//-pos2---------------------------------------------------------------------------------------------------------------------------
 
 	//-pos3---------------------------------------------------------------------------------------------------------------------------
@@ -470,18 +474,19 @@ void GenerateCollision(D3DXVECTOR3 pos, D3DXVECTOR3 rot, CollisionPos *pCollisio
 	mtxTrans = mtxWorld;
 
 	//0度のときの点を置く
-	vtxPos = D3DXVECTOR3(-fWidth, 0.0f, +fDepth);
+	vtxPos = rawColl.pos3;
 
 	//回転行列とかけ合わせる
 	D3DXVec3TransformCoord(&vtxTrans, &vtxPos, &mtxTrans);
 
 	//変換後の点の場所を代入
-	pCollision->pos3.x = vtxTrans.x;
-	pCollision->pos3.y = vtxTrans.y;
-	pCollision->pos3.z = vtxTrans.z;
+	pGeneratedColl->pos3.x = vtxTrans.x;
+	pGeneratedColl->pos3.y = vtxTrans.y;
+	pGeneratedColl->pos3.z = vtxTrans.z;
 	//-pos3---------------------------------------------------------------------------------------------------------------------------
 }
 
+#if 0
 //========================
 //反射処理
 //========================
@@ -549,3 +554,4 @@ bool HitPlayerToPlayer(Player *pATKPlayer, Player *pHitPlayer, D3DXVECTOR3 collP
 	//動いているか返す
 	return bMove;
 }
+#endif

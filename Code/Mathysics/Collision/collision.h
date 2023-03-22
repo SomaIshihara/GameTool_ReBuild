@@ -10,8 +10,10 @@
 #include "..\..\Core\Main\main.h"
 
 //プロトタイプ宣言
+#if 0
 bool CollisionPP(Player *pATKPlayer, float fWidth, float fHeight, float fDepth);										//プレイヤー同士の衝突判定
 bool CollisionHipDropPP(Player *pATKPlayer, float fWidth, float fHeight, float fDepth, float fRadius, float fPower);	//ヒップドロップ時の衝突判定
 bool CollisionFence(Player *pPlayer, float fFenceWidth, float fPlayerHeight, float fFenceDepth, float fenceSize);		//フェンスの衝突処理
+#endif
 
 #endif // !_COLLISION_H_

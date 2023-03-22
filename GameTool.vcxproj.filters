@@ -22,9 +22,6 @@
     <Filter Include="ソース ファイル\Object">
       <UniqueIdentifier>{e7bd3e62-6753-4541-b9a8-a805e171ac8c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Physics">
-      <UniqueIdentifier>{0f44db6d-1989-47bf-a494-2abda5523003}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Resource">
       <UniqueIdentifier>{a025b132-beba-4f08-a143-8c0570fab248}</UniqueIdentifier>
     </Filter>
@@ -55,9 +52,6 @@
     <Filter Include="ソース ファイル\Object\Billboard">
       <UniqueIdentifier>{2631b167-a6a7-4c07-90c0-d178a4b8d644}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Physics\Collision">
-      <UniqueIdentifier>{2a8abb31-e654-44f9-937b-9478c8b14282}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Resource\Model">
       <UniqueIdentifier>{698daa36-9997-4814-9972-e8902a932fd2}</UniqueIdentifier>
     </Filter>
@@ -66,6 +60,15 @@
     </Filter>
     <Filter Include="ソース ファイル\Transition\Game">
       <UniqueIdentifier>{6b495392-c758-4fd1-b513-aace9c813139}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Mathysics">
+      <UniqueIdentifier>{0f44db6d-1989-47bf-a494-2abda5523003}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Mathysics\Collision">
+      <UniqueIdentifier>{2a8abb31-e654-44f9-937b-9478c8b14282}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Mathysics\Culc">
+      <UniqueIdentifier>{64f3bbcc-875a-4be1-a11f-150c1276d715}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -93,9 +96,6 @@
     <ClCompile Include="Code\Object\Billboard\billboard.cpp">
       <Filter>ソース ファイル\Object\Billboard</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Physics\Collision\collision.cpp">
-      <Filter>ソース ファイル\Physics\Collision</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Resource\Model\cModel.cpp">
       <Filter>ソース ファイル\Resource\Model</Filter>
     </ClCompile>
@@ -104,6 +104,12 @@
     </ClCompile>
     <ClCompile Include="Code\Transition\Game\game.cpp">
       <Filter>ソース ファイル\Transition\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Mathysics\Culc\Culc.cpp">
+      <Filter>ソース ファイル\Mathysics\Culc</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Mathysics\Collision\collision.cpp">
+      <Filter>ソース ファイル\Mathysics\Collision</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -131,9 +137,6 @@
     <ClInclude Include="Code\Object\Billboard\billboard.h">
       <Filter>ソース ファイル\Object\Billboard</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Physics\Collision\collision.h">
-      <Filter>ソース ファイル\Physics\Collision</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Resource\Model\cModel.h">
       <Filter>ソース ファイル\Resource\Model</Filter>
     </ClInclude>
@@ -142,6 +145,12 @@
     </ClInclude>
     <ClInclude Include="Code\Transition\Game\game.h">
       <Filter>ソース ファイル\Transition\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Mathysics\Culc\Culc.h">
+      <Filter>ソース ファイル\Mathysics\Culc</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Mathysics\Collision\collision.h">
+      <Filter>ソース ファイル\Mathysics\Collision</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
