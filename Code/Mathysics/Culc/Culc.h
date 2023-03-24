@@ -18,6 +18,6 @@
 #define CONVERT_FPS(x)			(int)(x * MAX_FPS)									//秒数をFPSに変換
 
 //プロトタイプ宣言
-void UpdateBillboard(void);
+void UpdateCulc(void);
 
 #endif // !_BILLBOARD_H_

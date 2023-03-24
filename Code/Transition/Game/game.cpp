@@ -6,7 +6,7 @@
 //==========================================
 #include "..\..\Core\Main\main.h"
 #include "game.h"
-#include "..\..\Core\File\file.h"
+//#include "..\..\Core\File\file.h"
 #include "..\..\Core\Input\input.h"
 #include "..\..\3D\Camera\cCamera.h"
 

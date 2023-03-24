@@ -7,13 +7,6 @@
 #include "..\..\Core\Main\main.h"
 #include "collision.h"
 
-
-//当たり判定範囲構造体
-typedef struct
-{
-	D3DXVECTOR3 pos0, pos1, pos2, pos3;
-} CollisionPos;
-
 //プロト
 void GenerateCollision(CollisionPos *pGeneratedColl, CollisionPos rawColl, D3DXVECTOR3 pos, D3DXVECTOR3 rot);
 #if 0
@@ -392,8 +385,116 @@ bool CollisionFence(Player *pPlayer, float fFenceWidth, float fPlayerHeight, flo
 }
 #endif
 
+//当たり判定頂点列挙
+typedef enum
+{//M = マイナス, P = プラス
+	BOXCOLLPOINT_MXMYMZ = 0,
+	BOXCOLLPOINT_PXMYMZ,
+	BOXCOLLPOINT_MXMYPZ,
+	BOXCOLLPOINT_PXMYPZ,
+	BOXCOLLPOINT_MXPYMZ,
+	BOXCOLLPOINT_PXPYMZ,
+	BOXCOLLPOINT_MXPYPZ,
+	BOXCOLLPOINT_PXPYPZ,
+	BOXCOLLPOINT_MAX
+} BOXCOLLPOINT;
+
+const BOXCOLLPOINT c_aBoxCollPoint[6][4] = 
+{
+	{ BOXCOLLPOINT_MXPYMZ ,BOXCOLLPOINT_PXPYMZ ,BOXCOLLPOINT_PXPYPZ ,BOXCOLLPOINT_MXPYPZ },	//上面
+	{ BOXCOLLPOINT_MXMYPZ ,BOXCOLLPOINT_MXMYMZ ,BOXCOLLPOINT_MXPYMZ ,BOXCOLLPOINT_MXPYPZ },	//左側面
+	{ BOXCOLLPOINT_PXMYMZ ,BOXCOLLPOINT_PXMYPZ ,BOXCOLLPOINT_PXPYPZ ,BOXCOLLPOINT_PXPYMZ },	//右側面
+	{ BOXCOLLPOINT_MXMYMZ ,BOXCOLLPOINT_PXMYMZ ,BOXCOLLPOINT_PXPYMZ ,BOXCOLLPOINT_MXPYMZ },	//前側面
+	{ BOXCOLLPOINT_PXMYPZ ,BOXCOLLPOINT_MXMYPZ ,BOXCOLLPOINT_MXPYPZ ,BOXCOLLPOINT_PXPYPZ },	//奥側面
+	{ BOXCOLLPOINT_MXMYMZ ,BOXCOLLPOINT_PXMYMZ ,BOXCOLLPOINT_PXMYPZ ,BOXCOLLPOINT_MXMYPZ }	//下面
+};
+
+//*********************************************
+//板の当たり判定
+//*********************************************
 //========================
 //当たり判定生成
+//========================
+void cCollision::SetCollision(D3DXVECTOR3 rot, CollisionPos collPos)
+{
+	//memo-------------------------------------------------------------
+	//		　	↑
+	//		　・-|------・
+	//		／	 |	  ／
+	//	  ／		／
+	//	・--------・
+	//
+	//	これが0.0f,0.0f,0.0f それに合わせて初期法線ベクトル設定してある
+	//memo-------------------------------------------------------------
+
+	//ローカル変数
+	D3DXVECTOR3 vecNor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	D3DXMATRIX mtxWorld;
+	D3DXMATRIX mtxRot;
+
+	//当たり判定頂点設定
+	GenerateCollision(
+		&this->m_coll.m_collPos, 
+		collPos, 
+		D3DXVECTOR3(0.0f, 0.0f, 0.0f),	//仮
+		rot);
+
+	//角度設定
+	this->m_coll.m_rot = rot;
+
+	//単位行列作成
+	D3DXMatrixIdentity(&mtxRot);
+
+	//法線ベクトル生成
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, rot.y, rot.x, rot.z);
+	D3DXVec3TransformCoord(&this->m_coll.m_vecNor, &vecNor, &mtxRot);
+}
+
+//========================
+//当たり判定確認
+//========================
+bool cCollision::CollisionCheck(D3DXVECTOR3 pos, D3DXVECTOR3 posOld, D3DXVECTOR3 *posCloss)
+{
+	return false;
+}
+
+//*********************************************
+//箱の当たり判定
+//*********************************************
+//========================
+//当たり判定生成
+//========================
+void cBoxCollider::SetBoxCollider(D3DXVECTOR3 pos, D3DXVECTOR3 rot, float fWidth, float fHeight, float fDepth)
+{
+	//頂点生成
+	D3DXVECTOR3 posPoint[BOXCOLLPOINT_MAX];
+
+	for (int nCntPoint = 0; nCntPoint < 8; nCntPoint++)
+	{
+		posPoint[nCntPoint] = D3DXVECTOR3(
+			pos.x + ((fWidth / 2) * ((nCntPoint % 2 == 0) ? -1 : 1)),
+			pos.y + ((fHeight / 2) * ((nCntPoint / 4 == 0) ? -1 : 1)),
+			pos.z + ((fDepth / 2) * (((nCntPoint / 2) % 2 == 0) ? -1 : 1)));
+	}
+
+	for (int nCntCollider = 0; nCntCollider < 6; nCntCollider++)
+	{
+		CollisionPos collPos = CollisionPos{
+			posPoint[c_aBoxCollPoint[nCntCollider][0]],
+			posPoint[c_aBoxCollPoint[nCntCollider][1]],
+			posPoint[c_aBoxCollPoint[nCntCollider][2]],
+			posPoint[c_aBoxCollPoint[nCntCollider][3]]};
+
+		this->m_collPlane[nCntCollider].SetCollision(rot, collPos);
+	}
+}
+
+
+//*********************************************
+//CPP内のみ使用
+//*********************************************
+//========================
+//当たり判定用点生成
 //========================
 void GenerateCollision(CollisionPos *pGeneratedColl, CollisionPos rawColl, D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 {
@@ -408,12 +509,13 @@ void GenerateCollision(CollisionPos *pGeneratedColl, CollisionPos rawColl, D3DXV
 	D3DXMatrixIdentity(&mtxWorld);
 
 	//向き反映
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, rot.y, rot.x, rot.z);
 	D3DXMatrixRotationY(&mtxRot, rot.y);
 	D3DXMatrixMultiply(&mtxWorld, &mtxRot, &mtxWorld);
 
 	//位置反映
 	mtxWorld._41 = pos.x;
-	mtxWorld._42 = 0.0f;
+	mtxWorld._42 = pos.y;
 	mtxWorld._43 = pos.z;
 
 	//-mtx----------------------------------------------------------------------------------------------------------------------------

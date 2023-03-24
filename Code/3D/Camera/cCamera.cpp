@@ -8,6 +8,7 @@
 #include "cCamera.h"
 #include "..\..\Core\Input\input.h"
 #include "..\..\Core\Debugproc\cDebugproc.h"
+#include "..\..\Mathysics\Culc\Culc.h"
 
 //マクロ
 #define CAMERA_MOVE_SPEED		(1.0f)		//カメラ移動速度

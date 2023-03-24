@@ -7,6 +7,9 @@
 #include "..\..\Core\Main\main.h"
 #include "cLight.h"
 
+//静的メンバ変数初期化
+int cLight::m_allLightNum = 0;
+
 //========================
 //コンストラクタ
 //========================

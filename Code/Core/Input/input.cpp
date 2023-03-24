@@ -15,6 +15,10 @@
 #define GAMEPAD_BUTTON_NUM	(14)	//ゲームパッドのボタン数
 #define STICK_DEADZONE		(655)	//遊び
 
+//静的メンバ構造体を定義
+Keyboard cKeyboard::m_Key[NUM_KEY_MAX];
+GamePad cGamePad::m_Pad[MAX_USE_GAMEPAD];
+
 //プロト
 void AdjustStick(SHORT* pStick);
 
@@ -149,6 +153,7 @@ bool cKeyboard::GetKeyboard(INPUTTYPE type, int nKey)
 		return (this->m_Key[nKey].repeate & 0x80) ? true : false;
 		break;
 	}
+	return false;
 }
 
 //==================================================
@@ -264,10 +269,7 @@ bool cGamePad::GetGamePadButton(INPUTTYPE type, int nButton)
 			break;
 		}
 	}
-	else
-	{
-		return false;
-	}
+	return false;
 }
 
 //========================
@@ -281,11 +283,11 @@ bool cGamePad::GetGamePadStick(char location, char dir)
 		{//Lスティック指定
 			if (location == 'X')
 			{//X方向指定
-				return this->m_Pad->state.Gamepad.sThumbLX;
+				return this->m_Pad->state.Gamepad.sThumbLX > STICK_DEADZONE ? true : false;
 			}
 			else if (location == 'Y')
 			{//Y方向指定
-				return this->m_Pad->state.Gamepad.sThumbLY;
+				return this->m_Pad->state.Gamepad.sThumbLY > STICK_DEADZONE ? true : false;
 			}
 			else
 			{//そんなものはない
@@ -296,11 +298,11 @@ bool cGamePad::GetGamePadStick(char location, char dir)
 		{//Rスティック指定
 			if (location == 'X')
 			{//X方向指定
-				return this->m_Pad->state.Gamepad.sThumbRX;
+				return this->m_Pad->state.Gamepad.sThumbRX > STICK_DEADZONE ? true : false;
 			}
 			else if (location == 'Y')
 			{//Y方向指定
-				return this->m_Pad->state.Gamepad.sThumbRY;
+				return this->m_Pad->state.Gamepad.sThumbRY > STICK_DEADZONE ? true : false;
 			}
 			else
 			{//そんなものはない
@@ -489,6 +491,7 @@ bool cMouse::GetMouseClick(INPUTTYPE type, int button)
 		return false;	//工事中
 		break;
 	}
+	return false;
 }
 
 //========================

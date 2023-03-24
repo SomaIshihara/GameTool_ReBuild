@@ -12,7 +12,7 @@
 //========================
 //XVˆ—
 //========================
-void UpdateBillboard(void)
+void UpdateCulc(void)
 {
 	//–³
 }

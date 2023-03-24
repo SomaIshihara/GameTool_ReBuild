@@ -81,9 +81,6 @@
     <ClCompile Include="Code\Core\DebugProc\cDebugproc.cpp">
       <Filter>ソース ファイル\Core\DebugProc</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Core\File\file.cpp">
-      <Filter>ソース ファイル\Core\File</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Core\Input\input.cpp">
       <Filter>ソース ファイル\Core\Input</Filter>
     </ClCompile>
@@ -121,9 +118,6 @@
     </ClInclude>
     <ClInclude Include="Code\Core\DebugProc\cDebugproc.h">
       <Filter>ソース ファイル\Core\DebugProc</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Core\File\file.h">
-      <Filter>ソース ファイル\Core\File</Filter>
     </ClInclude>
     <ClInclude Include="Code\Core\Input\input.h">
       <Filter>ソース ファイル\Core\Input</Filter>

@@ -51,8 +51,8 @@ typedef enum
 //==========================================================================================
 // 構造体定義
 //==========================================================================================
-//キーボード
-typedef struct
+//キーボード構造体
+struct Keyboard
 {
 	BYTE state;		//状態（保存用およびプレス情報）
 	BYTE trigger;	//トリガー情報
@@ -60,10 +60,10 @@ typedef struct
 	BYTE repeate;	//リピート情報
 	DWORD currentTime;	//現在の時間
 	DWORD execLastTime;	//最後にtrueにした時間
-} Keyboard;
+};
 
 //ゲームパッド
-typedef struct
+struct GamePad
 {
 	XINPUT_STATE state;	//状態全部（およびプレス情報）
 	WORD trigger;		//トリガー情報
@@ -72,7 +72,7 @@ typedef struct
 	DWORD currentTime;	//現在の時間
 	DWORD execLastTime;	//最後にtrueにした時間
 	bool bUse;			//使用の有無
-} GamePad;
+};
 
 //マウスのボタン部
 typedef struct
@@ -114,13 +114,13 @@ public:
 
 	//取得
 	bool GetKeyboard(INPUTTYPE type, int nKey);
+
+	//保存場所
+	static Keyboard m_Key[NUM_KEY_MAX];
 private:
 	//取得に必要
 	LPDIRECTINPUT8 m_pInputKeyboard;
 	LPDIRECTINPUTDEVICE8 m_pDevKeyboard;
-
-	//保存場所
-	static Keyboard m_Key[NUM_KEY_MAX];
 };
 
 //=============================
@@ -146,10 +146,10 @@ public:
 	bool GetGamePadButton(INPUTTYPE type, int nButton);	//ボタン
 	bool GetGamePadStick(char location, char dir);		//スティック
 	static bool GetUseGamePad(GAMEPAD_NO PadNum);		//使用の有無
-private:
+
 	//保存場所
 	static GamePad m_Pad[MAX_USE_GAMEPAD];
-
+private:
 	//パッド番号
 	GAMEPAD_NO m_PadNum;
 };
