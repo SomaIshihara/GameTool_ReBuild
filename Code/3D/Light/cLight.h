@@ -17,7 +17,7 @@ public:
 	~cLight();
 
 	//İ’è
-	void SetLight(D3DLIGHTTYPE type, D3DCOLORVALUE col, D3DXVECTOR3 vecDir);
+	void SetLight(D3DLIGHTTYPE type, D3DXCOLOR col, D3DXVECTOR3 vecDir);
 
 	//—LŒøE–³Œø‰»ØŠ·‚¦
 	void EnableLight(bool bEnable);

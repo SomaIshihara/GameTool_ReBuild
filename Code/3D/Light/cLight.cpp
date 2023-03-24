@@ -33,7 +33,7 @@ cLight::~cLight()
 //========================
 //設定処理
 //========================
-void cLight::SetLight(D3DLIGHTTYPE type,D3DCOLORVALUE col,D3DXVECTOR3 vecDir)
+void cLight::SetLight(D3DLIGHTTYPE type,D3DXCOLOR col,D3DXVECTOR3 vecDir)
 {
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();	//デバイスの取得
 

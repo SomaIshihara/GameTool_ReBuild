@@ -15,6 +15,7 @@ struct cModelStruct
 	LPD3DXMESH pMesh;		//メッシュ
 	LPD3DXBUFFER pBuffMat;	//マテリアルポインタ
 	DWORD dwNumMatModel;	//マテ数
+	D3DXMATRIX mtxWorld;	//ワールドマトリ
 	D3DXVECTOR3 posOffset;	//位置（オフセット）
 	D3DXVECTOR3 rotOffset;	//向き（オフセット）
 	LPDIRECT3DTEXTURE9 apTexture[16];	//テクスチャポインタ
@@ -27,6 +28,7 @@ public:
 	cModel();
 	~cModel();
 	void LoadModel(const char* pPath);
+	void SetModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale);
 	cModelStruct GetModel(void);
 private:
 	cModelStruct m_cModelStr;

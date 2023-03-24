@@ -35,9 +35,7 @@ bool g_bShowCursor = true;
 bool g_bDebug = true;
 
 cKeyboard g_keyboard;
-cCamera g_camera;
-cLight g_light;
-cDebugProc g_debugProc;
+cDebugProc *g_pDebugProc;
 
 //========================
 //メイン関数
@@ -319,7 +317,9 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	}
 
 	//オブジェクト初期化
-	//カメラ・ライト・デバッグプロシージャは宣言時に自動設定
+	//カメラ・ライトは宣言時に自動設定
+	//デバッグプロシージャの初期化
+	g_pDebugProc = new cDebugProc();
 
 	//まとまったもの
 	SetMode(MODE_TITLE);
@@ -341,8 +341,8 @@ void Uninit(void)
 
 	//単品
 	//UninitFile();
-	//デバッグプロシージャは自動破棄
-	//カメラ・ライトは終了時に自動破棄……するんだけど今は何もしない
+	//デバッグプロシージャ終了
+	delete g_pDebugProc;
 
 	//キーボードの終了は自動で行う
 
@@ -388,9 +388,6 @@ void Update(void)
 		UpdateGame();
 		break;
 	}
-
-	//カメラ
-	g_camera.MoveCamera(0.0f, 0.0f);
 }
 
 //========================
@@ -414,9 +411,6 @@ void Draw(void)
 	//描画開始
 	if (SUCCEEDED(g_pD3DDevice->BeginScene()))
 	{//成功した場合
-		//カメラ設定
-		g_camera.SetCamera();
-
 		//オブジェクト描画
 		//まとまったものから選ぶ
 		switch (g_mode)
@@ -433,7 +427,7 @@ void Draw(void)
 		}
 
 		//デバッグ表示
-		g_debugProc.DrawDebugProc();
+		g_pDebugProc->DrawDebugProc();
 
 		//描画終了処理
 		g_pD3DDevice->EndScene();
