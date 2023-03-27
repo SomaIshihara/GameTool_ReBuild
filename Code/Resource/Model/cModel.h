@@ -15,22 +15,28 @@ struct cModelStruct
 	LPD3DXMESH pMesh;		//メッシュ
 	LPD3DXBUFFER pBuffMat;	//マテリアルポインタ
 	DWORD dwNumMatModel;	//マテ数
+	LPDIRECT3DTEXTURE9 apTexture[16];	//テクスチャポインタ
 	D3DXMATRIX mtxWorld;	//ワールドマトリ
+
+	//変更可能
 	D3DXVECTOR3 posOffset;	//位置（オフセット）
 	D3DXVECTOR3 rotOffset;	//向き（オフセット）
-	LPDIRECT3DTEXTURE9 apTexture[16];	//テクスチャポインタ
-	int mIdxModelParent;	//親モデルインデックス
+	int m_IdxModelParent;	//親モデルインデックス
 };
 
+//========================
+//モデル単体
+//========================
 class cModel
 {
 public:
 	cModel();
 	~cModel();
 	void LoadModel(const char* pPath);
-	void SetModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale);
+	void SetModelSetup(cModelStruct modelstr);
+	void SetModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale, D3DXMATRIX *pMtxBace, D3DXMATRIX *mtxParent = NULL);
 	cModelStruct GetModel(void);
-private:
+protected:
 	cModelStruct m_cModelStr;
 };
 

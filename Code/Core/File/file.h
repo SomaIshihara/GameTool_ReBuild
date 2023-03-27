@@ -12,6 +12,7 @@
 //マクロ
 #define MAX_NUM_TEXTURE	(32)	//最大テクスチャ数
 #define MAX_NUM_MODEL	(128)	//最大モデル数
+#define MAX_STR_LENGTH	(1024)	//読み取り文字最大数
 
 //コード名
 //共通
@@ -19,8 +20,7 @@
 #define CODE_SCRIPT				"SCRIPT"			//スクリプト開始
 #define CODE_END_SCRIPT			"END_SCRIPT"		//スクリプト終了
 
-//モデルビューワー・モーションビューワー用
-//モデルビューワ
+//モデルビューワー用
 //テクスチャ数
 #define CODE_NUM_TEXTURE		"NUM_TEXTURE"		//テクスチャ数読み取り
 //テクスチャファイル名
@@ -59,27 +59,6 @@
 #define CODE_PLAYERSET			"PLAYERSET"			//プレイヤー配置開始
 #define CODE_END_PLAYERSET		"END_PLAYERSET"		//プレイヤー配置終了
 
-//モーションビューワー
-//初期
-#define CODE_NUM_MODEL			"NUM_MODEL"			//モデル数
-#define CODE_MODEL_FILENAME		"MODEL_FILENAME"	//モデルのファイルパス
-#define CODE_CHARACTERSET		"CHARACTERSET"		//キャラクター情報
-#define CODE_END_CHARACTERSET	"END_CHARACTERSET"
-
-//パーツ設定
-#define CODE_PARTSSET			"PARTSSET"			//パーツ設定開始
-#define CODE_END_PARTSSET		"END_PARTSSET"		//パーツ設定終了
-
-//モーション設定
-#define CODE_MOTIONSET			"MOTIONSET"			//モーション設定開始
-#define CODE_END_MOTIONSET		"END_MOTIONSET"		//モーション設定終了
-//キーセット設定
-#define CODE_KEYSET				"KEYSET"			//キーセット設定開始
-#define CODE_END_KEYSET			"END_KEYSET"		//キーセット設定終了
-//キー設定
-#define CODE_KEY				"KEY"				//キー設定開始
-#define CODE_END_KEY			"END_KEY"			//キー設定終了
-
 //パラメータ類
 //モデル・モーション共通
 #define CODE_POS				"POS"				//位置
@@ -100,94 +79,12 @@
 #define CODE_ORIGIN				"ORIGIN"			//なにこれ
 #define CODE_BLEND				"BLEND"				//合成の設定じゃないかな
 #define CODE_MOTION_FILENAME	"MOTION_FILENAME"	//モーションのファイルパス
-//モーションビューワー用
-#define CODE_MOVE				"MOVE"				//移動量
-#define CODE_JUMP				"JUMP"				//ジャンプ量
-#define CODE_NUM_PARTS			"NUM_PARTS"			//パーツ数
-#define CODE_INDEX				"INDEX"				//番号
-#define CODE_PARENT				"PARENT"			//親モデルの番号
-#define CODE_LOOP				"LOOP"				//ループするかの設定
-#define CODE_NUM_KEY			"NUM_KEY"			//キー数
-#define CODE_FRAME				"FRAME"				//フレーム数
-
-//構造体類
-//モデル
-typedef struct
-{
-	//int numTexture;	//テクスチャ数
-	char fileName[MAX_NUM_TEXTURE][MAX_PATH_STR];
-} ReadModelData;
-
-//カメラはCamera.hのものを使う
-//ライトはD3DLIGHT9のものを使う
-
-//空（使いたければ移動してOK）
-typedef struct
-{
-	int texType;	//テクスチャ種類（読み込んだテクスチャの中から選ぶ）
-	float fMove;	//移動量
-} ReadSky;
-
-//山はテクスチャ種類設定するだけだからそっちで用意して
-
-//メッシュフィールド
-typedef struct
-{
-	int texType;	//テクスチャ種類（読み込んだテクスチャの中から選ぶ）
-	MESHFIELD mf;	//メッシュフィールド生成に必要なデータ類
-} ReadMeshField;
-
-//メッシュ壁（使いたければ移動してOK）
-typedef struct
-{
-	int texType;		//テクスチャ種類（読み込んだテクスチャの中から選ぶ）
-	D3DXVECTOR3 pos;	//位置
-	D3DXVECTOR3 rot;	//向き
-	int blockX;			//Xの分割数
-	int blockZ;			//Zの分割数
-	int sizeX;			//Xのサイズ
-	int sizeZ;			//Zのサイズ
-} MeshWall;
-
-//モデル読み込みに使う
-typedef struct
-{
-	int modelType;		//モデル種類
-	D3DXVECTOR3 pos;	//位置
-	D3DXVECTOR3 rot;	//向き
-	int state;			//状態（何に使うか忘れた）
-	int collision;		//当たり判定（何に使うか忘れた）
-	int shadow;			//影（シャドウマトリックスなるものを使うなら要らないかも）
-} ReadModel;
-
-//ビルボード
-typedef struct
-{
-	int texType;		//テクスチャ種類
-	D3DXVECTOR3 pos;	//位置
-	int sizeX;			//Xのサイズ
-	int sizeZ;			//Zのサイズ
-	int originX;		//Xのなにこれ
-	int originZ;		//Zのなにこれ
-	int blend;			//合成の設定とかじゃないかな
-	int shadow;			//影（何に使うか忘れた）
-} ReadBillBoard;
-
-//プレイヤーモデル
-typedef struct
-{
-	char motionFileName[MAX_PATH_STR];	//モーションファイルのパス
-	D3DXVECTOR3 pos;	//位置
-	D3DXVECTOR3 rot;	//向き
-} ReadPlayerModel;
 
 //プロト
 void InitFile(void);
 void UninitFile(void);
 void UpdateFile(void);
 void LoadModelViewerFile(const char *path);	//モデルビューワーの設定ファイル読み込み（引数は設定ファイルのパス指定）
-void LoadMotionViewerFile(const char *path, Model *pModel);
-void LoadModelOriginalFile(const char *path);
 char *GetTextureFilePath(int nTexNum);
 char *GetModelFilePath(int nModNum);
 char *GetMotionFilePath(int animal);

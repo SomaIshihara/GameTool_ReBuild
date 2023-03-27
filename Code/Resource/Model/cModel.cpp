@@ -10,6 +10,9 @@
 cModel::cModel()
 {
 	this->m_cModelStr = {};
+	this->m_cModelStr.posOffset = INIT_ZERO;
+	this->m_cModelStr.rotOffset = INIT_ZERO;
+	this->m_cModelStr.m_IdxModelParent = -1;
 }
 
 cModel::~cModel()
@@ -61,7 +64,14 @@ void cModel::LoadModel(const char* pPath)
 	}
 }
 
-void cModel::SetModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale)
+void cModel::SetModelSetup(cModelStruct modelstr)
+{
+	this->m_cModelStr.posOffset = modelstr.posOffset;
+	this->m_cModelStr.rotOffset = modelstr.rotOffset;
+	this->m_cModelStr.m_IdxModelParent = modelstr.m_IdxModelParent;
+}
+
+void cModel::SetModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale, D3DXMATRIX *mtxBace, D3DXMATRIX *mtxParent)
 {
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();	//デバイスの取得
 	D3DXMATRIX mtxRot, mtxTrans, mtxTexture;	//計算用
@@ -76,8 +86,8 @@ void cModel::SetModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale)
 	D3DXMatrixIdentity(&this->m_cModelStr.mtxWorld);
 
 	//オフセットを足す
-	//pos = this->m_cModelStr.posOffset;
-	//rot = this->m_cModelStr.rotOffset;
+	pos = this->m_cModelStr.posOffset;
+	rot = this->m_cModelStr.rotOffset;
 
 	//拡縮を反映
 	//D3DXMatrixScaling(&mtxScall, FENCE_SCALE, FENCE_SCALE, FENCE_SCALE);
@@ -90,6 +100,18 @@ void cModel::SetModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale)
 	//位置反映
 	D3DXMatrixTranslation(&mtxTrans, pos.x, pos.y, pos.z);
 	D3DXMatrixMultiply(&this->m_cModelStr.mtxWorld, &this->m_cModelStr.mtxWorld, &mtxTrans);
+
+	//パーツの親マトリ設定
+	if (mtxParent != NULL)
+	{
+		//パーツのマトリと親マトリをかけ合わせる
+		D3DXMatrixMultiply(&this->m_cModelStr.mtxWorld, &this->m_cModelStr.mtxWorld, mtxParent);
+	}
+	else
+	{
+		//パーツのマトリとベースマトリをかけ合わせる
+		D3DXMatrixMultiply(&this->m_cModelStr.mtxWorld, &this->m_cModelStr.mtxWorld, mtxBace);
+	}
 
 	//ワールドマトリックス設定
 	pDevice->SetTransform(D3DTS_WORLD, &this->m_cModelStr.mtxWorld);

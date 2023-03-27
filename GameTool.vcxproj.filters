@@ -76,6 +76,9 @@
     <Filter Include="ソース ファイル\lib\Transition\Game">
       <UniqueIdentifier>{6b495392-c758-4fd1-b513-aace9c813139}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\lib\3D\MotionModel">
+      <UniqueIdentifier>{c7a027b0-3125-4459-977e-e3ea0f1339cd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\3D\Camera\cCamera.cpp">
@@ -114,8 +117,8 @@
     <ClCompile Include="Code\Mathysics\Collision\collision.cpp">
       <Filter>ソース ファイル\lib\Mathysics\Collision</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Added\Player.cpp">
-      <Filter>ソース ファイル\Added</Filter>
+    <ClCompile Include="Code\3D\MotionModel\cMotionModel.cpp">
+      <Filter>ソース ファイル\lib\3D\MotionModel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -155,8 +158,11 @@
     <ClInclude Include="Code\Mathysics\Collision\collision.h">
       <Filter>ソース ファイル\lib\Mathysics\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Added\Player.h">
-      <Filter>ソース ファイル\Added</Filter>
+    <ClInclude Include="Code\Core\File\file.h">
+      <Filter>ソース ファイル\lib\Core\File</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\3D\MotionModel\cMotionModel.h">
+      <Filter>ソース ファイル\lib\3D\MotionModel</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

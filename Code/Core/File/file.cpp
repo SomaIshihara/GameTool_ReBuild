@@ -17,7 +17,7 @@
 typedef enum
 {
 	//共通
-	READSTAT_NONE = 0,	//何もしてない
+	READSTAT_MOTION_NONE = 0,	//何もしてない
 
 	//-モデルビューワー-----------------------
 	READSTAT_CAMERASET,
@@ -31,27 +31,11 @@ typedef enum
 	READSTAT_BILLBOARDSET,
 	READSTAT_PLAYERSET,
 	//----------------------------------------
-
-	//-配置情報-------------------------------
-	READSTAT_SETENEMY,
-	//----------------------------------------
-
-	//--モーションビューワー------------------
-	READSTAT_CHARACTERSET,
-	READSTAT_PARTSSET,
-	READSTAT_MOTIONSET,
-	READSTAT_KEYSET,
-	READSTAT_KEY,
-	//----------------------------------------
-
-	//-オリジナル-----------------------------
-	READSTAT_FAULTSET,
-	//----------------------------------------
 	READSTAT_MAX
-} READSTAT;
+} READSTAT_MOTION;
 
 //グローバル
-READSTAT g_readStat = READSTAT_NONE;
+READSTAT_MOTION g_readStat = READSTAT_NONE;
 
 //取得したもの
 //記憶する
@@ -123,7 +107,7 @@ void InitFile(void)
 	g_counterReadAnimal = 0;
 	g_nIdxParts = -1;
 
-	g_readStat = READSTAT_NONE;
+	g_readStat = READSTAT_MOTION_NONE;
 }
 
 //========================
@@ -203,7 +187,7 @@ void LoadModelViewerFile(const char *path)
 			{//読み取り
 				switch (g_readStat)
 				{
-				case READSTAT_NONE:	//処理取得
+				case READSTAT_MOTION_NONE:	//処理取得
 					//処理部分
 					if (strncmp(&aCode[0], CODE_CAMERASET, sizeof CODE_CAMERASET / sizeof(char) - 1) == 0)
 					{
@@ -294,7 +278,7 @@ void LoadModelViewerFile(const char *path)
 					{
 						//カメラ設定
 						InitSetCameraPos(g_readCamera.posV, g_readCamera.posR, g_counterReadCamera);
-						g_readStat = READSTAT_NONE;
+						g_readStat = READSTAT_MOTION_NONE;
 						g_counterReadCamera++;		//加算
 					}
 					else if (strncmp(&aCode[0], CODE_POS, sizeof CODE_POS / sizeof(char) - 1) == 0)
@@ -335,7 +319,7 @@ void LoadModelViewerFile(const char *path)
 					{
 						//カメラ設定
 						InitSetHDRCameraPos(g_readHDRCamera.posV, g_readHDRCamera.posR, g_counterReadHDRCamera);
-						g_readStat = READSTAT_NONE;
+						g_readStat = READSTAT_MOTION_NONE;
 						g_counterReadHDRCamera++;		//加算
 					}
 					else if (strncmp(&aCode[0], CODE_POS, sizeof CODE_POS / sizeof(char) - 1) == 0)
@@ -376,7 +360,7 @@ void LoadModelViewerFile(const char *path)
 					{
 						//ライト設定
 						SetLight(g_counterReadLight, g_readLight);
-						g_readStat = READSTAT_NONE;
+						g_readStat = READSTAT_MOTION_NONE;
 
 						g_counterReadLight++;
 					}
@@ -429,7 +413,7 @@ void LoadModelViewerFile(const char *path)
 					if (strncmp(&aCode[0], CODE_END_SKYSET, sizeof CODE_END_SKYSET / sizeof(char) - 1) == 0)
 					{
 						//空設定して
-						g_readStat = READSTAT_NONE;
+						g_readStat = READSTAT_MOTION_NONE;
 					}
 					else if (strncmp(&aCode[0], CODE_TEXTYPE, sizeof CODE_TEXTYPE / sizeof(char) - 1) == 0)
 					{
@@ -451,7 +435,7 @@ void LoadModelViewerFile(const char *path)
 				case READSTAT_MOUNTAINSET:	//山情報取得
 					if (strncmp(&aCode[0], CODE_END_MOUNTAINSET, sizeof CODE_END_MOUNTAINSET / sizeof(char) - 1) == 0)
 					{
-						g_readStat = READSTAT_NONE;
+						g_readStat = READSTAT_MOTION_NONE;
 					}
 					else if (strncmp(&aCode[0], CODE_TEXTYPE, sizeof CODE_TEXTYPE / sizeof(char) - 1) == 0)
 					{
@@ -465,7 +449,7 @@ void LoadModelViewerFile(const char *path)
 					{
 						//地面設定
 						SetMeshField(g_readmeshfield.texType, g_readmeshfield.mf);
-						g_readStat = READSTAT_NONE;
+						g_readStat = READSTAT_MOTION_NONE;
 					}
 					else if (strncmp(&aCode[0], CODE_TEXTYPE, sizeof CODE_TEXTYPE / sizeof(char) - 1) == 0)
 					{
@@ -520,7 +504,7 @@ void LoadModelViewerFile(const char *path)
 					if (strncmp(&aCode[0], CODE_END_WALLSET, sizeof CODE_END_WALLSET / sizeof(char) - 1) == 0)
 					{
 						//壁生成して
-						g_readStat = READSTAT_NONE;
+						g_readStat = READSTAT_MOTION_NONE;
 					}
 					else if (strncmp(&aCode[0], CODE_TEXTYPE, sizeof CODE_TEXTYPE / sizeof(char) - 1) == 0)
 					{
@@ -585,7 +569,7 @@ void LoadModelViewerFile(const char *path)
 					if (strncmp(&aCode[0], CODE_END_MODELSET, sizeof CODE_END_MODELSET / sizeof(char) - 1) == 0)
 					{
 						
-						g_readStat = READSTAT_NONE;
+						g_readStat = READSTAT_MOTION_NONE;
 					}
 					else if (strncmp(&aCode[0], CODE_TYPE, sizeof CODE_TYPE / sizeof(char) - 1) == 0)
 					{
@@ -655,7 +639,7 @@ void LoadModelViewerFile(const char *path)
 					if (strncmp(&aCode[0], CODE_END_BILLBOARDSET, sizeof CODE_END_BILLBOARDSET / sizeof(char) - 1) == 0)
 					{
 						//ビルボード設定して
-						g_readStat = READSTAT_NONE;
+						g_readStat = READSTAT_MOTION_NONE;
 					}
 					else if (strncmp(&aCode[0], CODE_TEXTYPE, sizeof CODE_TEXTYPE / sizeof(char) - 1) == 0)
 					{
@@ -722,7 +706,7 @@ void LoadModelViewerFile(const char *path)
 					if (strncmp(&aCode[0], CODE_END_PLAYERSET, sizeof CODE_END_PLAYERSET / sizeof(char) - 1) == 0)
 					{
 						//プレイヤーモデル取得完了
-						g_readStat = READSTAT_NONE;
+						g_readStat = READSTAT_MOTION_NONE;
 
 						//加算
 						g_counterReadAnimal++;
@@ -775,432 +759,6 @@ void LoadModelViewerFile(const char *path)
 			}
 		}
 		
-		//ファイル閉じる
-		fclose(pFile);
-	}
-	else
-	{
-		assert(pFile != NULL);
-	}
-}
-
-//========================
-//モーション読み込み処理
-//引数1:モーションビューワーの設定ファイルのパス
-//引数2:入れたいモデル構造体のポインタ
-//========================
-void LoadMotionViewerFile(const char *path, Model *pModel)
-{
-	FILE *pFile;
-	char aCode[CODE_LENGTH];
-	char *pSprit;
-	bool bRead = false;
-
-	//変数初期化
-	g_counterReadModel = 0;
-
-	//モーション情報
-	//読み込みファイル設定
-	pFile = fopen(path, "r");
-
-	//敵配置情報を取得
-	if (pFile != NULL)
-	{
-		while (1)
-		{
-			fgets(&aCode[0], CODE_LENGTH, pFile);
-
-			//コメントアウトチェック
-			char *pCharPos = strchr(&aCode[0], '#');
-			if (pCharPos != nullptr)
-			{//strchrの返り値がぬるぽではない
-				*pCharPos = '\0';
-			}
-
-			//タブ消去
-			while (aCode[0] == '\t')
-			{
-				char aCodeBackup[CODE_LENGTH];
-				strcpy(&aCodeBackup[0], &aCode[0]);
-				strcpy(&aCode[0], &aCodeBackup[1]);
-			}
-
-			//文字列チェック
-			if (strncmp(&aCode[0], CODE_SCRIPT, sizeof CODE_SCRIPT / sizeof(char) - 1) == 0)
-			{//読み取り開始
-				bRead = true;
-			}
-			else if (strncmp(&aCode[0], CODE_END_SCRIPT, sizeof CODE_END_SCRIPT / sizeof(char) - 1) == 0)
-			{//読み取り終了
-				bRead = false;
-				break;
-			}
-			else if (aCode[0] == EOF)
-			{//EOFかもしれない
-				if (feof(pFile))
-				{//いや、これはEOFだ
-					bRead = false;
-					break;
-				}
-			}
-			else if (bRead == true)
-			{//読み取り
-				switch (g_readStat)
-				{
-				case READSTAT_NONE:	//処理取得
-					if (strncmp(&aCode[0], CODE_MODEL_FILENAME, sizeof CODE_MODEL_FILENAME / sizeof(char) - 1) == 0)
-					{
-						if (g_counterReadModel < MAX_PARTS)
-						{
-							pSprit = strtok(&aCode[0], " =\n");	//処理内容の部分消す
-
-							//代入
-							strcpy(pModel->aModelFileName[g_counterReadModel], strtok(NULL, " =\n"));
-							//タブ文字が入っているところを消す
-							char *pCharPos = strchr(&pModel->aModelFileName[g_counterReadModel][0], '\t');
-							if (pCharPos != nullptr)
-							{//strchrの返り値がぬるぽではない
-								*pCharPos = '\0';
-							}
-
-							//加算
-							g_counterReadModel++;
-						}
-					}
-					if (strncmp(&aCode[0], CODE_CHARACTERSET, sizeof CODE_CHARACTERSET / sizeof(char) - 1) == 0)
-					{
-						g_readStat = READSTAT_CHARACTERSET;
-					}
-					if (strncmp(&aCode[0], CODE_MOTIONSET, sizeof CODE_MOTIONSET / sizeof(char) - 1) == 0)
-					{
-						if (g_counterMotionInfo < MOTIONTYPE_MAX)
-						{
-							g_readStat = READSTAT_MOTIONSET;
-						}
-					}
-					break;
-				case READSTAT_CHARACTERSET:		//モデル情報取得
-					if (strncmp(&aCode[0], CODE_END_CHARACTERSET, sizeof CODE_END_CHARACTERSET / sizeof(char) - 1) == 0)
-					{
-						g_readStat = READSTAT_NONE;
-					}
-					else if (strncmp(&aCode[0], CODE_PARTSSET, sizeof CODE_PARTSSET / sizeof(char) - 1) == 0)
-					{
-						g_readStat = READSTAT_PARTSSET;
-					}
-					else if (strncmp(&aCode[0], CODE_MOVE, sizeof CODE_MOVE / sizeof(char) - 1) == 0)
-					{
-						pSprit = strtok(&aCode[0], " =\n");	//処理内容の部分消す
-
-						//移動量取得
-						pSprit = strtok(NULL, " =\n");
-						pModel->fMove = fatof(pSprit);
-					}
-					else if (strncmp(&aCode[0], CODE_JUMP, sizeof CODE_JUMP / sizeof(char) - 1) == 0)
-					{
-						pSprit = strtok(&aCode[0], " =\n");	//処理内容の部分消す
-
-						//ジャンプ量取得
-						pSprit = strtok(NULL, " =\n");
-						pModel->fJump = fatof(pSprit);
-					}
-					else if (strncmp(&aCode[0], CODE_RADIUS, sizeof CODE_RADIUS / sizeof(char) - 1) == 0)
-					{
-						pSprit = strtok(&aCode[0], " =\n");	//処理内容の部分消す
-
-						//半径取得
-						pSprit = strtok(NULL, " =\n");
-						pModel->fRadius = fatof(pSprit);
-					}
-					else if (strncmp(&aCode[0], CODE_NUM_PARTS, sizeof CODE_NUM_PARTS / sizeof(char) - 1) == 0)
-					{
-						pSprit = strtok(&aCode[0], " =\n");	//処理内容の部分消す
-
-						//パーツ数取得
-						pSprit = strtok(NULL, " =\n");
-						pModel->nNumParts = atoi(pSprit);
-					}
-					break;
-				case READSTAT_PARTSSET:
-					if (strncmp(&aCode[0], CODE_END_PARTSSET, sizeof CODE_END_PARTSSET / sizeof(char) - 1) == 0)
-					{
-						//取得したものをもらったポインタに代入
-						pModel->aParts[g_nIdxParts] = g_readParts;
-
-						//取得したものを消す
-						g_readParts = {};
-
-						//キャラクター設定状態に戻る
-						g_readStat = READSTAT_CHARACTERSET;
-					}
-					else if (strncmp(&aCode[0], CODE_INDEX, sizeof CODE_INDEX / sizeof(char) - 1) == 0)
-					{
-						pSprit = strtok(&aCode[0], " =\n");	//処理内容の部分消す
-
-						//番号取得
-						pSprit = strtok(NULL, " =\n");
-						g_nIdxParts = atoi(pSprit);
-					}
-					else if (strncmp(&aCode[0], CODE_PARENT, sizeof CODE_PARENT / sizeof(char) - 1) == 0)
-					{
-						pSprit = strtok(&aCode[0], " =\n");	//処理内容の部分消す
-
-						//親番号取得
-						pSprit = strtok(NULL, " =\n");
-						g_readParts.mIdxModelParent = atoi(pSprit);
-					}
-					else if (strncmp(&aCode[0], CODE_POS, sizeof CODE_POS / sizeof(char) - 1) == 0)
-					{
-						pSprit = strtok(&aCode[0], " =\n");	//処理内容の部分消す
-
-						//X座標読み取り
-						pSprit = strtok(NULL, " =\n");
-						g_readParts.posOffset.x = fatof(pSprit);
-
-						//Y座標読み取り
-						pSprit = strtok(NULL, " =\n");
-						g_readParts.posOffset.y = fatof(pSprit);
-
-						//Z座標読み取り
-						pSprit = strtok(NULL, " =\n");
-						g_readParts.posOffset.z = fatof(pSprit);
-					}
-					else if (strncmp(&aCode[0], CODE_ROT, sizeof CODE_ROT / sizeof(char) - 1) == 0)
-					{
-						pSprit = strtok(&aCode[0], " =\n");	//処理内容の部分消す
-
-						//X座標読み取り
-						pSprit = strtok(NULL, " =\n");
-						g_readParts.rotOffset.x = fatof(pSprit);
-
-						//Y座標読み取り
-						pSprit = strtok(NULL, " =\n");
-						g_readParts.rotOffset.y = fatof(pSprit);
-
-						//Z座標読み取り
-						pSprit = strtok(NULL, " =\n");
-						g_readParts.rotOffset.z = fatof(pSprit);
-					}
-					break;
-				case READSTAT_MOTIONSET:
-					if (strncmp(&aCode[0], CODE_KEYSET, sizeof CODE_KEYSET / sizeof(char) - 1) == 0)
-					{
-						g_readStat = READSTAT_KEYSET;
-					}
-					else if (strncmp(&aCode[0], CODE_END_MOTIONSET, sizeof CODE_END_MOTIONSET / sizeof(char) - 1) == 0)
-					{
-						g_counterMotionInfo++;
-						g_counterKeyInfo = 0;
-						g_readStat = READSTAT_NONE;
-					}
-					else if (strncmp(&aCode[0], CODE_LOOP, sizeof CODE_LOOP / sizeof(char) - 1) == 0)
-					{
-						pSprit = strtok(&aCode[0], " =\n");	//処理内容の部分消す
-
-															//ループ可否読み取り
-						pSprit = strtok(NULL, " =\n");
-						g_motionInfo[g_counterMotionInfo].mLoop = atoi(pSprit) ? true : false;
-					}
-					else if (strncmp(&aCode[0], CODE_NUM_KEY, sizeof CODE_NUM_KEY / sizeof(char) - 1) == 0)
-					{
-						pSprit = strtok(&aCode[0], " =\n");	//処理内容の部分消す
-
-															//キー数読み取り
-						pSprit = strtok(NULL, " =\n");
-						g_motionInfo[g_counterMotionInfo].mNumKey = atoi(pSprit);
-					}
-					break;
-				case READSTAT_KEYSET:
-					if (strncmp(&aCode[0], CODE_KEY, sizeof CODE_KEY / sizeof(char) - 1) == 0)
-					{
-						g_readStat = READSTAT_KEY;
-					}
-					else if (strncmp(&aCode[0], CODE_END_KEYSET, sizeof CODE_END_KEYSET / sizeof(char) - 1) == 0)
-					{
-						g_counterKeyInfo++;
-						g_counterKey = 0;
-						g_readStat = READSTAT_MOTIONSET;
-					}
-					else if (strncmp(&aCode[0], CODE_FRAME, sizeof CODE_FRAME / sizeof(char) - 1) == 0)
-					{
-						pSprit = strtok(&aCode[0], " =\n");	//処理内容の部分消す
-
-						//フレーム数読み取り
-						pSprit = strtok(NULL, " =\n");
-						g_motionInfo[g_counterMotionInfo].aKeyInfo[g_counterKeyInfo].mFrame = atoi(pSprit);
-					}
-					break;
-				case READSTAT_KEY:
-					if (strncmp(&aCode[0], CODE_END_KEY, sizeof CODE_END_KEY / sizeof(char) - 1) == 0)
-					{
-						g_counterKey++;
-						g_readStat = READSTAT_KEYSET;
-					}
-					else if (strncmp(&aCode[0], CODE_POS, sizeof CODE_POS / sizeof(char) - 1) == 0)
-					{
-						pSprit = strtok(&aCode[0], " =\n");	//処理内容の部分消す
-
-						//X座標読み取り
-						pSprit = strtok(NULL, " =\n");
-						g_motionInfo[g_counterMotionInfo].aKeyInfo[g_counterKeyInfo].aKey[g_counterKey].mPosX = fatof(pSprit);
-
-						//Y座標読み取り
-						pSprit = strtok(NULL, " =\n");
-						g_motionInfo[g_counterMotionInfo].aKeyInfo[g_counterKeyInfo].aKey[g_counterKey].mPosY = fatof(pSprit);
-
-						//Z座標読み取り
-						pSprit = strtok(NULL, " =\n");
-						g_motionInfo[g_counterMotionInfo].aKeyInfo[g_counterKeyInfo].aKey[g_counterKey].mPosZ = fatof(pSprit);
-					}
-					else if (strncmp(&aCode[0], CODE_ROT, sizeof CODE_ROT / sizeof(char) - 1) == 0)
-					{
-						pSprit = strtok(&aCode[0], " =\n");	//処理内容の部分消す
-
-						//X向き読み取り
-						pSprit = strtok(NULL, " =\n");
-						g_motionInfo[g_counterMotionInfo].aKeyInfo[g_counterKeyInfo].aKey[g_counterKey].mRotX = fatof(pSprit);
-
-						//Y向き読み取り
-						pSprit = strtok(NULL, " =\n");
-						g_motionInfo[g_counterMotionInfo].aKeyInfo[g_counterKeyInfo].aKey[g_counterKey].mRotY = fatof(pSprit);
-
-						//Z向き読み取り
-						pSprit = strtok(NULL, " =\n");
-						g_motionInfo[g_counterMotionInfo].aKeyInfo[g_counterKeyInfo].aKey[g_counterKey].mRotZ = fatof(pSprit);
-					}
-					break;
-				}
-			}
-		}
-
-		//ファイル閉じる
-		fclose(pFile);
-	}
-	else
-	{
-		assert(pFile != NULL);
-	}
-}
-
-//========================
-//オリジナルモデル配置情報読み込み処理
-//引数1:オリジナルモデル配置情報の設定ファイルのパス
-//========================
-void LoadModelOriginalFile(const char *path)
-{
-	FILE *pFile;
-	char aCode[CODE_LENGTH];
-	char *pSprit;
-	bool bRead = false;
-
-	//変数初期化
-	g_counterReadModel = 0;
-
-	//モーション情報
-	//読み込みファイル設定
-	pFile = fopen(path, "r");
-
-	//敵配置情報を取得
-	if (pFile != NULL)
-	{
-		while (1)
-		{
-			fgets(&aCode[0], CODE_LENGTH, pFile);
-
-			//コメントアウトチェック
-			char *pCharPos = strchr(&aCode[0], '#');
-			if (pCharPos != nullptr)
-			{//strchrの返り値がぬるぽではない
-				*pCharPos = '\0';
-			}
-
-			//タブ消去
-			while (aCode[0] == '\t')
-			{
-				char aCodeBackup[CODE_LENGTH];
-				strcpy(&aCodeBackup[0], &aCode[0]);
-				strcpy(&aCode[0], &aCodeBackup[1]);
-			}
-
-			//文字列チェック
-			if (strncmp(&aCode[0], CODE_SCRIPT, sizeof CODE_SCRIPT / sizeof(char) - 1) == 0)
-			{//読み取り開始
-				bRead = true;
-			}
-			else if (strncmp(&aCode[0], CODE_END_SCRIPT, sizeof CODE_END_SCRIPT / sizeof(char) - 1) == 0)
-			{//読み取り終了
-				bRead = false;
-				break;
-			}
-			else if (aCode[0] == EOF)
-			{//EOFかもしれない
-				if (feof(pFile))
-				{//いや、これはEOFだ
-					bRead = false;
-					break;
-				}
-			}
-			else if (bRead == true)
-			{//読み取り
-				switch (g_readStat)
-				{
-				case READSTAT_NONE:	//処理取得
-					if (strncmp(&aCode[0], CODE_FAULTSET, sizeof CODE_FAULTSET / sizeof(char) - 1) == 0)
-					{
-						g_readStat = READSTAT_FAULTSET;
-					}
-					break;
-				case READSTAT_FAULTSET:		//モデル情報取得
-					if (strncmp(&aCode[0], CODE_END_FAULTSET, sizeof CODE_END_FAULTSET / sizeof(char) - 1) == 0)
-					{
-
-						g_readStat = READSTAT_NONE;
-					}
-					else if (strncmp(&aCode[0], CODE_POS, sizeof CODE_POS / sizeof(char) - 1) == 0)
-					{
-						pSprit = strtok(&aCode[0], " =\n");	//処理内容の部分消す
-
-						//X座標読み取り
-						pSprit = strtok(NULL, " =\n");
-						g_readFault.pos.x = fatof(pSprit);
-
-						//Y座標読み取り
-						pSprit = strtok(NULL, " =\n");
-						g_readFault.pos.y = fatof(pSprit);
-
-						//Z座標読み取り
-						pSprit = strtok(NULL, " =\n");
-						g_readFault.pos.z = fatof(pSprit);
-					}
-					else if (strncmp(&aCode[0], CODE_ROT, sizeof CODE_ROT / sizeof(char) - 1) == 0)
-					{
-						pSprit = strtok(&aCode[0], " =\n");	//処理内容の部分消す
-
-						//X座標読み取り
-						pSprit = strtok(NULL, " =\n");
-						g_readFault.rot.x = (fatof(pSprit) / 180) * D3DX_PI;
-
-						//Y座標読み取り
-						pSprit = strtok(NULL, " =\n");
-						g_readFault.rot.y = (fatof(pSprit) / 180) * D3DX_PI;
-
-						//Z座標読み取り
-						pSprit = strtok(NULL, " =\n");
-						g_readFault.rot.z = (fatof(pSprit) / 180) * D3DX_PI;
-					}
-					else if (strncmp(&aCode[0], CODE_RADIUS, sizeof CODE_RADIUS / sizeof(char) - 1) == 0)
-					{
-						pSprit = strtok(&aCode[0], " =\n");	//処理内容の部分消す
-
-						//半径取得
-						pSprit = strtok(NULL, " =\n");
-						g_readFault.fRadius = fatof(pSprit);
-					}
-					break;
-				}
-			}
-		}
-
 		//ファイル閉じる
 		fclose(pFile);
 	}

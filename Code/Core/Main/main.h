@@ -40,7 +40,7 @@ typedef enum
 #define MAX_PATH_STR		(1024)		//ファイルパスの長さ
 #define FVF_VERTEX_2D		(D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1)	//2D
 #define FVF_VERTEX_3D		(D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX1)	//3D
-#define INIT_ZERO			D3DXVECTER3(0.0f, 0.0f, 0.0f)
+#define INIT_ZERO			(D3DXVECTOR3(0.0f, 0.0f, 0.0f))
 
 //頂点情報[2D]
 typedef struct

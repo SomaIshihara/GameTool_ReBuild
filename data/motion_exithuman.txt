@@ -14,16 +14,16 @@ NUM_MODEL = 10
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data/MODEL/ExitHuman_Model/01_Body.x			# [0]体
-MODEL_FILENAME = data/MODEL/ExitHuman_Model/02_Head.x			# [1]頭
-MODEL_FILENAME = data/MODEL/ExitHuman_Model/03_Left_Arm.x		# [2]左腕
-MODEL_FILENAME = data/MODEL/ExitHuman_Model/04_Left_Hand.x		# [3]左手
-MODEL_FILENAME = data/MODEL/ExitHuman_Model/05_Right_Arm.x		# [4]右腕
-MODEL_FILENAME = data/MODEL/ExitHuman_Model/06_Right_Hand.x		# [5]右手
-MODEL_FILENAME = data/MODEL/ExitHuman_Model/07_Left_Leg.x		# [6]左腿
-MODEL_FILENAME = data/MODEL/ExitHuman_Model/08_Left_Foot.x		# [7]左足
-MODEL_FILENAME = data/MODEL/ExitHuman_Model/09_Right_Leg.x		# [8]右腿
-MODEL_FILENAME = data/MODEL/ExitHuman_Model/10_Right_Foot.x		# [9]右足
+MODEL_FILENAME = data/MODEL/exithuman_x/01_Body.x			# [0]体
+MODEL_FILENAME = data/MODEL/exithuman_x/02_Head.x			# [1]頭
+MODEL_FILENAME = data/MODEL/exithuman_x/03_Left_Arm.x		# [2]左腕
+MODEL_FILENAME = data/MODEL/exithuman_x/04_Left_Hand.x		# [3]左手
+MODEL_FILENAME = data/MODEL/exithuman_x/05_Right_Arm.x		# [4]右腕
+MODEL_FILENAME = data/MODEL/exithuman_x/06_Right_Hand.x		# [5]右手
+MODEL_FILENAME = data/MODEL/exithuman_x/07_Left_Leg.x		# [6]左腿
+MODEL_FILENAME = data/MODEL/exithuman_x/08_Left_Foot.x		# [7]左足
+MODEL_FILENAME = data/MODEL/exithuman_x/09_Right_Leg.x		# [8]右腿
+MODEL_FILENAME = data/MODEL/exithuman_x/10_Right_Foot.x		# [9]右足
 
 #------------------------------------------------------------------------------
 # キャラクター情報
