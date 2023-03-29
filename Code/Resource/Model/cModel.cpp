@@ -71,7 +71,7 @@ void cModel::SetModelSetup(cModelStruct modelstr)
 	this->m_cModelStr.m_IdxModelParent = modelstr.m_IdxModelParent;
 }
 
-void cModel::SetModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale, D3DXMATRIX *mtxBace, D3DXMATRIX *mtxParent)
+void cModel::DrawModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale, D3DXMATRIX *mtxBace, D3DXMATRIX *mtxParent)
 {
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();	//デバイスの取得
 	D3DXMATRIX mtxRot, mtxTrans, mtxTexture;	//計算用

@@ -141,16 +141,16 @@ bool cKeyboard::GetKeyboard(INPUTTYPE type, int nKey)
 	switch (type)
 	{
 	case INPUTTYPE_PRESS:
-		return (this->m_Key[nKey].state & 0x80) ? true : false;
+		return (m_Key[nKey].state & 0x80) ? true : false;
 		break;
 	case INPUTTYPE_TRIGGER:
-		return (this->m_Key[nKey].trigger & 0x80) ? true : false;
+		return (m_Key[nKey].trigger & 0x80) ? true : false;
 		break;
 	case INPUTTYPE_RELEASE:
-		return (this->m_Key[nKey].release & 0x80) ? true : false;
+		return (m_Key[nKey].release & 0x80) ? true : false;
 		break;
 	case INPUTTYPE_REPEATE:
-		return (this->m_Key[nKey].repeate & 0x80) ? true : false;
+		return (m_Key[nKey].repeate & 0x80) ? true : false;
 		break;
 	}
 	return false;

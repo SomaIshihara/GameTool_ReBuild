@@ -120,6 +120,9 @@
     <ClCompile Include="Code\3D\MotionModel\cMotionModel.cpp">
       <Filter>ソース ファイル\lib\3D\MotionModel</Filter>
     </ClCompile>
+    <ClCompile Include="Code\Added\Player.cpp">
+      <Filter>ソース ファイル\Added</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\3D\Camera\cCamera.h">
@@ -163,6 +166,9 @@
     </ClInclude>
     <ClInclude Include="Code\3D\MotionModel\cMotionModel.h">
       <Filter>ソース ファイル\lib\3D\MotionModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Added\Player.h">
+      <Filter>ソース ファイル\Added</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

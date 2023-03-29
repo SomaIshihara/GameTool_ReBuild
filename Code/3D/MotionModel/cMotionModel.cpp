@@ -5,8 +5,8 @@
 //
 //==========================================
 #include "cMotionModel.h"
-#include "..\Core\File\file.h"
-#include "..\Mathysics\Culc\Culc.h"
+#include "..\..\Core\File\file.h"
+#include "..\..\Mathysics\Culc\Culc.h"
 #include <stdio.h>
 #include <assert.h>
 
@@ -386,20 +386,19 @@ void cMotionModel::LoadMotionModel(const char *pPath)
 //========================
 //ƒ‚ƒfƒ‹”z’u
 //========================
-void cMotionModel::SetMotionModel(D3DXMATRIX *mtxBace)
+void cMotionModel::DrawMotionModel(D3DXMATRIX *mtxBace)
 {
-
 	D3DXMATRIX mtxParent;
 	for (int cntModel = 0; cntModel < MAX_MOTION_MODEL; cntModel++)
 	{
 		if(this->m_model[cntModel].GetModel().m_IdxModelParent != -1)
 		{
 			mtxParent = this->m_model[this->m_model[cntModel].GetModel().m_IdxModelParent].GetModel().mtxWorld;
-			this->m_model[cntModel].SetModel(INIT_ZERO, INIT_ZERO, INIT_ZERO, mtxBace, &mtxParent);
+			this->m_model[cntModel].DrawModel(INIT_ZERO, INIT_ZERO, INIT_ZERO, mtxBace, &mtxParent);
 		}
 		else
 		{
-			this->m_model[cntModel].SetModel(INIT_ZERO, INIT_ZERO, INIT_ZERO, mtxBace);
+			this->m_model[cntModel].DrawModel(INIT_ZERO, INIT_ZERO, INIT_ZERO, mtxBace);
 		}
 	}
 }

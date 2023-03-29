@@ -7,8 +7,8 @@
 #ifndef _MOTION_MODEL_H_
 #define _MOTION_MODEL_H_
 
-#include "../Core/Main/main.h"
-#include "../Resource/Model/cModel.h"
+#include "../../Core/Main/main.h"
+#include "../../Resource/Model/cModel.h"
 
 #define MAX_MOTION_MODEL	(10)	//“®‚­ƒ‚ƒfƒ‹‚ÉŽg‚¦‚é
 
@@ -60,9 +60,9 @@ class cMotionModel
 {
 public:
 	cMotionModel();
-	~cMotionModel();
+	virtual ~cMotionModel();
 	void LoadMotionModel(const char* pPath);
-	void SetMotionModel(D3DXMATRIX *mtxBace);
+	void DrawMotionModel(D3DXMATRIX *mtxBace);
 private:
 	Motion m_motion;
 	MOTION_INFO m_motionInfo[MOTIONTYPE_MAX];

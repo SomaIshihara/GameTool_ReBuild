@@ -113,14 +113,14 @@ public:
 	void Update(void);
 
 	//取得
-	bool GetKeyboard(INPUTTYPE type, int nKey);
-
-	//保存場所
-	static Keyboard m_Key[NUM_KEY_MAX];
+	static bool GetKeyboard(INPUTTYPE type, int nKey);
 private:
 	//取得に必要
 	LPDIRECTINPUT8 m_pInputKeyboard;
 	LPDIRECTINPUTDEVICE8 m_pDevKeyboard;
+
+	//保存場所
+	static Keyboard m_Key[NUM_KEY_MAX];
 };
 
 //=============================
@@ -146,12 +146,12 @@ public:
 	bool GetGamePadButton(INPUTTYPE type, int nButton);	//ボタン
 	bool GetGamePadStick(char location, char dir);		//スティック
 	static bool GetUseGamePad(GAMEPAD_NO PadNum);		//使用の有無
-
-	//保存場所
-	static GamePad m_Pad[MAX_USE_GAMEPAD];
 private:
 	//パッド番号
 	GAMEPAD_NO m_PadNum;
+
+	//保存場所
+	static GamePad m_Pad[MAX_USE_GAMEPAD];
 };
 
 //=============================

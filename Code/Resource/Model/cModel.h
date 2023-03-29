@@ -34,7 +34,7 @@ public:
 	~cModel();
 	void LoadModel(const char* pPath);
 	void SetModelSetup(cModelStruct modelstr);
-	void SetModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale, D3DXMATRIX *pMtxBace, D3DXMATRIX *mtxParent = NULL);
+	void DrawModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale, D3DXMATRIX *pMtxBace, D3DXMATRIX *mtxParent = NULL);
 	cModelStruct GetModel(void);
 protected:
 	cModelStruct m_cModelStr;

@@ -22,6 +22,7 @@
     <ClCompile Include="Code\3D\Camera\cCamera.cpp" />
     <ClCompile Include="Code\3D\Light\cLight.cpp" />
     <ClCompile Include="Code\3D\MotionModel\cMotionModel.cpp" />
+    <ClCompile Include="Code\Added\Player.cpp" />
     <ClCompile Include="Code\Core\DebugProc\cDebugproc.cpp" />
     <ClCompile Include="Code\Core\Input\input.cpp" />
     <ClCompile Include="Code\Core\Main\main.cpp" />
@@ -37,6 +38,7 @@
     <ClInclude Include="Code\3D\Camera\cCamera.h" />
     <ClInclude Include="Code\3D\Light\cLight.h" />
     <ClInclude Include="Code\3D\MotionModel\cMotionModel.h" />
+    <ClInclude Include="Code\Added\Player.h" />
     <ClInclude Include="Code\Core\DebugProc\cDebugproc.h" />
     <ClInclude Include="Code\Core\File\file.h" />
     <ClInclude Include="Code\Core\Input\input.h" />
