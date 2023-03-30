@@ -384,21 +384,111 @@ void cMotionModel::LoadMotionModel(const char *pPath)
 }
 
 //========================
-//モデル配置
+//モーション更新処理
+//========================
+void cMotionModel::UpdateMotion(void)
+{
+	//今のキーと次のキーを入れておく
+	int nNowKey = this->m_motion.m_nowKey;
+	int nNextKey = this->m_motion.m_nowKey + 1;
+
+	for (int CntModel = 0; CntModel < MAX_MOTION_MODEL; CntModel++)
+	{
+		if (this->m_model[CntModel].GetModel().m_bUse == true)
+		{
+			//オフセットを入れておく
+			this->m_motionPos[CntModel] = this->m_model[CntModel].GetModel().posOffset;
+			this->m_motionRot[CntModel] = this->m_model[CntModel].GetModel().rotOffset;
+
+			//差分算出
+			float posDiffX = this->m_motionInfo[this->m_motion.m_motionType].m_aKeyInfo[nNextKey].m_aKey[CntModel].m_PosX -
+				this->m_motionInfo[this->m_motion.m_motionType].m_aKeyInfo[nNowKey].m_aKey[CntModel].m_PosX;
+			float posDiffY = this->m_motionInfo[this->m_motion.m_motionType].m_aKeyInfo[nNextKey].m_aKey[CntModel].m_PosY -
+				this->m_motionInfo[this->m_motion.m_motionType].m_aKeyInfo[nNowKey].m_aKey[CntModel].m_PosY;
+			float posDiffZ = this->m_motionInfo[this->m_motion.m_motionType].m_aKeyInfo[nNextKey].m_aKey[CntModel].m_PosZ -
+				this->m_motionInfo[this->m_motion.m_motionType].m_aKeyInfo[nNowKey].m_aKey[CntModel].m_PosZ;
+			float rotDiffX = this->m_motionInfo[this->m_motion.m_motionType].m_aKeyInfo[nNextKey].m_aKey[CntModel].m_RotX -
+				this->m_motionInfo[this->m_motion.m_motionType].m_aKeyInfo[nNowKey].m_aKey[CntModel].m_RotX;
+			float rotDiffY = this->m_motionInfo[this->m_motion.m_motionType].m_aKeyInfo[nNextKey].m_aKey[CntModel].m_RotY -
+				this->m_motionInfo[this->m_motion.m_motionType].m_aKeyInfo[nNowKey].m_aKey[CntModel].m_RotY;
+			float rotDiffZ = this->m_motionInfo[this->m_motion.m_motionType].m_aKeyInfo[nNextKey].m_aKey[CntModel].m_RotZ -
+				this->m_motionInfo[this->m_motion.m_motionType].m_aKeyInfo[nNowKey].m_aKey[CntModel].m_RotZ;
+
+			//位置向き算出
+			float posDemandX = this->m_motionInfo[this->m_motion.m_motionType].m_aKeyInfo[nNowKey].m_aKey[CntModel].m_PosX +
+				posDiffX * ((float)this->m_motion.m_counterMotion / this->m_motionInfo[this->m_motion.m_motionType].m_aKeyInfo[nNowKey].m_Frame);
+			float posDemandY = this->m_motionInfo[this->m_motion.m_motionType].m_aKeyInfo[nNowKey].m_aKey[CntModel].m_PosY +
+				posDiffY * ((float)this->m_motion.m_counterMotion / this->m_motionInfo[this->m_motion.m_motionType].m_aKeyInfo[nNowKey].m_Frame);
+			float posDemandZ = this->m_motionInfo[this->m_motion.m_motionType].m_aKeyInfo[nNowKey].m_aKey[CntModel].m_PosZ +
+				posDiffZ * ((float)this->m_motion.m_counterMotion / this->m_motionInfo[this->m_motion.m_motionType].m_aKeyInfo[nNowKey].m_Frame);
+			float rotDemandX = this->m_motionInfo[this->m_motion.m_motionType].m_aKeyInfo[nNowKey].m_aKey[CntModel].m_RotX +
+				rotDiffX * ((float)this->m_motion.m_counterMotion / this->m_motionInfo[this->m_motion.m_motionType].m_aKeyInfo[nNowKey].m_Frame);
+			float rotDemandY = this->m_motionInfo[this->m_motion.m_motionType].m_aKeyInfo[nNowKey].m_aKey[CntModel].m_RotY +
+				rotDiffY * ((float)this->m_motion.m_counterMotion / this->m_motionInfo[this->m_motion.m_motionType].m_aKeyInfo[nNowKey].m_Frame);
+			float rotDemandZ = this->m_motionInfo[this->m_motion.m_motionType].m_aKeyInfo[nNowKey].m_aKey[CntModel].m_RotZ +
+				rotDiffZ * ((float)this->m_motion.m_counterMotion / this->m_motionInfo[this->m_motion.m_motionType].m_aKeyInfo[nNowKey].m_Frame);
+
+			//パーツの位置向き設定
+			this->m_motionPos[CntModel] += D3DXVECTOR3(posDemandX, posDemandY, posDemandZ);
+			this->m_motionRot[CntModel] += D3DXVECTOR3(rotDemandX, rotDemandY, rotDemandZ);
+		}
+	}
+	this->m_motion.m_counterMotion++;
+
+	//再生フレーム後の挙動
+	if (this->m_motion.m_counterMotion == this->m_motionInfo[this->m_motion.m_motionType].m_aKeyInfo[nNowKey].m_Frame)
+	{//再生フレーム数に達したら
+	 //カウンターをリセットしてキーを一つ増やす
+		this->m_motion.m_counterMotion = 0;
+		this->m_motion.m_nowKey++;
+
+		//キーの最大数に達したらループするか否かに応じて再設定する
+		if (this->m_motion.m_nowKey == this->m_motionInfo[this->m_motion.m_motionType].m_numKey)
+		{
+			if (this->m_motionInfo[this->m_motion.m_motionType].m_Loop == true)
+			{//ループさせる
+				this->m_motion.m_nowKey = 0;
+			}
+			else
+			{//通常はNEUTRAL状態にする
+				this->SetMotion(MOTIONTYPE_HOGE);
+			}
+		}
+	}
+}
+
+//========================
+//モーション設定処理
+//========================
+void cMotionModel::SetMotion(MOTIONTYPE type)
+{
+	if (this->m_motion.m_motionType != type)
+	{
+		this->m_motion.m_motionType = type;
+		this->m_motion.m_nowKey = 0;
+		this->m_motion.m_counterMotion = 0;
+	}
+}
+
+//========================
+//モデル描画
 //========================
 void cMotionModel::DrawMotionModel(D3DXMATRIX *mtxBace)
 {
 	D3DXMATRIX mtxParent;
 	for (int cntModel = 0; cntModel < MAX_MOTION_MODEL; cntModel++)
 	{
-		if(this->m_model[cntModel].GetModel().m_IdxModelParent != -1)
+		if (this->m_model[cntModel].GetModel().m_bUse == true)
 		{
-			mtxParent = this->m_model[this->m_model[cntModel].GetModel().m_IdxModelParent].GetModel().mtxWorld;
-			this->m_model[cntModel].DrawModel(INIT_ZERO, INIT_ZERO, INIT_ZERO, mtxBace, &mtxParent);
-		}
-		else
-		{
-			this->m_model[cntModel].DrawModel(INIT_ZERO, INIT_ZERO, INIT_ZERO, mtxBace);
+			if (this->m_model[cntModel].GetModel().m_IdxModelParent != -1)
+			{
+				mtxParent = this->m_model[this->m_model[cntModel].GetModel().m_IdxModelParent].GetModel().mtxWorld;
+				this->m_model[cntModel].DrawModel(this->m_motionPos[cntModel], this->m_motionRot[cntModel], INIT_ZERO, mtxBace, &mtxParent);
+			}
+			else
+			{
+				this->m_model[cntModel].DrawModel(this->m_motionPos[cntModel], this->m_motionRot[cntModel], INIT_ZERO, mtxBace);
+			}
 		}
 	}
 }

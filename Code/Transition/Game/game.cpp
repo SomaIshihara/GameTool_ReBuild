@@ -25,7 +25,7 @@ Player g_Player;
 void InitGame(void)
 {
 	//g_model.LoadModel("data\\MODEL\\Rock_xfile\\Rock_01.x");
-	g_Player.LoadMotionModel("data\\motion_exithuman.txt");
+	g_Player.LoadMotionModel("data\\motion_ino.txt");
 	g_light.SetLight(D3DLIGHT_DIRECTIONAL, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), D3DXVECTOR3(0.2f, -0.8f, 0.4f));
 }
 

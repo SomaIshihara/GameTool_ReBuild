@@ -22,6 +22,9 @@ struct cModelStruct
 	D3DXVECTOR3 posOffset;	//位置（オフセット）
 	D3DXVECTOR3 rotOffset;	//向き（オフセット）
 	int m_IdxModelParent;	//親モデルインデックス
+
+	//使用有無
+	bool m_bUse;			//使用の有無
 };
 
 //========================

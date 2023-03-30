@@ -46,6 +46,8 @@ void Player::Update(void)
 	{
 		this->pos.x -= 1.0f;
 	}
+	this->SetMotion(MOTIONTYPE_HUGA);
+	this->UpdateMotion();
 }
 
 //========================

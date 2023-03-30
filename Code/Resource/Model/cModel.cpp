@@ -7,6 +7,9 @@
 #include "..\..\Core\Main\main.h"
 #include "cModel.h"
 
+//========================
+//コンストラクタ
+//========================
 cModel::cModel()
 {
 	this->m_cModelStr = {};
@@ -15,6 +18,9 @@ cModel::cModel()
 	this->m_cModelStr.m_IdxModelParent = -1;
 }
 
+//========================
+//デストラクタ
+//========================
 cModel::~cModel()
 {
 	//メッシュの破棄
@@ -32,11 +38,14 @@ cModel::~cModel()
 	}
 }
 
+//========================
+//モデル読み込み
+//========================
 void cModel::LoadModel(const char* pPath)
 {
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();	//デバイスの取得
 
-	D3DXLoadMeshFromX(
+	if (SUCCEEDED(D3DXLoadMeshFromX(
 		pPath,
 		D3DXMESH_SYSTEMMEM,
 		pDevice,
@@ -44,26 +53,39 @@ void cModel::LoadModel(const char* pPath)
 		&this->m_cModelStr.pBuffMat,
 		NULL,
 		&this->m_cModelStr.dwNumMatModel,
-		&this->m_cModelStr.pMesh);
-
-	//テクスチャ読み込み
-	D3DXMATERIAL* pMat;	//マテリアルポインタ
-
-	//マテリアル情報に対するポインタ取得
-	pMat = (D3DXMATERIAL*)this->m_cModelStr.pBuffMat->GetBufferPointer();
-
-	for (int nCntTex = 0; nCntTex < (int)this->m_cModelStr.dwNumMatModel; nCntTex++)
+		&this->m_cModelStr.pMesh)))
 	{
-		if (pMat[nCntTex].pTextureFilename != NULL)
+		//テクスチャ読み込み
+		D3DXMATERIAL* pMat;	//マテリアルポインタ
+
+		//マテリアル情報に対するポインタ取得
+		pMat = (D3DXMATERIAL*)this->m_cModelStr.pBuffMat->GetBufferPointer();
+
+		//テクスチャ読み込み
+		for (int nCntTex = 0; nCntTex < (int)this->m_cModelStr.dwNumMatModel; nCntTex++)
 		{
-			//テクスチャ読み込み
-			D3DXCreateTextureFromFile(pDevice,
-				pMat[nCntTex].pTextureFilename,
-				&this->m_cModelStr.apTexture[nCntTex]);
+			if (pMat[nCntTex].pTextureFilename != NULL)
+			{
+				//テクスチャ読み込み
+				D3DXCreateTextureFromFile(pDevice,
+					pMat[nCntTex].pTextureFilename,
+					&this->m_cModelStr.apTexture[nCntTex]);
+			}
 		}
+
+		//使用している状態にする
+		this->m_cModelStr.m_bUse = true;
+	}
+	else
+	{
+		//使用していない
+		this->m_cModelStr.m_bUse = false;
 	}
 }
 
+//========================
+//モデル設定
+//========================
 void cModel::SetModelSetup(cModelStruct modelstr)
 {
 	this->m_cModelStr.posOffset = modelstr.posOffset;
@@ -71,6 +93,9 @@ void cModel::SetModelSetup(cModelStruct modelstr)
 	this->m_cModelStr.m_IdxModelParent = modelstr.m_IdxModelParent;
 }
 
+//========================
+//描画処理
+//========================
 void cModel::DrawModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale, D3DXMATRIX *mtxBace, D3DXMATRIX *mtxParent)
 {
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();	//デバイスの取得
@@ -84,10 +109,6 @@ void cModel::DrawModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale, D3DX
 	//モデル取得
 	//ワールドマトリックス初期化
 	D3DXMatrixIdentity(&this->m_cModelStr.mtxWorld);
-
-	//オフセットを足す
-	pos = this->m_cModelStr.posOffset;
-	rot = this->m_cModelStr.rotOffset;
 
 	//拡縮を反映
 	//D3DXMatrixScaling(&mtxScall, FENCE_SCALE, FENCE_SCALE, FENCE_SCALE);

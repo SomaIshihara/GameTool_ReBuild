@@ -10,7 +10,7 @@
 #include "../../Core/Main/main.h"
 #include "../../Resource/Model/cModel.h"
 
-#define MAX_MOTION_MODEL	(10)	//動くモデルに使える
+#define MAX_MOTION_MODEL	(16)	//動くモデルに使える
 
 //モーションの種類
 typedef enum
@@ -62,11 +62,15 @@ public:
 	cMotionModel();
 	virtual ~cMotionModel();
 	void LoadMotionModel(const char* pPath);
+	void UpdateMotion(void);
+	void SetMotion(MOTIONTYPE type);
 	void DrawMotionModel(D3DXMATRIX *mtxBace);
 private:
 	Motion m_motion;
 	MOTION_INFO m_motionInfo[MOTIONTYPE_MAX];
 	cModel m_model[MAX_MOTION_MODEL];
+	D3DXVECTOR3 m_motionPos[MAX_MOTION_MODEL];
+	D3DXVECTOR3 m_motionRot[MAX_MOTION_MODEL];
 	float m_move;	//移動量
 	float m_jump;	//ジャンプ量
 	float m_radius;	//半径（未使用）
