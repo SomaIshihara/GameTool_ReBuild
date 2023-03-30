@@ -8,6 +8,8 @@
 #include "..\Core\Input\input.h"
 #include "Player.h"
 
+#define PLAYER_MOVE_SPEED	(1.5f)	//移動速度
+
 //========================
 //コンストラクタ
 //========================
@@ -32,21 +34,72 @@ void Player::Update(void)
 	//キーボードの情報取得
 	if (cKeyboard::GetKeyboard(INPUTTYPE_PRESS, DIK_W) == true)
 	{
-		this->pos.z += 1.0f;
+		//角度指定
+		if (cKeyboard::GetKeyboard(INPUTTYPE_PRESS, DIK_D) == true)
+		{
+			this->rot.y = -0.75f * D3DX_PI;
+		}
+		else if (cKeyboard::GetKeyboard(INPUTTYPE_PRESS, DIK_A) == true)
+		{
+			this->rot.y = 0.75f * D3DX_PI;
+		}
+		else
+		{
+			this->rot.y = 1.0f * D3DX_PI;
+		}
+
+		//位置指定
+		this->pos.x -= sinf(this->rot.y) * PLAYER_MOVE_SPEED;
+		this->pos.z -= cosf(this->rot.y) * PLAYER_MOVE_SPEED;
+		this->SetMotion(MOTIONTYPE_HUGA);
 	}
 	else if (cKeyboard::GetKeyboard(INPUTTYPE_PRESS, DIK_S) == true)
 	{
-		this->pos.z -= 1.0f;
+		//角度指定
+		if (cKeyboard::GetKeyboard(INPUTTYPE_PRESS, DIK_D) == true)
+		{
+			this->rot.y = -0.25f * D3DX_PI;
+		}
+		else if (cKeyboard::GetKeyboard(INPUTTYPE_PRESS, DIK_A) == true)
+		{
+			this->rot.y = 0.25f * D3DX_PI;
+		}
+		else
+		{
+			this->rot.y = 0.0f * D3DX_PI;
+		}
+
+		//位置指定
+		this->pos.x -= sinf(this->rot.y) * PLAYER_MOVE_SPEED;
+		this->pos.z -= cosf(this->rot.y) * PLAYER_MOVE_SPEED;
+		this->SetMotion(MOTIONTYPE_HUGA);
 	}
-	if (cKeyboard::GetKeyboard(INPUTTYPE_PRESS, DIK_D) == true)
+	else if (cKeyboard::GetKeyboard(INPUTTYPE_PRESS, DIK_D) == true)
 	{
-		this->pos.x += 1.0f;
+		//角度指定
+		this->rot.y = -0.5f * D3DX_PI;
+
+		//位置指定
+		this->pos.x -= sinf(this->rot.y) * PLAYER_MOVE_SPEED;
+		this->pos.z -= cosf(this->rot.y) * PLAYER_MOVE_SPEED;
+		this->SetMotion(MOTIONTYPE_HUGA);
 	}
 	else if (cKeyboard::GetKeyboard(INPUTTYPE_PRESS, DIK_A) == true)
 	{
-		this->pos.x -= 1.0f;
+		//角度指定
+		this->rot.y = 0.5f * D3DX_PI;
+
+		//位置指定
+		this->pos.x -= sinf(this->rot.y) * PLAYER_MOVE_SPEED;
+		this->pos.z -= cosf(this->rot.y) * PLAYER_MOVE_SPEED;
+		this->SetMotion(MOTIONTYPE_HUGA);
 	}
-	this->SetMotion(MOTIONTYPE_HUGA);
+	else
+	{
+		this->SetMotion(MOTIONTYPE_HOGE);
+	}
+
+	//モーション更新
 	this->UpdateMotion();
 }
 
