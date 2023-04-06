@@ -159,6 +159,7 @@ private:
 //=============================
 class cMouse
 {
+public:
 	//コンストラクタ・デストラクタ
 	cMouse();
 	~cMouse();
@@ -171,20 +172,20 @@ class cMouse
 
 	//取得
 	//ボタン
-	bool GetMouseClick(INPUTTYPE type, int button);
+	static bool GetMouseClick(INPUTTYPE type, int button);
 
 	//位置
-	D3DXVECTOR3 GetMousePos(void);
+	static D3DXVECTOR3 GetMousePos(void);
 
 	//移動量
-	D3DXVECTOR3 GetMouseMove(void);
+	static D3DXVECTOR3 GetMouseMove(void);
 private:
 	//取得に必要
 	LPDIRECTINPUT8 m_pInputMouse;
 	LPDIRECTINPUTDEVICE8 m_pDevMouse;
 
 	//保存場所
-	Mouse m_Mouse;
+	static Mouse m_Mouse;
 };
 
 #endif // !_INPUT_H_

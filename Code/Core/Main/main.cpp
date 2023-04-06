@@ -38,6 +38,7 @@ bool g_bDebug = true;
 
 //クラス
 cKeyboard g_keyboard;
+cMouse g_mouse;
 cDebugProc *g_pDebugProc;
 
 //========================
@@ -322,6 +323,12 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		return E_FAIL;
 	}
 
+	//マウスの初期化
+	if (FAILED(g_mouse.Init(hInstance, hWnd)))
+	{
+		return E_FAIL;
+	}
+
 	//ImGUI系
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
@@ -368,7 +375,7 @@ void Uninit(void)
 	//デバッグプロシージャ終了
 	delete g_pDebugProc;
 
-	//キーボードの終了は自動で行う
+	//キーボード・マウスの終了は自動で行う
 
 	//XInput終了
 	XInputEnable(false);
@@ -395,6 +402,9 @@ void Update(HWND hWnd)
 {
 	//キーボードの更新
 	g_keyboard.Update();
+
+	//マウスの更新
+	g_mouse.Update();
 
 	//ファイル
 	//UpdateFile();

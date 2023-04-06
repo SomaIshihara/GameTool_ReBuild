@@ -60,7 +60,8 @@ void UpdateGame(void)
 	//プレイヤー
 	g_Player.Update();
 	//カメラ
-	g_camera.MoveCamera(0.0f, 0.0f);
+	g_camera.MoveCamera();
+	//g_camera.MoveCamera(0.0f, 0.0f);
 }
 
 //========================

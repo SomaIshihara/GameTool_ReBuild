@@ -12,7 +12,7 @@
 
 //マクロ
 #define CAMERA_MOVE_SPEED		(1.0f)		//カメラ移動速度
-#define CAMERA_MOU_ROT_SPEED	(0.0012f)	//マウス移動での回転速度
+#define CAMERA_MOU_ROT_SPEED	(0.0024f)	//マウス移動での回転速度
 #define CAMERA_LENGTH			(5200.0f)	//カメラが見える最大距離
 
 //プロト
@@ -39,7 +39,28 @@ cCamera::~cCamera()
 }
 
 //========================
-//移動処理
+//移動処理（クラス内処理）
+//========================
+void cCamera::MoveCamera(void)
+{
+	//視点・注視点設定
+	if (cMouse::GetMouseClick(INPUTTYPE_PRESS, MOUSE_CLICK_LEFT) == true)
+	{
+		//視点設定
+		this->m_camera.rot.y -= cMouse::GetMouseMove().x * CAMERA_MOU_ROT_SPEED;
+		this->m_camera.rot.x -= cMouse::GetMouseMove().y * CAMERA_MOU_ROT_SPEED;
+		FixRot(&m_camera.rot);
+		this->m_camera.vecU.x = sinf(this->m_camera.rot.x) * sinf(this->m_camera.rot.y);
+		this->m_camera.vecU.y = cosf(this->m_camera.rot.x);
+		this->m_camera.vecU.z = sinf(this->m_camera.rot.x) * cosf(this->m_camera.rot.y) * -1;
+		D3DXVec3Normalize(&this->m_camera.vecU, &this->m_camera.vecU);
+		FixPosV(&this->m_camera);
+	}
+
+}
+
+//========================
+//移動処理（直打ち）
 //========================
 void cCamera::MoveCamera(float moveX, float moveY)
 {

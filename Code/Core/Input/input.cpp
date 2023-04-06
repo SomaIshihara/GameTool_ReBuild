@@ -18,6 +18,7 @@
 //静的メンバ構造体を定義
 Keyboard cKeyboard::m_Key[NUM_KEY_MAX];
 GamePad cGamePad::m_Pad[MAX_USE_GAMEPAD];
+Mouse cMouse::m_Mouse;
 
 //プロト
 void AdjustStick(SHORT* pStick);
@@ -479,13 +480,13 @@ bool cMouse::GetMouseClick(INPUTTYPE type, int button)
 	switch (type)
 	{
 	case INPUTTYPE_PRESS:
-		return this->m_Mouse.state.rgbButtons[button] & 0x80 ? true : false;
+		return m_Mouse.state.rgbButtons[button] & 0x80 ? true : false;
 		break;
 	case INPUTTYPE_TRIGGER:
-		return this->m_Mouse.mb[button].trigger & 0x80 ? true : false;
+		return m_Mouse.mb[button].trigger & 0x80 ? true : false;
 		break;
 	case INPUTTYPE_RELEASE:
-		return this->m_Mouse.mb[button].repeate & 0x80 ? true : false;
+		return m_Mouse.mb[button].repeate & 0x80 ? true : false;
 		break;
 	case INPUTTYPE_REPEATE:
 		return false;	//工事中
@@ -499,7 +500,7 @@ bool cMouse::GetMouseClick(INPUTTYPE type, int button)
 //=======================
 D3DXVECTOR3 cMouse::GetMousePos(void)
 {
-	return this->m_Mouse.pos;
+	return m_Mouse.pos;
 }
 
 //========================
@@ -507,5 +508,5 @@ D3DXVECTOR3 cMouse::GetMousePos(void)
 //=======================
 D3DXVECTOR3 cMouse::GetMouseMove(void)
 {
-	return this->m_Mouse.move;
+	return m_Mouse.move;
 }

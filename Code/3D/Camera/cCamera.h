@@ -29,7 +29,8 @@ public:
 	~cCamera();
 
 	//移動
-	void MoveCamera(float moveX, float moveY);
+	void MoveCamera(void);						//クラス内で移動処理を行う
+	void MoveCamera(float moveX, float moveY);	//直打ち
 	void ResetCamera(float fLength, D3DXVECTOR2 posV, D3DXVECTOR3 posR, D3DXVECTOR3 rot);
 
 	//設定
@@ -40,8 +41,5 @@ public:
 private:
 	Camera m_camera;
 };
-
-//プロトタイプ宣言
-Camera *GetCamera(void);
 
 #endif // !_CAMERA_H_
