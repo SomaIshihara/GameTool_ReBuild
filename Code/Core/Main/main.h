@@ -15,6 +15,14 @@
 #include "dinput.h"
 #include "xaudio2.h"
 
+//ImGUI
+#include "..\..\ImGUI\imgui.h"
+#include "..\..\ImGUI\imgui_impl_win32.h"
+#include "..\..\ImGUI\imgui_impl_dx9.h"
+#include <d3d9.h>
+#include <tchar.h>
+#include <vector>
+
 //ライブラリのリンク
 #pragma comment(lib,"d3d9.lib")
 #pragma comment(lib,"d3dx9.lib")
@@ -34,6 +42,7 @@ typedef enum
 
 //マクロ定義
 #define CLASS_NAME			"WindowClass"
+#define WINDOW_NAME			"hogehoge"
 #define SCREEN_WIDTH		(1280)		//クライアント領域の幅
 #define SCREEN_HEIGHT		(720)		//クライアント領域の高さ
 #define MAX_FPS				(60)		//最大フレームレート

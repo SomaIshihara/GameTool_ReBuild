@@ -4,16 +4,17 @@
 //Author:石原颯馬
 //
 //==========================================
+//main
 #include "main.h"
 #include "..\..\Core\Input\input.h"
 #include "..\..\3D\Camera\cCamera.h"
 #include "..\..\3D\Light\cLight.h"
+#include "..\..\Resource\Model\cModel.h"
 #include "..\..\Core\Input\input.h"
 #include "..\..\Core\DebugProc\cDebugproc.h"
 #include "..\..\Transition\Game\game.h"
 
 //マクロ定義
-#define WINDOW_NAME		"hogehoge"
 #define PROC_SPEED	(1000 / MAX_FPS)
 #define FPS_SPEED	(500)
 #define SHOWCURSOR_COUNTER		(2)	//カーソル表示非表示が正常にされるカウンタ
@@ -22,9 +23,10 @@
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow);
 void Uninit(void);
-void Update(void);
+void Update(HWND hWnd);
 void Draw(void);
 void UpdateShowCursor(void);
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 //グローバル変数
 LPDIRECT3D9 g_pD3D = NULL;	//Direct3Dオブジェクトへのポインタ
@@ -34,6 +36,7 @@ MODE g_mode = MODE_TITLE;
 bool g_bShowCursor = true;
 bool g_bDebug = true;
 
+//クラス
 cKeyboard g_keyboard;
 cDebugProc *g_pDebugProc;
 
@@ -161,7 +164,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hInstancePrev, LPSTR lpCmdLine
 				dwExecLastTime = dwCurrentTime;
 
 				//更新処理
-				Update();
+				Update(hWnd);
 
 				//描画処理
 				Draw();
@@ -190,6 +193,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hInstancePrev, LPSTR lpCmdLine
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	int nID;
+
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
+		return true;
 
 	switch (uMsg)
 	{
@@ -316,6 +322,19 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		return E_FAIL;
 	}
 
+	//ImGUI系
+	// Setup Dear ImGui context
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+	io.Fonts->AddFontFromFileTTF("data//FONTS//meiryo.ttc", 20.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
+	//ImGui::StyleColorsLight();
+	ImGui::StyleColorsDark();
+	ImGui_ImplWin32_Init(hWnd);
+	ImGui_ImplDX9_Init(GetDevice());// GetGlyphRangesJapanese
+
 	//オブジェクト初期化
 	//カメラ・ライトは宣言時に自動設定
 	//デバッグプロシージャの初期化
@@ -338,6 +357,11 @@ void Uninit(void)
 	//終了処理（自分が作ったものを捨てる）
 	//まとまったもの
 	UninitGame();
+
+	//ImGUI
+	ImGui_ImplDX9_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 
 	//単品
 	//UninitFile();
@@ -367,7 +391,7 @@ void Uninit(void)
 //========================
 //更新処理
 //========================
-void Update(void)
+void Update(HWND hWnd)
 {
 	//キーボードの更新
 	g_keyboard.Update();

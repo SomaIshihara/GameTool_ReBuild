@@ -79,6 +79,9 @@
     <Filter Include="ソース ファイル\lib\3D\MotionModel">
       <UniqueIdentifier>{c7a027b0-3125-4459-977e-e3ea0f1339cd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\ImGUI">
+      <UniqueIdentifier>{d1f1f5ea-7434-48d6-8b00-e88fbdcf8555}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\3D\Camera\cCamera.cpp">
@@ -122,6 +125,27 @@
     </ClCompile>
     <ClCompile Include="Code\Added\Player.cpp">
       <Filter>ソース ファイル\Added</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ImGUI\imgui_demo.cpp">
+      <Filter>ソース ファイル\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ImGUI\imgui_draw.cpp">
+      <Filter>ソース ファイル\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ImGUI\imgui_impl_dx9.cpp">
+      <Filter>ソース ファイル\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ImGUI\imgui_impl_win32.cpp">
+      <Filter>ソース ファイル\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ImGUI\imgui_tables.cpp">
+      <Filter>ソース ファイル\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ImGUI\imgui_widgets.cpp">
+      <Filter>ソース ファイル\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ImGUI\imgui.cpp">
+      <Filter>ソース ファイル\ImGUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +193,30 @@
     </ClInclude>
     <ClInclude Include="Code\Added\Player.h">
       <Filter>ソース ファイル\Added</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ImGUI\imgui.h">
+      <Filter>ソース ファイル\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ImGUI\imgui_impl_dx9.h">
+      <Filter>ソース ファイル\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ImGUI\imgui_impl_win32.h">
+      <Filter>ソース ファイル\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ImGUI\imgui_internal.h">
+      <Filter>ソース ファイル\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ImGUI\imstb_rectpack.h">
+      <Filter>ソース ファイル\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ImGUI\imstb_textedit.h">
+      <Filter>ソース ファイル\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ImGUI\imstb_truetype.h">
+      <Filter>ソース ファイル\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ImGUI\imconfig.h">
+      <Filter>ソース ファイル\ImGUI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
