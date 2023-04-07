@@ -11,7 +11,7 @@
 #include "..\..\Mathysics\Culc\Culc.h"
 
 //マクロ
-#define CAMERA_MOVE_SPEED		(1.0f)		//カメラ移動速度
+#define CAMERA_MOVE_SPEED		(0.2f)		//カメラ移動速度
 #define CAMERA_MOU_ROT_SPEED	(0.005f)	//マウス移動での回転速度
 #define CAMERA_LENGTH			(5200.0f)	//カメラが見える最大距離
 
@@ -46,15 +46,28 @@ void cCamera::MoveCamera(void)
 	//視点・注視点設定
 	if (cMouse::GetMouseClick(INPUTTYPE_PRESS, MOUSE_CLICK_RIGHT) == true)
 	{
-		//視点設定
-		this->m_camera.rot.y -= cMouse::GetMouseMove().x * CAMERA_MOU_ROT_SPEED;
-		this->m_camera.rot.x -= cMouse::GetMouseMove().y * CAMERA_MOU_ROT_SPEED;
-		FixRot(&m_camera.rot);
-		this->m_camera.vecU.x = sinf(this->m_camera.rot.x) * sinf(this->m_camera.rot.y);
-		this->m_camera.vecU.y = cosf(this->m_camera.rot.x);
-		this->m_camera.vecU.z = sinf(this->m_camera.rot.x) * cosf(this->m_camera.rot.y) * -1;
-		D3DXVec3Normalize(&this->m_camera.vecU, &this->m_camera.vecU);
-		FixPosV(&this->m_camera);
+		if (cMouse::GetMouseClick(INPUTTYPE_PRESS, MOUSE_CLICK_LEFT) == true)
+		{//注視点と視点を動かす
+			//注視点
+			this->m_camera.posR.x -= cosf(this->m_camera.rot.y) * cMouse::GetMouseMove().x * CAMERA_MOVE_SPEED;
+			this->m_camera.posR.y += cMouse::GetMouseMove().y * CAMERA_MOVE_SPEED;
+			this->m_camera.posR.z -= sinf(this->m_camera.rot.y) * cMouse::GetMouseMove().x * CAMERA_MOVE_SPEED;
+
+			//視点
+			FixPosV(&this->m_camera);
+		}
+		else
+		{
+			//視点設定
+			this->m_camera.rot.y -= cMouse::GetMouseMove().x * CAMERA_MOU_ROT_SPEED;
+			this->m_camera.rot.x -= cMouse::GetMouseMove().y * CAMERA_MOU_ROT_SPEED;
+			FixRot(&m_camera.rot);
+			this->m_camera.vecU.x = sinf(this->m_camera.rot.x) * sinf(this->m_camera.rot.y);
+			this->m_camera.vecU.y = cosf(this->m_camera.rot.x);
+			this->m_camera.vecU.z = sinf(this->m_camera.rot.x) * cosf(this->m_camera.rot.y) * -1;
+			D3DXVec3Normalize(&this->m_camera.vecU, &this->m_camera.vecU);
+			FixPosV(&this->m_camera);
+		}
 	}
 
 }
