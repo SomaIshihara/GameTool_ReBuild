@@ -157,7 +157,7 @@ void UpdateImGui(void)
 	ImGui::NewFrame();
 
 	ImGui::SetNextWindowSize(ImVec2(335, 580), ImGuiCond_Once);	// サイズ
-	ImGui::Begin(u8"hoge", NULL, window_flags);				// 名前
+	ImGui::Begin(u8"Inspector", NULL, window_flags);				// 名前
 
 															// Menu Bar
 	if (ImGui::BeginMenuBar())
