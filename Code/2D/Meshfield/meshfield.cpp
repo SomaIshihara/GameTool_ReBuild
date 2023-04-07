@@ -129,7 +129,7 @@ void cMeshfield::SetMeshfield(D3DXVECTOR3 pos, D3DXVECTOR3 rot, const char* pPat
 		NULL);
 
 	//インデックスバッファの生成
-	pDevice->CreateIndexBuffer(sizeof(WORD) * (((this->m_meshData.m_width + 1) * this->m_meshData.m_height) + (2 * (this->m_meshData.m_height - 1))),
+	pDevice->CreateIndexBuffer(sizeof(WORD) * (((this->m_meshData.m_width + 1) * this->m_meshData.m_height * 2) + (2 * (this->m_meshData.m_height - 1))),
 		D3DUSAGE_WRITEONLY,
 		D3DFMT_INDEX16,
 		D3DPOOL_MANAGED,

@@ -111,13 +111,17 @@ void UpdateImGui(void)
 	//ほげ
 	static bool hogehoge = false;
 
+	//共通
+	static float pos[4] = { 0.00f, 0.00f, 0.00f, 0.44f };
+	static float rot[4] = { 0.00f, 0.00f, 0.00f, 0.44f };
+
 	//モデル
 	static int item_current = 0;
 
 	//メッシュフィールド
 	static int width = 1;
 	static int height = 1;
-	static float length = 1.0f;
+	static float length = 100.0f;
 
 	// Demonstrate the various window flags. Typically you would just use the default!
 	static bool no_titlebar = false;
@@ -196,6 +200,9 @@ void UpdateImGui(void)
 		ImGui::EndMenuBar();
 	}
 
+	ImGui::Text("------------------Commons---------------");
+	ImGui::InputFloat3("Pos", pos);
+	ImGui::InputFloat3("Rot", rot);
 	ImGui::Text("-------------------Model-------------------");
 	ImGui::Text("Select Model");
 	ImGui::Combo(" ", &item_current, g_StrFilePath.data(), g_StrFilePath.size());
@@ -221,9 +228,14 @@ void UpdateImGui(void)
 	ImGui::InputFloat("Length", &length);
 	if (ImGui::Button("Generate"))
 	{
+		//Pos・RotをD3DXVECTOR3型に変換
+		D3DXVECTOR3 dxPos = D3DXVECTOR3(pos[0], pos[1], pos[2]);
+		D3DXVECTOR3 dxRot = D3DXVECTOR3(rot[0], rot[1], rot[2]);
+
+		//メッシュフィールドの設置
 		cMeshfield meshfield;
 		g_aMeshfield.push_back(meshfield);
-		g_aMeshfield.back().SetMeshfield(INIT_ZERO, INIT_ZERO, "hoge", width, height, length);
+		g_aMeshfield.back().SetMeshfield(dxPos, dxRot, "hoge", width, height, length);
 	}
 
 	ImGui::End();
