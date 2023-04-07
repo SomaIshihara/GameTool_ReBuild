@@ -7,6 +7,7 @@
 #include "..\Core\Main\main.h"
 #include "..\Core\Input\input.h"
 #include "Player.h"
+#include "..\Mathysics\Culc\Culc.h"
 
 #define PLAYER_MOVE_SPEED	(1.5f)	//移動速度
 
@@ -50,15 +51,15 @@ void cPlayer::Update(void)
 		//角度指定
 		if (cKeyboard::GetKeyboard(INPUTTYPE_PRESS, DIK_D) == true)
 		{
-			this->m_player.rot.y = ROT_WD - this->m_pCamera->rot.y;
+			this->m_player.rot.y = FIX_ROT(ROT_WD - this->m_pCamera->rot.y);
 		}
 		else if (cKeyboard::GetKeyboard(INPUTTYPE_PRESS, DIK_A) == true)
 		{
-			this->m_player.rot.y = ROT_WA - this->m_pCamera->rot.y;
+			this->m_player.rot.y = FIX_ROT(ROT_WA - this->m_pCamera->rot.y);
 		}
 		else
 		{
-			this->m_player.rot.y = ROT_W - this->m_pCamera->rot.y;
+			this->m_player.rot.y = FIX_ROT(ROT_W - this->m_pCamera->rot.y);
 		}
 
 		//位置指定
@@ -70,15 +71,15 @@ void cPlayer::Update(void)
 		//角度指定
 		if (cKeyboard::GetKeyboard(INPUTTYPE_PRESS, DIK_D) == true)
 		{
-			this->m_player.rot.y = ROT_SD - this->m_pCamera->rot.y;
+			this->m_player.rot.y = FIX_ROT(ROT_SD - this->m_pCamera->rot.y);
 		}
 		else if (cKeyboard::GetKeyboard(INPUTTYPE_PRESS, DIK_A) == true)
 		{
-			this->m_player.rot.y = ROT_SA - this->m_pCamera->rot.y;
+			this->m_player.rot.y = FIX_ROT(ROT_SA - this->m_pCamera->rot.y);
 		}
 		else
 		{
-			this->m_player.rot.y = ROT_S - this->m_pCamera->rot.y;
+			this->m_player.rot.y = FIX_ROT(ROT_S - this->m_pCamera->rot.y);
 		}
 
 		//位置指定
@@ -88,7 +89,7 @@ void cPlayer::Update(void)
 	else if (cKeyboard::GetKeyboard(INPUTTYPE_PRESS, DIK_D) == true)
 	{
 		//角度指定
-		this->m_player.rot.y = ROT_D - this->m_pCamera->rot.y;
+		this->m_player.rot.y = FIX_ROT(ROT_D - this->m_pCamera->rot.y);
 
 		//位置指定
 		SetPos(&this->m_player.pos, &this->m_player.rot);
@@ -97,7 +98,7 @@ void cPlayer::Update(void)
 	else if (cKeyboard::GetKeyboard(INPUTTYPE_PRESS, DIK_A) == true)
 	{
 		//角度指定
-		this->m_player.rot.y = ROT_A - this->m_pCamera->rot.y;
+		this->m_player.rot.y = FIX_ROT(ROT_A - this->m_pCamera->rot.y);
 
 		//位置指定
 		SetPos(&this->m_player.pos, &this->m_player.rot);

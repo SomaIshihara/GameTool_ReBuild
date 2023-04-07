@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Code\2D\Meshfield\meshfield.cpp" />
     <ClCompile Include="Code\3D\Camera\cCamera.cpp" />
     <ClCompile Include="Code\3D\Light\cLight.cpp" />
     <ClCompile Include="Code\3D\MotionModel\cMotionModel.cpp" />
@@ -42,6 +43,7 @@
     <ClCompile Include="Code\Transition\Game\game.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Code\2D\Meshfield\meshfield.h" />
     <ClInclude Include="Code\3D\Camera\cCamera.h" />
     <ClInclude Include="Code\3D\Light\cLight.h" />
     <ClInclude Include="Code\3D\MotionModel\cMotionModel.h" />

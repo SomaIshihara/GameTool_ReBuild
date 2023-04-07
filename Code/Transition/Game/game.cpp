@@ -12,6 +12,7 @@
 #include "..\..\Resource\Model\cModel.h"
 #include "..\..\3D\MotionModel\cMotionModel.h"
 #include "..\..\Added\Player.h"
+#include "..\..\2D\Meshfield\meshfield.h"
 #include <vector>
 
 //プロトタイプ宣言
@@ -25,6 +26,7 @@ cPlayer g_Player;
 //ファイルパス
 std::vector<const char*> g_StrFilePath = {};
 std::vector<cModel> g_aModel = {};
+std::vector<cMeshfield>g_aMeshfield = {};
 
 //========================
 //初期化処理
@@ -33,6 +35,7 @@ void InitGame(void)
 {
 	//モデルクラスのvector枠確保
 	g_aModel.reserve(128);
+	g_aMeshfield.reserve(128);
 
 	//プレイヤーの初期化処理
 	g_Player.LoadMotionModel("data\\motion_ino.txt");
@@ -64,7 +67,6 @@ void UpdateGame(void)
 	g_Player.Update();
 	//カメラ
 	g_camera.MoveCamera();
-	//g_camera.MoveCamera(0.0f, 0.0f);
 }
 
 //========================
@@ -84,6 +86,12 @@ void DrawGame(void)
 		g_aModel.at(cntModel).DrawModel(INIT_ZERO, INIT_ZERO, INIT_ZERO, &hogeMtx);
 	}
 
+	//メッシュフィールド描画
+	for (int cntModel = 0; cntModel < g_aMeshfield.size(); cntModel++)
+	{
+		g_aMeshfield.at(cntModel).Draw();
+	}
+
 	//プレイヤー描画
 	g_Player.Draw();
 
@@ -100,8 +108,16 @@ void UpdateImGui(void)
 	//ImGUI
 	ImGuiIO& io = ImGui::GetIO();
 
+	//ほげ
 	static bool hogehoge = false;
+
+	//モデル
 	static int item_current = 0;
+
+	//メッシュフィールド
+	static int width = 1;
+	static int height = 1;
+	static float length = 1.0f;
 
 	// Demonstrate the various window flags. Typically you would just use the default!
 	static bool no_titlebar = false;
@@ -180,7 +196,9 @@ void UpdateImGui(void)
 		ImGui::EndMenuBar();
 	}
 
-	ImGui::Combo("Select Model", &item_current, g_StrFilePath.data(), g_StrFilePath.size());
+	ImGui::Text("-------------------Model-------------------");
+	ImGui::Text("Select Model");
+	ImGui::Combo(" ", &item_current, g_StrFilePath.data(), g_StrFilePath.size());
 	if (ImGui::Button("Add Model"))
 	{
 		if (g_StrFilePath.size() != 0)
@@ -189,6 +207,23 @@ void UpdateImGui(void)
 			g_aModel.push_back(model);
 			g_aModel.back().LoadModel(g_StrFilePath.at(item_current));
 		}
+	}
+	ImGui::Text("-----------------Meshfield-----------------");
+	//分割数を最低1にする
+	if (width < 1)width = 1;
+	if (height < 1)height = 1;
+
+	//長さを最低0.1にする
+	if (length < 0.1f)length = 0.1f;
+
+	ImGui::InputInt("Width", &width);
+	ImGui::InputInt("Height", &height);
+	ImGui::InputFloat("Length", &length);
+	if (ImGui::Button("Generate"))
+	{
+		cMeshfield meshfield;
+		g_aMeshfield.push_back(meshfield);
+		g_aMeshfield.back().SetMeshfield(INIT_ZERO, INIT_ZERO, "hoge", width, height, length);
 	}
 
 	ImGui::End();

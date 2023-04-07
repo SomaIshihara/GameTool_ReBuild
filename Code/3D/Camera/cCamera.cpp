@@ -44,7 +44,7 @@ cCamera::~cCamera()
 void cCamera::MoveCamera(void)
 {
 	//視点・注視点設定
-	if (cMouse::GetMouseClick(INPUTTYPE_PRESS, MOUSE_CLICK_LEFT) == true)
+	if (cMouse::GetMouseClick(INPUTTYPE_PRESS, MOUSE_CLICK_RIGHT) == true)
 	{
 		//視点設定
 		this->m_camera.rot.y -= cMouse::GetMouseMove().x * CAMERA_MOU_ROT_SPEED;
