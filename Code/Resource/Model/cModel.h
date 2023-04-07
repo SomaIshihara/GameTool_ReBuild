@@ -9,7 +9,7 @@
 
 #include "..\..\Core\Main\main.h"
 
-struct cModelStruct
+struct ModelStruct
 {
 	//ï`âÊä÷åW
 	LPD3DXMESH pMesh;		//ÉÅÉbÉVÉÖ
@@ -36,11 +36,11 @@ public:
 	cModel();
 	~cModel();
 	void LoadModel(const char* pPath);
-	void SetModelSetup(cModelStruct modelstr);
+	void SetModelSetup(ModelStruct modelstr);
 	void DrawModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale, D3DXMATRIX *pMtxBace, D3DXMATRIX *mtxParent = NULL);
-	cModelStruct GetModel(void);
+	ModelStruct GetModel(void);
 protected:
-	cModelStruct m_cModelStr;
+	ModelStruct m_cModelStr;
 };
 
 #endif // !_MODEL_H_

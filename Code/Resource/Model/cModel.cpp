@@ -86,7 +86,7 @@ void cModel::LoadModel(const char* pPath)
 //========================
 //ƒ‚ƒfƒ‹Ý’è
 //========================
-void cModel::SetModelSetup(cModelStruct modelstr)
+void cModel::SetModelSetup(ModelStruct modelstr)
 {
 	this->m_cModelStr.posOffset = modelstr.posOffset;
 	this->m_cModelStr.rotOffset = modelstr.rotOffset;
@@ -156,7 +156,7 @@ void cModel::DrawModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale, D3DX
 	pDevice->SetMaterial(&matDef);
 }
 
-cModelStruct cModel::GetModel(void)
+ModelStruct cModel::GetModel(void)
 {
 	return this->m_cModelStr;
 }

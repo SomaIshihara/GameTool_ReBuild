@@ -94,7 +94,7 @@ void cMotionModel::LoadMotionModel(const char *pPath)
 	int idxPartsSet = 0;
 
 	//仮置き
-	cModelStruct modelstr;
+	ModelStruct modelstr;
 
 	//モーション情報
 	//読み込みファイル設定

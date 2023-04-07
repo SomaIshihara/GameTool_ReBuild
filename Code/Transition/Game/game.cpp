@@ -83,7 +83,10 @@ void DrawGame(void)
 	//モデル描画
 	for (int cntModel = 0; cntModel < g_aModel.size(); cntModel++)
 	{
-		g_aModel.at(cntModel).DrawModel(INIT_ZERO, INIT_ZERO, INIT_ZERO, &hogeMtx);
+		g_aModel.at(cntModel).DrawModel(
+			g_aModel.at(cntModel).GetModel().posOffset,
+			g_aModel.at(cntModel).GetModel().rotOffset,
+			INIT_ZERO, &hogeMtx);
 	}
 
 	//メッシュフィールド描画
@@ -210,9 +213,22 @@ void UpdateImGui(void)
 	{
 		if (g_StrFilePath.size() != 0)
 		{
+			//プッシュ用変数宣言
 			cModel model;
+			ModelStruct modelstr;
+
+			//Pos・RotをD3DXVECTOR3型に変換
+			D3DXVECTOR3 dxPos = D3DXVECTOR3(pos[0], pos[1], pos[2]);
+			D3DXVECTOR3 dxRot = D3DXVECTOR3(rot[0], rot[1], rot[2]);
+
+			//プッシュするデータを設定
+			modelstr.posOffset = dxPos;
+			modelstr.rotOffset = dxRot;
+			modelstr.m_IdxModelParent = -1;
+
 			g_aModel.push_back(model);
 			g_aModel.back().LoadModel(g_StrFilePath.at(item_current));
+			g_aModel.back().SetModelSetup(modelstr);
 		}
 	}
 	ImGui::Text("-----------------Meshfield-----------------");
