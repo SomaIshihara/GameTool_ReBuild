@@ -20,7 +20,7 @@ void UpdateImGui(void);
 //グローバル
 cCamera g_camera;
 cLight g_light;
-Player g_Player;
+cPlayer g_Player;
 
 //ファイルパス
 std::vector<const char*> g_StrFilePath = {};
@@ -34,7 +34,10 @@ void InitGame(void)
 	//モデルクラスのvector枠確保
 	g_aModel.reserve(128);
 
+	//プレイヤーの初期化処理
 	g_Player.LoadMotionModel("data\\motion_ino.txt");
+	*g_Player.GetLinkCamera() = g_camera.LinkedCamera();
+
 	g_light.SetLight(D3DLIGHT_DIRECTIONAL, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), D3DXVECTOR3(0.2f, -0.8f, 0.4f));
 }
 

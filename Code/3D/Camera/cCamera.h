@@ -36,8 +36,8 @@ public:
 	//設定
 	void SetCamera(void);
 
-	//取得
-	Camera* GetCamera(void);
+	//利用したいオブジェクトにポインタ返す
+	Camera* LinkedCamera(void);
 private:
 	Camera m_camera;
 };

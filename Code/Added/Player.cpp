@@ -10,10 +10,23 @@
 
 #define PLAYER_MOVE_SPEED	(1.5f)	//移動速度
 
+//角度
+#define ROT_WD	(-0.75f * D3DX_PI)
+#define ROT_WA	(0.75f * D3DX_PI)
+#define ROT_W	(1.0f * D3DX_PI)
+#define ROT_SD	(-0.25f * D3DX_PI)
+#define ROT_SA	(0.25f * D3DX_PI)
+#define ROT_S	(0.0f * D3DX_PI)
+#define ROT_D	(-0.5f * D3DX_PI)
+#define ROT_A	(0.5f * D3DX_PI)
+
+//プロトタイプ宣言
+void SetPos(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pRot);
+
 //========================
 //コンストラクタ
 //========================
-Player::Player()
+cPlayer::cPlayer()
 {
 
 }
@@ -21,7 +34,7 @@ Player::Player()
 //========================
 //デストラクタ
 //========================
-Player::~Player()
+cPlayer::~cPlayer()
 {
 
 }
@@ -29,7 +42,7 @@ Player::~Player()
 //========================
 //更新処理
 //========================
-void Player::Update(void)
+void cPlayer::Update(void)
 {
 	//キーボードの情報取得
 	if (cKeyboard::GetKeyboard(INPUTTYPE_PRESS, DIK_W) == true)
@@ -37,20 +50,19 @@ void Player::Update(void)
 		//角度指定
 		if (cKeyboard::GetKeyboard(INPUTTYPE_PRESS, DIK_D) == true)
 		{
-			this->rot.y = -0.75f * D3DX_PI;
+			this->m_player.rot.y = ROT_WD - this->m_pCamera->rot.y;
 		}
 		else if (cKeyboard::GetKeyboard(INPUTTYPE_PRESS, DIK_A) == true)
 		{
-			this->rot.y = 0.75f * D3DX_PI;
+			this->m_player.rot.y = ROT_WA - this->m_pCamera->rot.y;
 		}
 		else
 		{
-			this->rot.y = 1.0f * D3DX_PI;
+			this->m_player.rot.y = ROT_W - this->m_pCamera->rot.y;
 		}
 
 		//位置指定
-		this->pos.x -= sinf(this->rot.y) * PLAYER_MOVE_SPEED;
-		this->pos.z -= cosf(this->rot.y) * PLAYER_MOVE_SPEED;
+		SetPos(&this->m_player.pos, &this->m_player.rot);
 		this->SetMotion(MOTIONTYPE_HUGA);
 	}
 	else if (cKeyboard::GetKeyboard(INPUTTYPE_PRESS, DIK_S) == true)
@@ -58,40 +70,37 @@ void Player::Update(void)
 		//角度指定
 		if (cKeyboard::GetKeyboard(INPUTTYPE_PRESS, DIK_D) == true)
 		{
-			this->rot.y = -0.25f * D3DX_PI;
+			this->m_player.rot.y = ROT_SD - this->m_pCamera->rot.y;
 		}
 		else if (cKeyboard::GetKeyboard(INPUTTYPE_PRESS, DIK_A) == true)
 		{
-			this->rot.y = 0.25f * D3DX_PI;
+			this->m_player.rot.y = ROT_SA - this->m_pCamera->rot.y;
 		}
 		else
 		{
-			this->rot.y = 0.0f * D3DX_PI;
+			this->m_player.rot.y = ROT_S - this->m_pCamera->rot.y;
 		}
 
 		//位置指定
-		this->pos.x -= sinf(this->rot.y) * PLAYER_MOVE_SPEED;
-		this->pos.z -= cosf(this->rot.y) * PLAYER_MOVE_SPEED;
+		SetPos(&this->m_player.pos, &this->m_player.rot);
 		this->SetMotion(MOTIONTYPE_HUGA);
 	}
 	else if (cKeyboard::GetKeyboard(INPUTTYPE_PRESS, DIK_D) == true)
 	{
 		//角度指定
-		this->rot.y = -0.5f * D3DX_PI;
+		this->m_player.rot.y = ROT_D - this->m_pCamera->rot.y;
 
 		//位置指定
-		this->pos.x -= sinf(this->rot.y) * PLAYER_MOVE_SPEED;
-		this->pos.z -= cosf(this->rot.y) * PLAYER_MOVE_SPEED;
+		SetPos(&this->m_player.pos, &this->m_player.rot);
 		this->SetMotion(MOTIONTYPE_HUGA);
 	}
 	else if (cKeyboard::GetKeyboard(INPUTTYPE_PRESS, DIK_A) == true)
 	{
 		//角度指定
-		this->rot.y = 0.5f * D3DX_PI;
+		this->m_player.rot.y = ROT_A - this->m_pCamera->rot.y;
 
 		//位置指定
-		this->pos.x -= sinf(this->rot.y) * PLAYER_MOVE_SPEED;
-		this->pos.z -= cosf(this->rot.y) * PLAYER_MOVE_SPEED;
+		SetPos(&this->m_player.pos, &this->m_player.rot);
 		this->SetMotion(MOTIONTYPE_HUGA);
 	}
 	else
@@ -106,21 +115,46 @@ void Player::Update(void)
 //========================
 //描画処理
 //========================
-void Player::Draw(void)
+void cPlayer::Draw(void)
 {
 	//仮マトリ生成
 	D3DXMATRIX mtxRot, mtxTrans;
 
 	//ワールドマトリックス初期化
-	D3DXMatrixIdentity(&this->mtxWorld);
+	D3DXMatrixIdentity(&this->m_player.mtxWorld);
 
 	//向きを反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, this->rot.y, this->rot.x, this->rot.z);
-	D3DXMatrixMultiply(&this->mtxWorld, &this->mtxWorld, &mtxRot);
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, this->m_player.rot.y, this->m_player.rot.x, this->m_player.rot.z);
+	D3DXMatrixMultiply(&this->m_player.mtxWorld, &this->m_player.mtxWorld, &mtxRot);
 
 	//位置反映
-	D3DXMatrixTranslation(&mtxTrans, this->pos.x, this->pos.y, this->pos.z);
-	D3DXMatrixMultiply(&this->mtxWorld, &this->mtxWorld, &mtxTrans);
+	D3DXMatrixTranslation(&mtxTrans, this->m_player.pos.x, this->m_player.pos.y, this->m_player.pos.z);
+	D3DXMatrixMultiply(&this->m_player.mtxWorld, &this->m_player.mtxWorld, &mtxTrans);
 
-	DrawMotionModel(&this->mtxWorld);
+	DrawMotionModel(&this->m_player.mtxWorld);
+}
+
+//========================
+//プレイヤーの取得処理
+//========================
+Player *cPlayer::GetPlayer(void)
+{
+	return &this->m_player;
+}
+
+//========================
+//リンク用カメラの取得処理
+//========================
+Camera **cPlayer::GetLinkCamera(void)
+{
+	return &this->m_pCamera;
+}
+
+//========================
+//プレイヤーの位置設定処理
+//========================
+void SetPos(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pRot)
+{
+	pPos->x -= sinf(pRot->y) * PLAYER_MOVE_SPEED;
+	pPos->z -= cosf(pRot->y) * PLAYER_MOVE_SPEED;
 }

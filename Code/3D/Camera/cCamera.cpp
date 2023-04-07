@@ -12,7 +12,7 @@
 
 //マクロ
 #define CAMERA_MOVE_SPEED		(1.0f)		//カメラ移動速度
-#define CAMERA_MOU_ROT_SPEED	(0.0024f)	//マウス移動での回転速度
+#define CAMERA_MOU_ROT_SPEED	(0.005f)	//マウス移動での回転速度
 #define CAMERA_LENGTH			(5200.0f)	//カメラが見える最大距離
 
 //プロト
@@ -122,7 +122,7 @@ void cCamera::ResetCamera(float fLength, D3DXVECTOR2 posV, D3DXVECTOR3 posR, D3D
 //========================
 //カメラ情報取得
 //========================
-Camera* cCamera::GetCamera(void)
+Camera* cCamera::LinkedCamera(void)
 {
 	return &this->m_camera;
 }
