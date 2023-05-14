@@ -19,15 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Code\2D\Meshfield\meshfield.cpp" />
-    <ClCompile Include="Code\3D\Camera\cCamera.cpp" />
-    <ClCompile Include="Code\3D\Light\cLight.cpp" />
-    <ClCompile Include="Code\3D\MotionModel\cMotionModel.cpp" />
-    <ClCompile Include="Code\Added\Player.cpp" />
-    <ClCompile Include="Code\Core\DebugProc\cDebugproc.cpp" />
-    <ClCompile Include="Code\Core\Input\input.cpp" />
+    <ClCompile Include="Code\Core\File\file.cpp" />
     <ClCompile Include="Code\Core\Main\main.cpp" />
-    <ClCompile Include="Code\Core\Sound\sound.cpp" />
     <ClCompile Include="Code\ImGUI\imgui.cpp" />
     <ClCompile Include="Code\ImGUI\imgui_demo.cpp" />
     <ClCompile Include="Code\ImGUI\imgui_draw.cpp" />
@@ -35,24 +28,11 @@
     <ClCompile Include="Code\ImGUI\imgui_impl_win32.cpp" />
     <ClCompile Include="Code\ImGUI\imgui_tables.cpp" />
     <ClCompile Include="Code\ImGUI\imgui_widgets.cpp" />
-    <ClCompile Include="Code\Mathysics\Collision\collision.cpp" />
-    <ClCompile Include="Code\Mathysics\Culc\Culc.cpp" />
-    <ClCompile Include="Code\Object\Billboard\billboard.cpp" />
-    <ClCompile Include="Code\Resource\Model\cModel.cpp" />
-    <ClCompile Include="Code\Resource\Texture\cTexture.cpp" />
-    <ClCompile Include="Code\Transition\Game\game.cpp" />
+    <ClCompile Include="Code\Resource\Model\Model.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Code\2D\Meshfield\meshfield.h" />
-    <ClInclude Include="Code\3D\Camera\cCamera.h" />
-    <ClInclude Include="Code\3D\Light\cLight.h" />
-    <ClInclude Include="Code\3D\MotionModel\cMotionModel.h" />
-    <ClInclude Include="Code\Added\Player.h" />
-    <ClInclude Include="Code\Core\DebugProc\cDebugproc.h" />
     <ClInclude Include="Code\Core\File\file.h" />
-    <ClInclude Include="Code\Core\Input\input.h" />
     <ClInclude Include="Code\Core\Main\main.h" />
-    <ClInclude Include="Code\Core\Sound\sound.h" />
     <ClInclude Include="Code\ImGUI\imconfig.h" />
     <ClInclude Include="Code\ImGUI\imgui.h" />
     <ClInclude Include="Code\ImGUI\imgui_impl_dx9.h" />
@@ -61,12 +41,7 @@
     <ClInclude Include="Code\ImGUI\imstb_rectpack.h" />
     <ClInclude Include="Code\ImGUI\imstb_textedit.h" />
     <ClInclude Include="Code\ImGUI\imstb_truetype.h" />
-    <ClInclude Include="Code\Mathysics\Collision\collision.h" />
-    <ClInclude Include="Code\Mathysics\Culc\Culc.h" />
-    <ClInclude Include="Code\Object\Billboard\billboard.h" />
-    <ClInclude Include="Code\Resource\Model\cModel.h" />
-    <ClInclude Include="Code\Resource\Texture\cTexture.h" />
-    <ClInclude Include="Code\Transition\Game\game.h" />
+    <ClInclude Include="Code\Resource\Model\Model.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A3B804B3-4531-457A-B0E2-619C6124D53A}</ProjectGuid>

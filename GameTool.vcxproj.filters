@@ -13,125 +13,29 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="ソース ファイル\Added">
-      <UniqueIdentifier>{84b146c5-5efd-416e-a8c9-69b941c0d6c9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\lib">
       <UniqueIdentifier>{827d3c22-f064-44fa-9171-f8e7999af899}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\lib\3D">
-      <UniqueIdentifier>{36e095f6-ff92-452b-b331-1bf8c0054b73}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\lib\3D\Camera">
-      <UniqueIdentifier>{6d8483a7-2854-4b1d-8cd6-14b7a3cfe3ef}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\lib\3D\Light">
-      <UniqueIdentifier>{0c8dd768-c787-47a8-a1bd-d739f23a83e7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\lib\Mathysics">
-      <UniqueIdentifier>{0f44db6d-1989-47bf-a494-2abda5523003}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\lib\Mathysics\Collision">
-      <UniqueIdentifier>{2a8abb31-e654-44f9-937b-9478c8b14282}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\lib\Mathysics\Culc">
-      <UniqueIdentifier>{64f3bbcc-875a-4be1-a11f-150c1276d715}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\lib\Core">
-      <UniqueIdentifier>{44f9b0db-bf0d-404c-8c10-4364c8f59179}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\lib\Core\DebugProc">
-      <UniqueIdentifier>{bd5f5934-8574-410c-bafa-59129ec7d9e4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\lib\Core\File">
-      <UniqueIdentifier>{d64a29b9-34dc-4b27-a8f6-38ad2b04f4c3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\lib\Core\Input">
-      <UniqueIdentifier>{2ef93498-3f83-498b-a913-959174cf84f0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\lib\Core\Main">
-      <UniqueIdentifier>{850dd622-48c6-4bb2-b38f-1b5918022a21}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\lib\Core\Sound">
-      <UniqueIdentifier>{2927dd8c-012a-42aa-803d-1c08730cd0f6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\lib\Object">
-      <UniqueIdentifier>{e7bd3e62-6753-4541-b9a8-a805e171ac8c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\lib\Object\Billboard">
-      <UniqueIdentifier>{2631b167-a6a7-4c07-90c0-d178a4b8d644}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\lib\Resource">
-      <UniqueIdentifier>{a025b132-beba-4f08-a143-8c0570fab248}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\lib\Resource\Model">
-      <UniqueIdentifier>{698daa36-9997-4814-9972-e8902a932fd2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\lib\Resource\Texture">
-      <UniqueIdentifier>{dae46159-fcd3-419b-8cf4-5587acd4def0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\lib\Transition">
-      <UniqueIdentifier>{b1dbe9f3-aa61-4f99-9fb5-f47eb53bf7a0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\lib\Transition\Game">
-      <UniqueIdentifier>{6b495392-c758-4fd1-b513-aace9c813139}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\lib\3D\MotionModel">
-      <UniqueIdentifier>{c7a027b0-3125-4459-977e-e3ea0f1339cd}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\ImGUI">
       <UniqueIdentifier>{d1f1f5ea-7434-48d6-8b00-e88fbdcf8555}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\lib\2D">
-      <UniqueIdentifier>{532409f2-e616-404f-972f-8e997e1ea57c}</UniqueIdentifier>
+    <Filter Include="ソース ファイル\lib\Core">
+      <UniqueIdentifier>{652e1f8d-4c28-47a4-9dff-bd37ed984d45}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\lib\2D\Meshfield">
-      <UniqueIdentifier>{da058e0b-272d-49f7-b4eb-726ec7bdedf2}</UniqueIdentifier>
+    <Filter Include="ソース ファイル\lib\Core\Main">
+      <UniqueIdentifier>{bb6a65ed-0425-442d-85b4-945b829ba867}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\lib\3D">
+      <UniqueIdentifier>{9433c6f1-8268-4406-9a36-c69d6f57764d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\lib\3D\Model">
+      <UniqueIdentifier>{92abf25f-bdee-4f3d-91ed-0af309b3833d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\lib\Core\File">
+      <UniqueIdentifier>{8b5b07ef-b2b9-476e-8c96-e7471f9248c3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Code\3D\Camera\cCamera.cpp">
-      <Filter>ソース ファイル\lib\3D\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\3D\Light\cLight.cpp">
-      <Filter>ソース ファイル\lib\3D\Light</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Core\DebugProc\cDebugproc.cpp">
-      <Filter>ソース ファイル\lib\Core\DebugProc</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Core\Input\input.cpp">
-      <Filter>ソース ファイル\lib\Core\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Core\Main\main.cpp">
-      <Filter>ソース ファイル\lib\Core\Main</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Core\Sound\sound.cpp">
-      <Filter>ソース ファイル\lib\Core\Sound</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Object\Billboard\billboard.cpp">
-      <Filter>ソース ファイル\lib\Object\Billboard</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Resource\Model\cModel.cpp">
-      <Filter>ソース ファイル\lib\Resource\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Resource\Texture\cTexture.cpp">
-      <Filter>ソース ファイル\lib\Resource\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Transition\Game\game.cpp">
-      <Filter>ソース ファイル\lib\Transition\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Mathysics\Culc\Culc.cpp">
-      <Filter>ソース ファイル\lib\Mathysics\Culc</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Mathysics\Collision\collision.cpp">
-      <Filter>ソース ファイル\lib\Mathysics\Collision</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\3D\MotionModel\cMotionModel.cpp">
-      <Filter>ソース ファイル\lib\3D\MotionModel</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Added\Player.cpp">
-      <Filter>ソース ファイル\Added</Filter>
-    </ClCompile>
     <ClCompile Include="Code\ImGUI\imgui_demo.cpp">
       <Filter>ソース ファイル\ImGUI</Filter>
     </ClCompile>
@@ -153,56 +57,17 @@
     <ClCompile Include="Code\ImGUI\imgui.cpp">
       <Filter>ソース ファイル\ImGUI</Filter>
     </ClCompile>
-    <ClCompile Include="Code\2D\Meshfield\meshfield.cpp">
-      <Filter>ソース ファイル\lib\2D\Meshfield</Filter>
+    <ClCompile Include="Code\Core\Main\main.cpp">
+      <Filter>ソース ファイル\lib\Core\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Core\File\file.cpp">
+      <Filter>ソース ファイル\lib\Core\File</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Resource\Model\Model.cpp">
+      <Filter>ソース ファイル\lib\3D\Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Code\3D\Camera\cCamera.h">
-      <Filter>ソース ファイル\lib\3D\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\3D\Light\cLight.h">
-      <Filter>ソース ファイル\lib\3D\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Core\DebugProc\cDebugproc.h">
-      <Filter>ソース ファイル\lib\Core\DebugProc</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Core\Input\input.h">
-      <Filter>ソース ファイル\lib\Core\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Core\Main\main.h">
-      <Filter>ソース ファイル\lib\Core\Main</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Core\Sound\sound.h">
-      <Filter>ソース ファイル\lib\Core\Sound</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Object\Billboard\billboard.h">
-      <Filter>ソース ファイル\lib\Object\Billboard</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Resource\Model\cModel.h">
-      <Filter>ソース ファイル\lib\Resource\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Resource\Texture\cTexture.h">
-      <Filter>ソース ファイル\lib\Resource\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Transition\Game\game.h">
-      <Filter>ソース ファイル\lib\Transition\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Mathysics\Culc\Culc.h">
-      <Filter>ソース ファイル\lib\Mathysics\Culc</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Mathysics\Collision\collision.h">
-      <Filter>ソース ファイル\lib\Mathysics\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Core\File\file.h">
-      <Filter>ソース ファイル\lib\Core\File</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\3D\MotionModel\cMotionModel.h">
-      <Filter>ソース ファイル\lib\3D\MotionModel</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Added\Player.h">
-      <Filter>ソース ファイル\Added</Filter>
-    </ClInclude>
     <ClInclude Include="Code\ImGUI\imgui.h">
       <Filter>ソース ファイル\ImGUI</Filter>
     </ClInclude>
@@ -227,8 +92,14 @@
     <ClInclude Include="Code\ImGUI\imconfig.h">
       <Filter>ソース ファイル\ImGUI</Filter>
     </ClInclude>
-    <ClInclude Include="Code\2D\Meshfield\meshfield.h">
-      <Filter>ソース ファイル\lib\2D\Meshfield</Filter>
+    <ClInclude Include="Code\Core\Main\main.h">
+      <Filter>ソース ファイル\lib\Core\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Core\File\file.h">
+      <Filter>ソース ファイル\lib\Core\File</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Resource\Model\Model.h">
+      <Filter>ソース ファイル\lib\3D\Model</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

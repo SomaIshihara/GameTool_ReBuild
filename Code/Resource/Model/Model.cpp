@@ -4,44 +4,47 @@
 //Author:石原颯馬
 //
 //==========================================
-#include "..\..\Core\Main\main.h"
-#include "cModel.h"
+#include "Model.h"
 
-//========================
+//*******************************************************************
+//単体モデル
+//*******************************************************************
+//==========================================
 //コンストラクタ
-//========================
-cModel::cModel()
+//==========================================
+CModel::CModel()
 {
 	this->m_cModelStr = {};
-	this->m_cModelStr.posOffset = INIT_ZERO;
-	this->m_cModelStr.rotOffset = INIT_ZERO;
-	this->m_cModelStr.m_IdxModelParent = -1;
 }
 
-//========================
+//==========================================
 //デストラクタ
-//========================
-cModel::~cModel()
+//==========================================
+CModel::~CModel()
 {
-	//メッシュの破棄
-	if (this->m_cModelStr.pMesh != NULL)
-	{
-		this->m_cModelStr.pMesh->Release();
-		this->m_cModelStr.pMesh = NULL;
-	}
 
-	//マテリアルの破棄
-	if (this->m_cModelStr.pBuffMat != NULL)
-	{	
-		this->m_cModelStr.pBuffMat->Release();
-		this->m_cModelStr.pBuffMat = NULL;
-	}
 }
 
-//========================
-//モデル読み込み
-//========================
-void cModel::LoadModel(const char* pPath)
+//==========================================
+//初期化処理
+//==========================================
+void CModel::Init(void)
+{
+	this->m_cModelStr = {};
+}
+
+//==========================================
+//終了処理
+//==========================================
+void CModel::Uninit(void)
+{
+
+}
+
+//==========================================
+//生成処理
+//==========================================
+void CModel::Create(const char* pPath)
 {
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();	//デバイスの取得
 
@@ -83,27 +86,37 @@ void cModel::LoadModel(const char* pPath)
 	}
 }
 
-//========================
-//モデル設定
-//========================
-void cModel::SetModelSetup(ModelStruct modelstr)
+//==========================================
+//破棄処理
+//==========================================
+void CModel::Release(void)
 {
-	this->m_cModelStr.posOffset = modelstr.posOffset;
-	this->m_cModelStr.rotOffset = modelstr.rotOffset;
-	this->m_cModelStr.m_IdxModelParent = modelstr.m_IdxModelParent;
+	//メッシュの破棄
+	if (this->m_cModelStr.pMesh != NULL)
+	{
+		this->m_cModelStr.pMesh->Release();
+		this->m_cModelStr.pMesh = NULL;
+	}
+
+	//マテリアルの破棄
+	if (this->m_cModelStr.pBuffMat != NULL)
+	{
+		this->m_cModelStr.pBuffMat->Release();
+		this->m_cModelStr.pBuffMat = NULL;
+	}
 }
 
-//========================
+//==========================================
 //描画処理
-//========================
-void cModel::DrawModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale, D3DXMATRIX *mtxBace, D3DXMATRIX *mtxParent)
+//==========================================
+void CModel::DrawModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale, D3DXMATRIX *pMtxBace, D3DXMATRIX *mtxParent = NULL)
 {
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();	//デバイスの取得
 	D3DXMATRIX mtxRot, mtxTrans, mtxTexture;	//計算用
 	D3DMATERIAL9 matDef;			//現在のマテリアル保存用
 	D3DXMATERIAL *pMat;				//マテリアルデータへのポインタ
 
-	//現在のマテリアル取得
+									//現在のマテリアル取得
 	pDevice->GetMaterial(&matDef);
 
 	//モデル取得
@@ -131,7 +144,7 @@ void cModel::DrawModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale, D3DX
 	else
 	{
 		//パーツのマトリとベースマトリをかけ合わせる
-		D3DXMatrixMultiply(&this->m_cModelStr.mtxWorld, &this->m_cModelStr.mtxWorld, mtxBace);
+		D3DXMatrixMultiply(&this->m_cModelStr.mtxWorld, &this->m_cModelStr.mtxWorld, pMtxBace);
 	}
 
 	//ワールドマトリックス設定
@@ -156,7 +169,37 @@ void cModel::DrawModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale, D3DX
 	pDevice->SetMaterial(&matDef);
 }
 
-ModelStruct cModel::GetModel(void)
+//*******************************************************************
+//モーション付きモデル
+//*******************************************************************
+//==========================================
+//コンストラクタ
+//==========================================
+cMotionModel::cMotionModel()
 {
-	return this->m_cModelStr;
+	
+}
+
+//==========================================
+//デストラクタ
+//==========================================
+cMotionModel::~cMotionModel()
+{
+
+}
+
+//==========================================
+//初期化処理
+//==========================================
+void cMotionModel::Init(void)
+{
+	
+}
+
+//==========================================
+//終了処理
+//==========================================
+void cMotionModel::Uninit(void)
+{
+
 }

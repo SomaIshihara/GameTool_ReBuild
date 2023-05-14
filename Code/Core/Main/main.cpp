@@ -317,18 +317,6 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 	g_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
 
-	//キーボードの初期化
-	if (FAILED(g_keyboard.Init(hInstance, hWnd)))
-	{
-		return E_FAIL;
-	}
-
-	//マウスの初期化
-	if (FAILED(g_mouse.Init(hInstance, hWnd)))
-	{
-		return E_FAIL;
-	}
-
 	//ImGUI系
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
@@ -343,15 +331,6 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	ImGui_ImplDX9_Init(GetDevice());// GetGlyphRangesJapanese
 
 	//オブジェクト初期化
-	//カメラ・ライトは宣言時に自動設定
-	//デバッグプロシージャの初期化
-	g_pDebugProc = new cDebugProc();
-
-	//まとまったもの
-	SetMode(MODE_TITLE);
-
-	//ファイル初期化
-	//InitFile();
 	
 	return S_OK;
 }
@@ -362,20 +341,11 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 void Uninit(void)
 {
 	//終了処理（自分が作ったものを捨てる）
-	//まとまったもの
-	UninitGame();
 
 	//ImGUI
 	ImGui_ImplDX9_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
-
-	//単品
-	//UninitFile();
-	//デバッグプロシージャ終了
-	delete g_pDebugProc;
-
-	//キーボード・マウスの終了は自動で行う
 
 	//XInput終了
 	XInputEnable(false);
@@ -400,15 +370,6 @@ void Uninit(void)
 //========================
 void Update(HWND hWnd)
 {
-	//キーボードの更新
-	g_keyboard.Update();
-
-	//マウスの更新
-	g_mouse.Update();
-
-	//ファイル
-	//UpdateFile();
-
 	//まとまったものから選ぶ
 	switch (g_mode)
 	{
