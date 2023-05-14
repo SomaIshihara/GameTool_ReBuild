@@ -116,7 +116,7 @@ void CModel::DrawModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale, D3DX
 	D3DMATERIAL9 matDef;			//現在のマテリアル保存用
 	D3DXMATERIAL *pMat;				//マテリアルデータへのポインタ
 
-									//現在のマテリアル取得
+	//現在のマテリアル取得
 	pDevice->GetMaterial(&matDef);
 
 	//モデル取得
@@ -135,17 +135,7 @@ void CModel::DrawModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale, D3DX
 	D3DXMatrixTranslation(&mtxTrans, pos.x, pos.y, pos.z);
 	D3DXMatrixMultiply(&this->m_cModelStr.mtxWorld, &this->m_cModelStr.mtxWorld, &mtxTrans);
 
-	//パーツの親マトリ設定
-	if (mtxParent != NULL)
-	{
-		//パーツのマトリと親マトリをかけ合わせる
-		D3DXMatrixMultiply(&this->m_cModelStr.mtxWorld, &this->m_cModelStr.mtxWorld, mtxParent);
-	}
-	else
-	{
-		//パーツのマトリとベースマトリをかけ合わせる
-		D3DXMatrixMultiply(&this->m_cModelStr.mtxWorld, &this->m_cModelStr.mtxWorld, pMtxBace);
-	}
+	
 
 	//ワールドマトリックス設定
 	pDevice->SetTransform(D3DTS_WORLD, &this->m_cModelStr.mtxWorld);
@@ -202,4 +192,11 @@ void cMotionModel::Init(void)
 void cMotionModel::Uninit(void)
 {
 
+}
+
+void cMotionModel::SetParent(D3DXMATRIX mtx)
+{
+	//パーツの親マトリ設定
+	//パーツのマトリと親マトリをかけ合わせる
+	D3DXMatrixMultiply(&this->m_cModelStr.mtxWorld, &this->m_cModelStr.mtxWorld, &mtx);
 }

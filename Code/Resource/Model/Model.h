@@ -43,7 +43,6 @@ public:
 
 	void DrawModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, D3DXVECTOR3 scale, D3DXMATRIX *pMtxBace, D3DXMATRIX *mtxParent = NULL);
 	void SetModelSetup(ModelStruct modelstr);
-	ModelStruct GetModel(void);
 private:
 	ModelStruct m_cModelStr;
 };
@@ -110,6 +109,8 @@ public:
 
 	void UpdateMotion(void);
 	void SetMotion(MOTIONTYPE type);
+
+	void SetParent(D3DXMATRIX mtx);
 	void DrawMotionModel(D3DXMATRIX *mtxBace);
 private:
 	CModel *m_model;
